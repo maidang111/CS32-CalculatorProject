@@ -1,10 +1,10 @@
 #include <iostream>
-#include <string>
+#include "lib/Token.h"
 
 using namespace std; 
 
-struct Token{
-    string value = "";
-    size_t column = -1;
-    size_t row = -1;
+Token::Token(){
+    this->value = "";
+    this->column = -1;
+    this->row = -1;
 };

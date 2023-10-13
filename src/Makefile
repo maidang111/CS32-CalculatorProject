@@ -1,7 +1,7 @@
 all: main
 
-main: main.o Lexer.o Parser.o 
-	g++ main.o Lexer.o Parser.o -o main
+main: main.o Lexer.o Parser.o  Token.o
+	g++ main.o Lexer.o Parser.o Token.o -o main
 
 main.o: main.cpp
 	g++ -std=c++17 -Wall -Wextra -Werror -c main.cpp	
@@ -10,7 +10,7 @@ Token.o: Token.cpp
 	g++ -std=c++17 -Wall -Wextra -Werror -c Token.cpp	
 
 
-Lexer.o: Lexer.cpp 
+Lexer.o: Lexer.cpp
 	g++ -std=c++17 -Wall -Wextra -Werror -c Lexer.cpp
 
 Parser.o: Parser.cpp
@@ -18,4 +18,4 @@ Parser.o: Parser.cpp
 
 
 clean: 
-	rm -f main.o Lexer.o Parser.o main
+	rm -f main.o Lexer.o Parser.o Token.o main
