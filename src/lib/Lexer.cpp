@@ -13,7 +13,7 @@ Lexer::Lexer(){
     // string line = "";
     char token;
     while(!cin.eof()){
-        token = cin.peek();
+        token = cin.get();
         cout << token << endl;
     }
     //     getline(cin, line);
