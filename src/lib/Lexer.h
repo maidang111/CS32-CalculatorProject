@@ -7,6 +7,8 @@ using namespace std;
 
 class Lexer{
     public:
+    vector <char> user_input;
+
     string user_input;
     vector <string> whole_input;
     set <char> possible_values;
