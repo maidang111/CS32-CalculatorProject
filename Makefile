@@ -1,19 +1,23 @@
-all: lex
+CC=g++ -std=c++17
+CFLAGS= -Wall -Wextra -Werror
+OBJS =src/lex.o src/parser.o src/lib/AST.o src/lib/Lexer.o 
+MAIN= lex
 
-lex: lex.o Lexer.o parser.o AST.o
-	g++ lex.o Lexer.o parser.o AST.o -o lex
+all: $(MAIN)
 
-lex.o: lex.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c lex.cpp	
+lex: $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@
 
-parser.o: parser.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c parser.cpp
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
-AST.o: AST.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c AST.cpp	
 
-Lexer.o: Lexer.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c lib/Lexer.cpp	
+%.o: src/lib/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: src/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
 
 clean: 
-	rm -f AST.o Lexer.o parser.o Token.o lex.o 
+	$(RM) -r src/*.o src/lib/*.o
