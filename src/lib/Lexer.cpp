@@ -92,8 +92,8 @@ void Lexer::create_tokens(){
 
 void Lexer::print_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
-        cout << setw(2) << right << tokens.at(i)->row;
-        cout << setw(4) << right << tokens.at(i)->column;
-        cout << "   " << setw(2) << left << tokens.at(i)->value << endl;
+        cout << setw(5) << right << tokens.at(i)->row;
+        cout << setw(5) << right << tokens.at(i)->column;
+        cout << "   " << setw(3) << left << tokens.at(i)->value << endl;
     }
 }
