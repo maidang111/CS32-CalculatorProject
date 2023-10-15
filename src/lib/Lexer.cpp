@@ -9,13 +9,13 @@
 using namespace std; 
 
 Lexer::Lexer(){
-    this->possible_values = {'(', ')', '+', '-', '*', '/', 'E'};
-    string line = "";
-    while (line != "END"){
-        getline(cin, line);
-        this->whole_input.push_back(line);
-    }
-    create_tokens();
+    // this->possible_values = {'(', ')', '+', '-', '*', '/', 'E'};
+    // string line = "";
+    // while (line != "END"){
+    //     getline(cin, line);
+    //     this->whole_input.push_back(line);
+    // }
+    // create_tokens();
 }
 
 Lexer::~Lexer(){}
