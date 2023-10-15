@@ -1,5 +1,5 @@
 #include <iostream>
-#include "lib/AST.h"
+#include "AST.h"
 
 using namespace std; 
 
