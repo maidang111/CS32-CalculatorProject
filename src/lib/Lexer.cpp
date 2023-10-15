@@ -11,7 +11,7 @@ using namespace std;
 Lexer::Lexer(){
     this->possible_values = {'(', ')', '+', '-', '*', '/', 'E'};
     string line = "";
-    while (line.find("END") < 0){
+    while (line != "END"){
         getline(cin, line);
         this->whole_input.push_back(line);
     }
