@@ -10,13 +10,11 @@ class Lexer{
     vector <char> user_input;
     Lexer();
 
+    vector <string> whole_input;
+    set <char> possible_values;
+    vector <Token*> tokens;
+    ~Lexer();
 
-    // string user_input;
-    // vector <string> whole_input;
-    // set <char> possible_values;
-    // vector <Token*> tokens;
-    // ~Lexer();
-
-    // void create_tokens();
-    // void print_tokens();
+    void create_tokens();
+    void print_tokens();
 };
