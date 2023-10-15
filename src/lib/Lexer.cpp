@@ -9,8 +9,6 @@
 using namespace std; 
 
 Lexer::Lexer(){
-    // this->possible_values = {'(', ')', '+', '-', '*', '/', 'E'};
-    // string line = "";
     this->possible_values = {'(', ')', '+', '-', '*', '/'};
     string line = "";
     while (!cin.eof()){
@@ -30,7 +28,7 @@ void Lexer::create_tokens(){
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
             if(possible_values.count(whole_input.at(i).at(j))){
-                if(value.length() > 0){
+                if(value.length() > 0 && isdigit(value.at(value.length() -1))){
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = prev_index;
@@ -39,27 +37,18 @@ void Lexer::create_tokens(){
                     value = "";
                     prev_index = column;
                 }
-                if (whole_input.at(i).at(j) == 'E'){
-                    Token* new_token = new Token();
-                    new_token->value = "END";
-                    new_token->column = prev_index;
-                    new_token->row = row;
-                    tokens.push_back(new_token);
-                    break;
-                } else {
-                    Token* new_token = new Token();
-                    new_token->value = whole_input.at(i).at(j);
-                    new_token->column = prev_index;
-                    new_token->row = row;
-                    tokens.push_back(new_token);
-                    prev_index = column + 1;
-                }
+                Token* new_token = new Token();
+                new_token->value = whole_input.at(i).at(j);
+                new_token->column = prev_index;
+                new_token->row = row;
+                tokens.push_back(new_token);
+                prev_index = column + 1;
             } else if(isdigit(whole_input.at(i).at(j))){
                 value += whole_input.at(i).at(j);
             } else if(value.length() > 0){
                 if(whole_input.at(i).at(j) == '.'){
                     value += whole_input.at(i).at(j);
-                } else if(whole_input.at(i).at(j) == ' '){
+                } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = column - 1;
