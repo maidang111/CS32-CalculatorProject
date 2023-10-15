@@ -3,7 +3,7 @@
 #include <set>
 #include <vector>
 #include <iomanip>
-#include "Lexer.h"
+#include "lib/Lexer.h"
 #include <algorithm>
 
 using namespace std; 
