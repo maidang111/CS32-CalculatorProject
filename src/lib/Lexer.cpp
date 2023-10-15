@@ -28,7 +28,7 @@ void Lexer::create_tokens(){
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
             if(possible_values.count(whole_input.at(i).at(j))){
-                if(value.length() > 0 && isdigit(value.at(value.length() -1))){
+                if(value.length() > 0){
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = prev_index;
@@ -48,6 +48,9 @@ void Lexer::create_tokens(){
             } else if(value.length() > 0){
                 if(whole_input.at(i).at(j) == '.'){
                     value += whole_input.at(i).at(j);
+                    if(count(value.begin(), value.end(), '.') > 1){
+                    cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                    }
                 } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){
                     Token* new_token = new Token();
                     new_token->value = value;
