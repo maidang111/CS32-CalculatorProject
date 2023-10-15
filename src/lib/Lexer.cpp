@@ -13,13 +13,9 @@ Lexer::Lexer(){
     // string line = "";
     char token;
     while(!cin.eof()){
-        cin.get(token);
-        cout << token << endl;
+        // cin.get(token);
+        // user_input.push_back(token);
     }
-    //     getline(cin, line);
-    //     this->whole_input.push_back(line);
-    // }
-    // create_tokens();
 }
 
 // Lexer::~Lexer(){}
