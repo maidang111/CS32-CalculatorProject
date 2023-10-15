@@ -66,7 +66,7 @@ void Lexer::create_tokens(){
                     prev_index = column + 1;
                 }
             } else if(!possible_values.count(whole_input.at(i).at(j)) && whole_input.at(i).at(j) != ' '){
-                cout << "Syntax error on line " << row << " column " << column << endl;
+                cout << "Syntax error on line " << row << " column " << column << "." << endl;
                 exit(1);
             }
             column++;
@@ -93,7 +93,7 @@ void Lexer::create_tokens(){
 void Lexer::print_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         cout << setw(4) << right << tokens.at(i)->row;
-        cout << setw(4) << right << tokens.at(i)->column;
-        cout << "   " << setw(0) << right << tokens.at(i)->value << "."<< endl;
+        cout << setw(5) << right << tokens.at(i)->column;
+        cout << setw(2) << right << tokens.at(i)->value << "." << endl;
     }
 }
