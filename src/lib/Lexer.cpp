@@ -49,7 +49,8 @@ void Lexer::create_tokens(){
                 if(whole_input.at(i).at(j) == '.'){
                     value += whole_input.at(i).at(j);
                     if(count(value.begin(), value.end(), '.') > 1){
-                    cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                        cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                        exit(1);
                     }
                 } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){
                     Token* new_token = new Token();
