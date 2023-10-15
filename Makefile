@@ -1,4 +1,3 @@
-
 all: lex
 
 lex: lex.o Lexer.o parser.o AST.o

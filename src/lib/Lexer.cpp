@@ -16,6 +16,7 @@ Lexer::Lexer(){
         this->whole_input.push_back(line);
     }
 }
+
 Lexer::~Lexer(){}
 
 void Lexer::create_tokens(){
