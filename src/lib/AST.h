@@ -1,3 +1,5 @@
+#ifndef AST_H
+#define AST_H
 #include <iostream>
 #include <string>
 #include <set>
@@ -9,3 +11,5 @@ struct Token{
 
     Token();
 };
+
+#endif
