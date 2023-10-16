@@ -27,6 +27,7 @@ void Lexer::create_tokens(){
 
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
+            cout << whole_input.at(i).at(j) << endl;
             if(possible_values.count(whole_input.at(i).at(j))){
                 if(value.length() > 0){
                     Token* new_token = new Token();
