@@ -15,38 +15,18 @@ Lexer::Lexer(){
         getline(cin, line);
         this->whole_input.push_back(line);
     }
-    // char n;
-    // while (!cin.eof()){
-    //     cin.get(n);
-    //     if (n == '\n'){
-    //         whole_input.push_back(line);
-    //         line = "";
-    //     } else {
-    //         line += n;
-    //     }
-    // }
 }
 
-Lexer::~Lexer(){
-    for(size_t i = 0; i < tokens.size(); i++){
-        delete tokens.at(i);
-    }
-}
+Lexer::~Lexer(){}
 
 void Lexer::create_tokens(){
     string value = "";
     size_t row = 1; 
     size_t column = 1;
     size_t prev_index = 1;
-    for (size_t i = 0; i < whole_input.size(); i++){
-        cout << whole_input.at(i) << endl;
-    }
 
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
-            if (whole_input.at(i).at(j) == '\t'){
-                column += 5;
-            }
             if(possible_values.count(whole_input.at(i).at(j))){
                 if(value.length() > 0){
                     Token* new_token = new Token();
@@ -92,8 +72,10 @@ void Lexer::create_tokens(){
                     value = "";
                     prev_index = column + 1;
                 }
-            } else if(!possible_values.count(whole_input.at(i).at(j)) && !isspace(whole_input.at(i).at(j))){ // not a possible token
+            } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
+                cout << "(" << whole_input.at(i).at(j) << ")" << endl;
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                cout << "here" << endl;
                 exit(1);
             }
             column++;
