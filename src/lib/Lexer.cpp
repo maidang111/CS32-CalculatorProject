@@ -18,7 +18,10 @@ Lexer::Lexer(){
     // for(size_t i = 0; i < whole_input.size(); i++){
     //     cout << whole_input.at(i) << endl;
     //     for(size_t j = 0; j < whole_input.at(i).size(); j++){
-    //         cout << whole_input.at(i).at(j) << endl;
+    //         cout << "(" << whole_input.at(i).at(j) << ")"<< endl;
+    //         if (whole_input.at(i).at(j) == '\t'){
+    //             cout << "True";
+    //         }
     //     }
     // }
 }
@@ -84,6 +87,11 @@ void Lexer::create_tokens(){
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
+            }
+            if (whole_input.at(i).at(j) == '\t'){
+                cout << "here";
+                column += 4;
+                prev_index += column + 1;
             }
             column++;
         }
