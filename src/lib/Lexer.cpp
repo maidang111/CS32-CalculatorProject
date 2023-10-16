@@ -16,12 +16,6 @@ Lexer::Lexer(){
         getline(cin, line);
         this->whole_input.push_back(line);
     }
-    for(size_t i = 0; i < whole_input.size(); i++){
-        cout << whole_input.at(i) << endl;
-        for(size_t j = 0; j < whole_input.at(i).size(); j++){
-            cout << whole_input.at(i).at(j) << endl;
-        }
-    }
 }
 
 Lexer::~Lexer(){}
