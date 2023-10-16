@@ -73,9 +73,7 @@ void Lexer::create_tokens(){
                     prev_index = column + 1;
                 }
             } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
-                cout << "(" << whole_input.at(i).at(j) << ")" << endl;
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                cout << "here" << endl;
                 exit(1);
             }
             column++;
