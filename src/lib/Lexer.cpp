@@ -83,7 +83,7 @@ void Lexer::create_tokens(){
                 exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
-                prev_index ++;
+                prev_index = column + 1;
             }
             column++;
         }
