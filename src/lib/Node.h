@@ -7,8 +7,8 @@ using namespace std;
 
 class Node {
     protected:
-    Node* parent = nullptr;
-    Token* data = nullptr;
+    Node* parent;
+    Token* data;
 
     public:
     Node();

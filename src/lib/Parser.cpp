@@ -50,6 +50,8 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     Token* current_token = nullptr;
     int parenthesis_switch = 0;
     set<string> operator_check = {"+", "-", "*", "/"};
+    // string opperators[] = {"+", "-", "*", "/"}; 
+    // set<string> opperator_check(opperators, opperators + 5);
 
     // reading token until last )
     for (unsigned i = 0; i < tokens_list.size()- 1; ++i) {
