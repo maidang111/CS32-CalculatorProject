@@ -25,10 +25,6 @@ void Lexer::create_tokens(){
     size_t column = 1;
     size_t prev_index = 1;
 
-    for (size_t i = 0; i < whole_input.size(); i++){
-        cout << whole_input.at(i) << endl;
-    }
-
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
             if(possible_values.count(whole_input.at(i).at(j))){
@@ -52,14 +48,14 @@ void Lexer::create_tokens(){
             } else if(value.length() > 0){
                 if(whole_input.at(i).at(j) == '.'){
                     value += whole_input.at(i).at(j);
-                    if(count(value.begin(), value.end(), '.') > 1){
+                    if(count(value.begin(), value.end(), '.') > 1){ // multiple decimals
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         exit(1);
                     } else if(j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1))){
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
                         exit(1);
                     }
-                } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){
+                } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){ // ending decimal
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = column - 1;
@@ -76,8 +72,10 @@ void Lexer::create_tokens(){
                     value = "";
                     prev_index = column + 1;
                 }
-            } else if(!possible_values.count(whole_input.at(i).at(j)) && whole_input.at(i).at(j) != ' '){
+            } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
+                cout << "(" << whole_input.at(i).at(j) << ")" << endl;
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                cout << "here" << endl;
                 exit(1);
             }
             column++;
