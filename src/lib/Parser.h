@@ -6,6 +6,11 @@
 using namespace std;
 
 class Parser {
+    private:
+    Node* root;
+    string print_help(Node* in_node) const;
+    double calculate_help(Node* operator_node) const;
+    void delete_help(Node* current_node);
     public:
     Parser();
     void read_tokens(vector<Token*> tokens_list);
@@ -13,11 +18,6 @@ class Parser {
     double calculate() const;
     ~Parser();
 
-    private:
-    Node* root;
-    string print_help(Node* in_node) const;
-    double calculate_help(Node* operator_node) const;
-    void delete_help(Node* current_node);
 
 };
 

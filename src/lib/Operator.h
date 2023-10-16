@@ -3,19 +3,21 @@
 #include "AST.h"
 #include "Node.h"
 #include <vector>
+#include <string>
+
 
 using namespace std;
 
 class Operator: public Node {
-    char operator;
+    private:
+    string operator_value;
 
     public: 
     Operator(Node* parent_node, Token* in_token);
-    void add_child(Node* in_child);
     bool node_type() const;
-    char check_operator() const;
-    vector<Node*> children;
+    string check_operator() const;
     ~Operator();
+    double get_number() const;
 };
 
 #endif

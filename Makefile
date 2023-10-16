@@ -1,32 +1,22 @@
+CC=g++ -std=c++17
+CFLAGS= -Wall -Wextra -Werror
+OBJS =src/lex.o src/parser.o src/lib/AST.o src/lib/Lexer.o src/lib/Number.o src/lib/Node.o src/lib/Operator.o src/lib/Parser
+MAIN= lex
 
-all: lex
+all: $(MAIN)
 
-lex: lex.o Lexer.o parser.o AST.o
-	g++ lex.o Lexer.o parser.o AST.o -o lex
+lex: $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@
 
-lex.o: src/lex.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c src/lex.cpp	
-
-parser.o: src/parser.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c src/parser.cpp
-
-AST.o: src/lib/AST.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c src/lib/AST.cpp	
-
-Lexer.o: src/lib/Lexer.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c src/lib/Lexer.cpp	
-
-Node.o: src/lib/Node.cpp Operator.o Number.o
-	g++ -std=c++17 -Wall -Wextra -Werror -c src/lib/Node.cpp	
-
-Operator.o: src/lib/Operator.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c src/lib/Operator.cpp	
-
-Number.o: src/lib/Number.cpp
-	g++ -std=c++17 -Wall -Wextra -Werror -c src/lib/Number.cpp	
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 
+%.o: src/lib/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
+%.o: src/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean: 
-	rm -f AST.o Lexer.o parser.o Token.o lex.o 
+	$(RM) -r src/*.o src/lib/*.o

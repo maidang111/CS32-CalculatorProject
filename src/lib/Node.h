@@ -13,7 +13,13 @@ class Node {
     public:
     Node();
     virtual ~Node();
-    virtual bool node_type() const;
+    virtual bool node_type() const = 0;
+    void add_child(Node* child_node);
+    Node* switch_to_parent() const;
+    virtual double get_number() const = 0;
+    virtual string check_operator() const = 0;
+    vector<Node*> children;
+
 };
 
 #endif

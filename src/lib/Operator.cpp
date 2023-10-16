@@ -5,20 +5,24 @@
 using namespace std;
 
 Operator::Operator (Node* parent_node, Token* in_token) {
-    operator = in_token->value;
+    operator_value = in_token->value;
+    data = in_token;
     parent = parent_node;
 }
 
-void Operator::add_child(Node* in_child) {
-    children.push_back(in_child);
-}
+
 
 bool Operator::node_type() const {
     return true;
 }
 
-char Operator::check_operator() const {
-    return operator;
+string Operator::check_operator() const {
+    return operator_value;
 }
 
 Operator::~Operator() {}
+
+double Operator::get_number() const {
+    return 0;
+}
+
