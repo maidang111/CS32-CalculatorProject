@@ -34,6 +34,9 @@ void Lexer::create_tokens(){
     size_t row = 1; 
     size_t column = 1;
     size_t prev_index = 1;
+    for (size_t i = 0; i < whole_input.size(); i++){
+        cout << i << endl;
+    }
 
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
