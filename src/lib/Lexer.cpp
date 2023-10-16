@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include <set>
@@ -15,15 +16,12 @@ Lexer::Lexer(){
         getline(cin, line);
         this->whole_input.push_back(line);
     }
-    // for(size_t i = 0; i < whole_input.size(); i++){
-    //     cout << whole_input.at(i) << endl;
-    //     for(size_t j = 0; j < whole_input.at(i).size(); j++){
-    //         cout << "(" << whole_input.at(i).at(j) << ")"<< endl;
-    //         if (whole_input.at(i).at(j) == '\t'){
-    //             cout << "True";
-    //         }
-    //     }
-    // }
+    for(size_t i = 0; i < whole_input.size(); i++){
+        cout << whole_input.at(i) << endl;
+        for(size_t j = 0; j < whole_input.at(i).size(); j++){
+            cout << whole_input.at(i).at(j) << endl;
+        }
+    }
 }
 
 Lexer::~Lexer(){}
@@ -88,11 +86,6 @@ void Lexer::create_tokens(){
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
             }
-            if (whole_input.at(i).at(j) == '\t'){
-                cout << "here";
-                column += 4;
-                prev_index += column + 1;
-            }
             column++;
         }
         if (value.length() > 0){
@@ -102,16 +95,18 @@ void Lexer::create_tokens(){
             new_token->row = row;
             tokens.push_back(new_token);
         }
+        if (i == whole_input.size() - 1){
+            Token* new_token = new Token();
+            new_token->value = "END";
+            new_token->column = column;
+            new_token->row = row;
+            tokens.push_back(new_token);
+        }
         value = "";
         column = 1;
         prev_index = 1;
         row++;
     }
-    Token* new_token = new Token();
-    new_token->value = "END";
-    new_token->column = prev_index;
-    new_token->row = row -1;
-    tokens.push_back(new_token);
 }
 
 void Lexer::print_tokens(){
