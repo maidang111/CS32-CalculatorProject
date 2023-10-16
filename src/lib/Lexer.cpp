@@ -11,13 +11,23 @@ using namespace std;
 Lexer::Lexer(){
     this->possible_values = {'(', ')', '+', '-', '*', '/'};
     string line = "";
+    char n;
     while (!cin.eof()){
-        getline(cin, line);
-        this->whole_input.push_back(line);
+        cin.get(n);
+        if (n == '\n'){
+            whole_input.push_back(line);
+            line = "";
+        } else {
+            line += n;
+        }
     }
 }
 
-Lexer::~Lexer(){}
+Lexer::~Lexer(){
+    for(size_t i = 0; i < tokens.size(); i++){
+        delete tokens.at(i);
+    }
+}
 
 void Lexer::create_tokens(){
     string value = "";
