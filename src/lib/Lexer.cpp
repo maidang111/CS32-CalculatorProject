@@ -15,6 +15,12 @@ Lexer::Lexer(){
         getline(cin, line);
         this->whole_input.push_back(line);
     }
+    // for(size_t i = 0; i < whole_input.size(); i++){
+    //     cout << whole_input.at(i) << endl;
+    //     for(size_t j = 0; j < whole_input.at(i).size(); j++){
+    //         cout << whole_input.at(i).at(j) << endl;
+    //     }
+    // }
 }
 
 Lexer::~Lexer(){}
@@ -75,6 +81,9 @@ void Lexer::create_tokens(){
             } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
                 exit(1);
+            } 
+            if (isspace(whole_input.at(i).at(j))){
+                prev_index ++;
             }
             column++;
         }
