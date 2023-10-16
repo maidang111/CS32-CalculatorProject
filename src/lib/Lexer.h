@@ -1,3 +1,5 @@
+#ifndef LEXER_H
+#define LEXER_H
 #include <iostream>
 #include <string>
 #include <vector>
@@ -18,3 +20,5 @@ class Lexer{
     void create_tokens();
     void print_tokens();
 };
+
+#endif
