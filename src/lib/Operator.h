@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+
 using namespace std;
 
 class Operator: public Node {
@@ -17,7 +18,6 @@ class Operator: public Node {
     string check_operator() const;
     ~Operator();
     double get_number() const;
-
 };
 
 #endif

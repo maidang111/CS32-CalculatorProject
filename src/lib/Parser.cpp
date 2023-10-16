@@ -8,6 +8,7 @@
 #include <string>
 #include <set>
 #include <cstdlib>
+
 using namespace std;
 
 Parser::Parser() {
@@ -17,6 +18,7 @@ Parser::Parser() {
 void Parser::read_tokens(vector<Token*> tokens_list) {
     // checking if it has end token
     // check it has correct end sign
+
     Token* end_token = nullptr;
     if (!tokens_list.empty()) {
         end_token = tokens_list.at(tokens_list.size() - 1);
@@ -27,7 +29,6 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         //ex: Unexpected token at line 1 column 20: END
     }
-    // if it is empty
     else {
         return;
     }
@@ -54,11 +55,13 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     // set<string> opperator_check(opperators, opperators + 5);
 
     // reading token until last )
+
     for (unsigned i = 0; i < tokens_list.size()- 1; ++i) {
         // ith token
         current_token = tokens_list.at(i);
 
         // checking if it is "("
+
         // if it is true, the next value would be child of current node
         if (current_token->value == "(") {
             left_parenthesis = true;
@@ -101,6 +104,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                     << current_token->column << endl;
                 exit(2);
             }
+
         }
         // in the  case of numbers
         else {
@@ -112,6 +116,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     
     Token* check_end_parenthesis = tokens_list.at(tokens_list.size() - 2);
     if (parenthesis_switch != 0 || operator_mark != nullptr) {
+
         cout << "Unexpected token at line " << check_end_parenthesis->row 
              << " column " << check_end_parenthesis->column << endl;
         exit(2);
@@ -137,6 +142,7 @@ double Parser::calculate_help(Node* operator_node) const {
     string operator_sign = operator_node->check_operator();
     vector<Node*>& list_children = operator_node->children;
     double division_check = 0;
+
     double result = 0;
     Node* current_node = nullptr;
     for (unsigned int i = 0; i < list_children.size(); ++i) {
@@ -179,12 +185,14 @@ string Parser::print_help(Node* in_node) const {
     string expression;
     print_expression += "(";
     expression = in_node->check_operator();
+
     vector<Node*>& list_children = in_node->children;
 
     for (unsigned int i = 0; i < list_children.size(); ++i) {
         print_expression += print_help(list_children.at(i));
         if (i != list_children.size() - 1) {
             print_expression += ((list_children.at(i))->check_operator());
+
         }
     }
     print_expression += ")";
@@ -192,12 +200,14 @@ string Parser::print_help(Node* in_node) const {
 }
 
 Parser::~Parser() {
+
     delete_help(root);
 }
 
 void Parser::delete_help(Node* current_node) {
     if (!current_node->node_type()) {
         delete current_node;
+
         return;
     }
 

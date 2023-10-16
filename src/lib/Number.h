@@ -11,9 +11,6 @@ class Number: public Node {
     Number(Node* parent_token, Token* in_token);
     bool node_type() const;
     double get_number() const; 
-    string check_operator() const;
-
-    
     ~Number();
 };
 

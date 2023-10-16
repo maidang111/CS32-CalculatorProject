@@ -18,4 +18,3 @@ void Node::add_child(Node* child_node) {
     children.push_back(child_node);
 }
 
-

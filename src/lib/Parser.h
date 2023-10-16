@@ -18,6 +18,7 @@ class Parser {
     double calculate() const;
     ~Parser();
 
+
 };
 
 #endif

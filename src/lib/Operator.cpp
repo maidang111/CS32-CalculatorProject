@@ -1,4 +1,5 @@
 #include "Operator.h"
+#include "Node.h"
 #include "AST.h"
 #include <vector>
 using namespace std;
@@ -8,6 +9,7 @@ Operator::Operator (Node* parent_node, Token* in_token) {
     data = in_token;
     parent = parent_node;
 }
+
 
 
 bool Operator::node_type() const {

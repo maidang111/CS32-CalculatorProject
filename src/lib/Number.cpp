@@ -17,15 +17,3 @@ double Number::get_number() const{ return number_value;}
 
 Number::~Number() {
 }
-
-string Number::check_operator() const {
-    return "";
-}
-
-
-
-
-
-
-
-

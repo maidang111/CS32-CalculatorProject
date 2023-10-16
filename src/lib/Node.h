@@ -19,6 +19,7 @@ class Node {
     virtual double get_number() const = 0;
     virtual string check_operator() const = 0;
     vector<Node*> children;
+
 };
 
 #endif

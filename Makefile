@@ -18,6 +18,5 @@ lex: $(OBJS)
 %.o: src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-
 clean: 
 	$(RM) -r src/*.o src/lib/*.o
