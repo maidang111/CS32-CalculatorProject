@@ -105,7 +105,7 @@ void Lexer::print_tokens(){
     }
 }
 
-void Lexer::print_tokens(){
+void Lexer::delete_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         delete tokens.at(i);
     }
