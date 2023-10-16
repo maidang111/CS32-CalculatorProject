@@ -11,16 +11,20 @@ using namespace std;
 Lexer::Lexer(){
     this->possible_values = {'(', ')', '+', '-', '*', '/'};
     string line = "";
-    char n;
     while (!cin.eof()){
-        cin.get(n);
-        if (n == '\n'){
-            whole_input.push_back(line);
-            line = "";
-        } else {
-            line += n;
-        }
+        getline(cin, line);
+        this->whole_input.push_back(line);
     }
+    // char n;
+    // while (!cin.eof()){
+    //     cin.get(n);
+    //     if (n == '\n'){
+    //         whole_input.push_back(line);
+    //         line = "";
+    //     } else {
+    //         line += n;
+    //     }
+    // }
 }
 
 Lexer::~Lexer(){
