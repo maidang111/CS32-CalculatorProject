@@ -104,3 +104,9 @@ void Lexer::print_tokens(){
         cout << "  " << tokens.at(i)->value << endl;
     }
 }
+
+void Lexer::print_tokens(){
+    for(size_t i = 0; i < tokens.size(); i++){
+        delete tokens.at(i);
+    }
+}

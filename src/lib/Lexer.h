@@ -17,4 +17,5 @@ class Lexer{
 
     void create_tokens();
     void print_tokens();
+    void delete_tokens();
 };
