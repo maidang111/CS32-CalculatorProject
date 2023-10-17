@@ -59,7 +59,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         // checking if it is "("
         // if it is true, the next value would be child of current node
         if (current_token->value == "(") {
-            if (left_parenthesis || right_parenthesis) {
+            if (left_parenthesis) {
                 print_error_2(current_token);
             }
             left_parenthesis = true;
