@@ -15,6 +15,12 @@ Parser::Parser() {
     root = nullptr;
 }
 
+void Parser::print_error_2(Token* error_token) const {
+    cout << "Unexpected token at line " << error_token->row << " column " << error_token->column 
+            << ": " << error_token << endl;
+    exit(2);
+}
+
 void Parser::read_tokens(vector<Token*> tokens_list) {
     // checking if it has end token
     // check it has correct end sign
@@ -24,22 +30,9 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     Token* end_token = nullptr;
     end_token = tokens_list.at(tokens_list.size() - 1);
     if (end_token->value != "END") {
-        cout << "Unexpected token at line " << end_token->row << " column " << end_token->column 
-            << ": END" << endl;
-        exit(2);
+        print_error_2(end_token);
     }
     //ex: Unexpected token at line 1 column 20: END
-
-
-    // checking if it ends with )
-    if (tokens_list.size() > 1) {
-        end_token = tokens_list.at(tokens_list.size() - 2);
-        if (end_token->value != ")") {
-            cout << "Unexpected token at line " << end_token->row << " column " << end_token->column 
-                << endl;
-            exit(2);
-        }
-    }
 
     Node* operator_mark = nullptr;
     Node* add_operator = nullptr;
@@ -68,9 +61,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             // checking if it is not a number
             // after (, there always should be operator, no parenthesis and no number
             if (operator_check.find((tokens_list.at(i))->value) == operator_check.end()) {
-                cout << "Unexpected token at line " << current_token->row << " column " 
-                    << current_token->column << endl;
-                exit(2);
+                print_error_2(current_token);
             }
             // checking if it is an 
             // in the case where root node does not exist
@@ -86,12 +77,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             }
             left_parenthesis = false;
         }
-        // checking for double operator error 
-        if (operator_check.find(current_token->value) != operator_check.end()) {
-            cout << "Unexpected token at line " << current_token->row << " column " 
-                << current_token->column << endl;
-            exit(2);
-        }
+
         // if the last token was ), return to the parent node
         if (right_parenthesis) {
             operator_mark = operator_mark->switch_to_parent();
@@ -102,18 +88,14 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             right_parenthesis = true;
             parenthesis_switch -= 1;
             if (parenthesis_switch < 0) {
-                cout << "Unexpected token at line " << current_token->row << " column " 
-                    << current_token->column << endl;
-                exit(2);
+                print_error_2(current_token);
             }
 
         }
         // in the  case of numbers
         else {
             if (parenthesis_switch < 1) {
-                cout << "Unexpected token at line " << current_token->row << " column " 
-                    << current_token->column << endl;
-                exit(2);            
+                print_error_2(current_token);          
             }
             add_number = new Number(operator_mark,current_token);
             operator_mark->add_child(add_number);
@@ -123,10 +105,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     
     Token* check_end_parenthesis = tokens_list.at(tokens_list.size() - 2);
     if (parenthesis_switch != 0 || operator_mark != nullptr) {
-
-        cout << "Unexpected token at line " << check_end_parenthesis->row 
-             << " column " << check_end_parenthesis->column << endl;
-        exit(2);
+        print_error_2(current_token);
     }
 }
 
