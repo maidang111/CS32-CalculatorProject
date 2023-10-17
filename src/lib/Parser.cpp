@@ -102,8 +102,6 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
 
     }
-    
-    Token* check_end_parenthesis = tokens_list.at(tokens_list.size() - 2);
     if (parenthesis_switch != 0 || operator_mark != nullptr) {
         print_error_2(current_token);
     }
