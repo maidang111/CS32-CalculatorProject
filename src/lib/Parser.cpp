@@ -30,12 +30,16 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     int num_left_parenthesis = 0;
     Node* create_operator = nullptr;
     Node* create_number = nullptr;
+    bool is_zero = false;
 
     // read each token and make each of them as a node for AST
     for (unsigned int i = 0; i < tokens_list.size(); ++i) {
         // verify the token type
+        if (is_zero && i != tokens_list.size() - 1) {
+            print_error_2(tokens_list.at(i));
+        }
         if (tokens_list.at(i)->value == "(") {
-            if (left) {
+            if (left || i == tokens_list.size() - 2) {
                 print_error_2(tokens_list.at(i));
             }
             num_left_parenthesis += 1;
@@ -47,8 +51,8 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 print_error_2(tokens_list.at(i));
             }
             num_left_parenthesis -= 1;
-            if (num_left_parenthesis + 1 < 1) {
-                print_error_2(tokens_list.at(i));
+            if (num_left_parenthesis == 0) {
+                is_zero = true;
             }
             curr_node = curr_node->switch_to_parent();
             last_operator = true;
@@ -71,18 +75,23 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         else {
             // number or END token
+            // number
             if (i < tokens_list.size() - 1) {
-                if (left || num_left_parenthesis == 0) {
+                create_number = new Number(curr_node, tokens_list.at(i));
+                if (curr_node == nullptr) {
+                    root = create_number;
+                    curr_node = root;
+                }
+                if (!curr_node->node_type()){
+                    delete create_number;
                     print_error_2(tokens_list.at(i));
                 }
-                create_number = new Number(curr_node, tokens_list.at(i));
-                curr_node->add_child(create_number);
+                else {
+                    curr_node->add_child(create_number);
+                }
             }
             else if (num_left_parenthesis != 0) {
                 print_error_2(tokens_list.at(i));
-            }
-            else {
-                return;
             }
             last_operator = false;
         }
@@ -179,7 +188,7 @@ void Parser::delete_help(Node* current_node) {
         return;
     }
 
-    
+
     vector<Node*>& list_children = current_node->children;
     for (unsigned int i = 0; i < list_children.size(); ++i) {
         delete_help(list_children.at(i));
