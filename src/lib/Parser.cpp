@@ -39,6 +39,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     Node* add_number = nullptr;
     bool left_parenthesis = false;
     bool right_parenthesis = false;
+    bool is_operator = false;
     Token* current_token = nullptr;
     int parenthesis_switch = 0;
     set<string> operator_check = {"+", "-", "*", "/"};
@@ -58,12 +59,14 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         } 
         // if last Token one was (, add the value as mark_token's child
         else if (left_parenthesis) {
+            if (current_token->value == "(") {
+                print_error_2(current_token.at(i));
+            }
             // checking if it is not a number
             // after (, there always should be operator, no parenthesis and no number
             if (operator_check.find((tokens_list.at(i))->value) == operator_check.end()) {
                 print_error_2(current_token);
             }
-            // checking if it is an 
             // in the case where root node does not exist
             if (root == nullptr) {
                 root = new Operator(nullptr, current_token);
@@ -76,6 +79,9 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 operator_mark = add_operator;
             }
             left_parenthesis = false;
+        }
+        else if (operator_check.find((tokens_list.at(i))->value) != operator_check.end()) {
+            print_error_2(current_node);
         }
 
         // if the last token was ), return to the parent node
@@ -102,8 +108,8 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
 
     }
-    if (parenthesis_switch != 0 || operator_mark != nullptr) {
-        print_error_2(current_token);
+    if (tokens_list.at(tokens_list.size() - 2) != ")") {
+        print_error_2(tokens_list.size() - 2);
     }
 }
 
