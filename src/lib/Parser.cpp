@@ -81,7 +81,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             left_parenthesis = false;
         }
         else if (operator_check.find((tokens_list.at(i))->value) != operator_check.end()) {
-            print_error_2(current_node);
+            print_error_2(current_token);
         }
 
         // if the last token was ), return to the parent node
@@ -108,7 +108,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
 
     }
-    if (tokens_list.at(tokens_list.size() - 2) != ")") {
+    if ((tokens_list.at(tokens_list.size() - 2))->value != ")") {
         print_error_2(tokens_list.size() - 2);
     }
 }
