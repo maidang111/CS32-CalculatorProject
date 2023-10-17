@@ -82,6 +82,12 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             }
             // otherwise
             else {
+                if (parenthesis_switch < 1) {
+                    cout << "Unexpected token at line " << current_token->row << " column " 
+                           << current_token->column << endl;
+                    exit(2);
+                }
+                }
                 add_operator = new Operator(operator_mark, current_token);
                 operator_mark->add_child(add_operator);
                 operator_mark = add_operator;
