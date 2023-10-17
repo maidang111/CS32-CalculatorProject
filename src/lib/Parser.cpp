@@ -97,9 +97,6 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
 
         // if the last token was ), return to the parent node
         if (right_parenthesis) {
-            if (left_parenthesis) {
-                print_error_2(current_token);
-            }
             operator_mark = operator_mark->switch_to_parent();
             right_parenthesis = false;
             continue;
