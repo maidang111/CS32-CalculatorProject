@@ -18,20 +18,18 @@ Parser::Parser() {
 void Parser::read_tokens(vector<Token*> tokens_list) {
     // checking if it has end token
     // check it has correct end sign
-
-    Token* end_token = nullptr;
-    if (!tokens_list.empty()) {
-        end_token = tokens_list.at(tokens_list.size() - 1);
-        if (end_token->value != "END") {
-            cout << "Unexpected token at line " << end_token->row << " column " << end_token->column 
-                << ": END" << endl;
-            exit(2);
-        }
-        //ex: Unexpected token at line 1 column 20: END
-    }
-    else {
+    if (tokens_list.empty()) {
         return;
     }
+    Token* end_token = nullptr;
+    end_token = tokens_list.at(tokens_list.size() - 1);
+    if (end_token->value != "END") {
+        cout << "Unexpected token at line " << end_token->row << " column " << end_token->column 
+            << ": END" << endl;
+        exit(2);
+    }
+    //ex: Unexpected token at line 1 column 20: END
+
 
     // checking if it ends with )
     if (tokens_list.size() > 1) {
@@ -172,6 +170,9 @@ double Parser::calculate_help(Node* operator_node) const {
 
 
 void Parser::print() const {
+    if (!root) {
+        return;
+    }
     cout << print_help(root) << endl;
     cout << calculate() << endl;
 }
