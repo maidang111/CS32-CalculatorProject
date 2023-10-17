@@ -58,7 +58,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             parenthesis_switch += 1;
         } 
         // if last Token one was (, add the value as mark_token's child
-        else if (left_parenthesis) {
+        if (left_parenthesis) {
             if (current_token->value == "(") {
                 print_error_2(current_token);
             }
