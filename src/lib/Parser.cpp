@@ -17,7 +17,7 @@ Parser::Parser() {
 
 void Parser::print_error_2(Token* error_token) const {
     cout << "Unexpected token at line " << error_token->row << " column " << error_token->column 
-            << ": " << error_token << endl;
+            << ": " << error_token->value << endl;
     exit(2);
 }
 
