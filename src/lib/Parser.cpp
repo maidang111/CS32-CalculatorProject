@@ -30,7 +30,9 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     Token* end_token = nullptr;
     end_token = tokens_list.at(tokens_list.size() - 1);
     if (end_token->value != "END") {
-        print_error_2(end_token);
+        cout << "Unexpected token at line " << end_token->row << " column " << end_token->column 
+            << ": " << "END" << endl;
+        exit(2);
     }
     //ex: Unexpected token at line 1 column 20: END
 
@@ -113,10 +115,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     if ((tokens_list.at(tokens_list.size() - 2))->value != ")") {
         print_error_2(tokens_list.at(tokens_list.size() - 2));
     }
-    if ((tokens_list.at(tokens_list.size() - 1))->value != "END") {
-        cout << "Unexpected token at line " << error_token->row << " column " << error_token->column 
-            << ": END" << endl;
-    }
+
 }
 
 double Parser::calculate() const {
