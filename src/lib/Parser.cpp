@@ -43,8 +43,6 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     Token* current_token = nullptr;
     int parenthesis_switch = 0;
     set<string> operator_check = {"+", "-", "*", "/"};
-    // string opperators[] = {"+", "-", "*", "/"}; 
-    // set<string> opperator_check(opperators, opperators + 5);
 
     // reading token until last )
 
@@ -56,6 +54,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         if (current_token->value == "(") {
             left_parenthesis = true;
             parenthesis_switch += 1;
+            continue;
         } 
         // if last Token one was (, add the value as mark_token's child
         if (left_parenthesis) {
@@ -79,15 +78,18 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 operator_mark = add_operator;
             }
             left_parenthesis = false;
+            continue;
         }
         else if (operator_check.find(current_token->value) != operator_check.end()) {
             print_error_2(current_token);
+            continue;
         }
 
         // if the last token was ), return to the parent node
         if (right_parenthesis) {
             operator_mark = operator_mark->switch_to_parent();
             right_parenthesis = false;
+            continue;
         }        
         // if ), finished with the current )
         if (current_token->value == ")") {
@@ -96,7 +98,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             if (parenthesis_switch < 0) {
                 print_error_2(current_token);
             }
-
+            continue;
         }
         // in the  case of numbers
         else {
