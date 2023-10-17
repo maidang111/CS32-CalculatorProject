@@ -111,7 +111,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     if ((tokens_list.at(tokens_list.size() - 2))->value != ")") {
         print_error_2(tokens_list.at(tokens_list.size() - 2));
     }
-    if ((token_list.at(tokens_list.size() - 1))->value != "END") {
+    if ((tokens_list.at(tokens_list.size() - 1))->value != "END") {
         print_error_2(tokens_list.at(tokens_list.size() - 1));
     }
 }
