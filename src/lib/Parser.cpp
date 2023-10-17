@@ -27,8 +27,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     set<string> is_operator = {"+", "-", "*", "/"};
     Node* new_node = root;
     Node* curr_node = nullptr;
-    double check_double = 0;
-
+    
     current_token = (tokens_list.at(tokens_list.size() - 1));
     if (current_token->value != "END") {
         cout << "Unexpected token at line " << current_token->row << " column " << current_token->column << ": "
