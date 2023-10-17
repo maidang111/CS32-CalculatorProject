@@ -3,8 +3,8 @@
 using namespace std;
 
 Node::Node() {
-    this->parent = nullptr;
-    this->data = nullptr;
+    // this->parent = nullptr;
+    // this->data = nullptr;
 }
 
 Node::~Node() {
