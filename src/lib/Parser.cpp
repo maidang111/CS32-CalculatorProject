@@ -173,11 +173,13 @@ Parser::~Parser() {
 }
 
 void Parser::delete_help(Node* current_node) {
+    // delete the node if the node is number
     if (!current_node->node_type()) {
         delete current_node;
         return;
     }
 
+    
     vector<Node*>& list_children = current_node->children;
     for (unsigned int i = 0; i < list_children.size(); ++i) {
         delete_help(list_children.at(i));
