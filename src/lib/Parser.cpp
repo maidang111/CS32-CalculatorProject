@@ -39,7 +39,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     Node* add_number = nullptr;
     bool left_parenthesis = false;
     bool right_parenthesis = false;
-    bool is_operator = false;
+    // bool is_operator = false;
     Token* current_token = nullptr;
     int parenthesis_switch = 0;
     set<string> operator_check = {"+", "-", "*", "/"};
