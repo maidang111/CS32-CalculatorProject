@@ -51,6 +51,11 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     for (unsigned i = 0; i < tokens_list.size()- 1; ++i) {
         // ith token
         current_token = tokens_list.at(i);
+        if (current_token->value == "END") {
+            cout << "Unexpected token at line " << current_token->row << " column " << current_token->column 
+                << ": " << "END" << endl;
+            exit(2);
+        }
         // checking if it is "("
         // if it is true, the next value would be child of current node
         if (current_token->value == "(") {
