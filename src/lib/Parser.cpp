@@ -72,11 +72,13 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 if (left || num_left_parenthesis == 0) {
                     print_error_2(tokens_list.at(i));
                 }
+                if (i == token_list.size() - 1) {
+                    continue;
+                }
                 create_number = new Number(curr_node, tokens_list.at(i));
                 curr_node->add_child(create_number);
             }
         }
-
     }
 }
 
