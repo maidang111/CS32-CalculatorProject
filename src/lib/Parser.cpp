@@ -57,9 +57,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     for (unsigned i = 0; i < tokens_list.size()- 1; ++i) {
         // ith token
         current_token = tokens_list.at(i);
-
         // checking if it is "("
-
         // if it is true, the next value would be child of current node
         if (current_token->value == "(") {
             left_parenthesis = true;
@@ -87,6 +85,12 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 operator_mark = add_operator;
             }
             left_parenthesis = false;
+        }
+        // checking for double operator error 
+        if (operator_check.find(current_token->value) != operator_check.end()) {
+            cout << "Unexpected token at line " << current_token->row << " column " 
+                << current_token->column << endl;
+            exit(2);
         }
         // if the last token was ), return to the parent node
         if (right_parenthesis) {
