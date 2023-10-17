@@ -66,11 +66,16 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             parenthesis_switch += 1;
             continue;
         } 
-        // if last Token one was (, add the value as mark_token's child
-        if (left_parenthesis) {
-            if (current_token->value == "(") {
+        else if (current_token->value == ")") {
+            right_parenthesis = true;
+            parenthesis_switch -= 1;
+            if (parenthesis_switch < 0 || left_parenthesis) {
                 print_error_2(current_token);
             }
+            continue;
+        }
+        // if last Token one was (, add the value as mark_token's child
+        if (left_parenthesis) {
             // checking if it is not a number
             // after (, there always should be operator, no parenthesis and no number
             if (operator_check.find((tokens_list.at(i))->value) == operator_check.end()) {
@@ -102,14 +107,6 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             continue;
         }        
         // if ), finished with the current )
-        if (current_token->value == ")") {
-            right_parenthesis = true;
-            parenthesis_switch -= 1;
-            if (parenthesis_switch < 0 || left_parenthesis) {
-                print_error_2(current_token);
-            }
-            continue;
-        }
         // in the  case of numbers
         else {
             if (parenthesis_switch < 1) {
