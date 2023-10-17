@@ -39,17 +39,19 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         current_token = tokens_list.at(i);
         current_value = current_token->value;
         if (is_operator.find(current_value) != is_operator.end()) {
-            if (i - 1 < 0) {
+            if (i == 0) {
                 print_error_2(current_token);
             }
-            if (tokens_list.at(i - 1) != "(" || i > tokens_list.size() - 2) {
+            if ((tokens_list.at(i - 1))->value != "(" || i > tokens_list.size() - 2) {
                 print_error_2(current_token);
             }
-            new_node = new Operator(curr_node, current_node);
+            new_node = new Operator(curr_node, current_token);
             if (root == nullptr) {
-                root = new_operator;
+                root = new_node;
             }
-            curr_node->add_child(new_node);
+            else {
+                curr_node->add_child(new_node);
+            }
             curr_node = new_node; 
         }
         else if (current_value == ")") {
@@ -63,7 +65,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         else if (current_value == "(" ) {
             if (i != 0) {
-                if (tokens_list.at(i - 1) == "(") {
+                if ((tokens_list.at(i - 1))->value == "(") {
                     print_error_2(current_token);
                 }
             }
