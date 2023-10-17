@@ -95,7 +95,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         if (current_token->value == ")") {
             right_parenthesis = true;
             parenthesis_switch -= 1;
-            if (parenthesis_switch < 0) {
+            if (parenthesis_switch < 0 || left_parenthesis) {
                 print_error_2(current_token);
             }
             continue;
