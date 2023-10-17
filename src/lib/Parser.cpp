@@ -60,7 +60,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         // if last Token one was (, add the value as mark_token's child
         else if (left_parenthesis) {
             if (current_token->value == "(") {
-                print_error_2(current_token.at(i));
+                print_error_2(current_token);
             }
             // checking if it is not a number
             // after (, there always should be operator, no parenthesis and no number
