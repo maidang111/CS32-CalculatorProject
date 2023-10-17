@@ -40,6 +40,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             }
             num_left_parenthesis += 1;
             left = true;
+            last_operator = false;
         }
         else if (tokens_list.at(i)->value == ")") {
             if (left || last_operator) {
@@ -50,6 +51,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 print_error_2(tokens_list.at(i));
             }
             curr_node = curr_node->switch_to_parent();
+            last_operator = true;
         }
         else if (is_operator.find((tokens_list.at(i))->value) != is_operator.end()) {
             // operator token
@@ -65,6 +67,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 curr_node->add_child(create_operator);
             }
             curr_node = create_operator;
+            last_operator = false;
         }
         else {
             // number or END token
@@ -72,12 +75,13 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 if (left || num_left_parenthesis == 0) {
                     print_error_2(tokens_list.at(i));
                 }
-                if (i == token_list.size() - 1) {
-                    continue;
-                }
                 create_number = new Number(curr_node, tokens_list.at(i));
                 curr_node->add_child(create_number);
             }
+            else if (num_left_parenthesis != 0) {
+                print_error_2(tokens_list.at(i));
+            }
+            last_operator = false;
         }
     }
 }
@@ -136,42 +140,38 @@ void Parser::print() const {
     if (!root) {
         return;
     }
-    cout << print_help(root) << endl;
-    cout << calculate() << endl;
+    print_help(root);
+    cout << endl << calculate() << endl;
 }
 
-string Parser::print_help(Node* in_node) const {
+void Parser::print_help(Node* in_node) const {
     if (!in_node->node_type()) {
-        return to_string(in_node->get_number());
+        cout << to_string(in_node->get_number());
     }
 
-    string print_expression;
     string expression;
-    print_expression += "(";
+    cout << "(";
     expression = in_node->check_operator();
 
     vector<Node*>& list_children = in_node->children;
 
     for (unsigned int i = 0; i < list_children.size(); ++i) {
-        print_expression += print_help(list_children.at(i));
+        print_help(list_children.at(i));
         if (i != list_children.size() - 1) {
-            print_expression += ((list_children.at(i))->check_operator());
+            cout << (list_children.at(i))->check_operator();
 
         }
     }
-    print_expression += ")";
-    return print_expression;
+    cout << ")";
 }
 
 Parser::~Parser() {
-
     delete_help(root);
 }
 
 void Parser::delete_help(Node* current_node) {
     if (!current_node->node_type()) {
         delete current_node;
-
         return;
     }
 
