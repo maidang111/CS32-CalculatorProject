@@ -95,32 +95,25 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             left_parenthesis = false;
             continue;
         }
+        else if (right_parenthesis) {
+            operator_mark = operator_mark->switch_to_parent();
+            right_parenthesis = false;
+        }       
         else if (operator_check.find(current_token->value) != operator_check.end()) {
             print_error_2(current_token);
             continue;
-        }
-
-        // if the last token was ), return to the parent node
-        if (right_parenthesis) {
-            operator_mark = operator_mark->switch_to_parent();
-            right_parenthesis = false;
-            continue;
-        }        
+        } 
         // if ), finished with the current )
         // in the  case of numbers
-        else {
-            if (parenthesis_switch < 1) {
-                print_error_2(current_token);          
-            }
-            add_number = new Number(operator_mark,current_token);
-            operator_mark->add_child(add_number);
+        if (parenthesis_switch < 1) {
+            print_error_2(current_token);          
         }
-
+        add_number = new Number(operator_mark,current_token);
+        operator_mark->add_child(add_number);
     }
     if ((tokens_list.at(tokens_list.size() - 2))->value != ")") {
         print_error_2(tokens_list.at(tokens_list.size() - 2));
     }
-
 }
 
 double Parser::calculate() const {
