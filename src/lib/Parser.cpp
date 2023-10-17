@@ -114,7 +114,8 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         print_error_2(tokens_list.at(tokens_list.size() - 2));
     }
     if ((tokens_list.at(tokens_list.size() - 1))->value != "END") {
-        print_error_2(tokens_list.at(tokens_list.size() - 1));
+        cout << "Unexpected token at line " << error_token->row << " column " << error_token->column 
+            << ": END" << endl;
     }
 }
 
