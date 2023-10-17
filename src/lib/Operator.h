@@ -18,6 +18,7 @@ class Operator: public Node {
     string check_operator() const;
     ~Operator();
     double get_number() const;
+    void read_in_tokens(Token* in_token);
 };
 
 #endif

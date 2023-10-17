@@ -22,59 +22,65 @@ void Parser::print_error_2(Token* error_token) const {
 }
 
 void Parser::read_tokens(vector<Token*> tokens_list) {
-    Token* current_token = nullptr;
-    string current_value;
-    set<string> is_operator = {"+", "-", "*", "/"};
-    Node* new_node = root;
-    Node* curr_node = nullptr;
-    
-    current_token = (tokens_list.at(tokens_list.size() - 1));
-    if (current_token->value != "END") {
-        cout << "Unexpected token at line " << current_token->row << " column " << current_token->column << ": "
-            << current_token->value << endl; 
-    }
+    // operator look up
+    set<string> is_operator = { "+", "-", "*", "/"};
+    bool left = false;
+    bool last_operator = false;
+    Node* curr_node = root;
+    int num_left_parenthesis = 0;
+    Node* create_operator = nullptr;
+    Node* create_number = nullptr;
 
+    // read each token and make each of them as a node for AST
     for (unsigned int i = 0; i < tokens_list.size(); ++i) {
-        current_token = tokens_list.at(i);
-        current_value = current_token->value;
-        if (is_operator.find(current_value) != is_operator.end()) {
-            if (i == 0) {
-                print_error_2(current_token);
+        // verify the token type
+        if (tokens_list.at(i)->value == "(") {
+            if (left) {
+                print_error_2(tokens_list.at(i));
             }
-            if ((tokens_list.at(i - 1))->value != "(" || i > tokens_list.size() - 2) {
-                print_error_2(current_token);
-            }
-            new_node = new Operator(curr_node, current_token);
-            if (root == nullptr) {
-                root = new_node;
-            }
-            else {
-                curr_node->add_child(new_node);
-            }
-            curr_node = new_node; 
+            num_left_parenthesis += 1;
+            left = true;
         }
-        else if (current_value == ")") {
-            if (curr_node == nullptr) {
-                print_error_2(current_token);
+        else if (tokens_list.at(i)->value == ")") {
+            if (left || last_operator) {
+                print_error_2(tokens_list.at(i));
             }
-            if ((curr_node->children).size() < 2) {
-                print_error_2(current_token);
+            num_left_parenthesis -= 1;
+            if (num_left_parenthesis + 1 < 1) {
+                print_error_2(tokens_list.at(i));
             }
             curr_node = curr_node->switch_to_parent();
         }
-        else if (current_value == "(" ) {
-            if (i != 0) {
-                if ((tokens_list.at(i - 1))->value == "(") {
-                    print_error_2(current_token);
-                }
+        else if (is_operator.find((tokens_list.at(i))->value) != is_operator.end()) {
+            // operator token
+            if (!left) {
+                print_error_2(tokens_list.at(i));
             }
+            left = false;
+            create_operator = new Operator(curr_node, tokens_list.at(i));
+            if (curr_node == root) {
+                root = create_operator;
+            }
+            else {
+                curr_node->add_child(create_operator);
+            }
+            curr_node = create_operator;
         }
         else {
-            new_node = new Number(curr_node, current_token);
-            curr_node->add_child(new_node);
+            // number or END token
+            if (i < tokens_list.size() - 1) {
+                if (left || num_left_parenthesis == 0) {
+                    print_error_2(tokens_list.at(i));
+                }
+                create_number = new Number(curr_node, tokens_list.at(i));
+                curr_node->add_child(create_number);
+            }
         }
+
     }
 }
+
+
 
 double Parser::calculate() const {
     if (root == nullptr) {
