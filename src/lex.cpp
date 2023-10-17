@@ -11,10 +11,6 @@ int main(){
     lexer.create_tokens();
     lexer.print_tokens();
 
-    Parser parser;
-    parser.read_tokens(lexer.tokens);
-    parser.print();
-
     lexer.delete_tokens();
 
     return 0;

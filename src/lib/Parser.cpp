@@ -34,7 +34,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     }
 
     // checking if it ends with )
-    if (tokens_list.size() > 2) {
+    if (tokens_list.size() > 1) {
         end_token = tokens_list.at(tokens_list.size() - 2);
         if (end_token->value != ")") {
             cout << "Unexpected token at line " << end_token->row << " column " << end_token->column 
