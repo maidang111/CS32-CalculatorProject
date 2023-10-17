@@ -99,9 +99,8 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             operator_mark = operator_mark->switch_to_parent();
             right_parenthesis = false;
         }       
-        else if (operator_check.find(current_token->value) != operator_check.end()) {
+        if (operator_check.find(current_token->value) != operator_check.end()) {
             print_error_2(current_token);
-            continue;
         } 
         // if ), finished with the current )
         // in the  case of numbers
