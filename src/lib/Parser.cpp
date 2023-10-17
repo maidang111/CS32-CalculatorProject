@@ -36,7 +36,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     }
     //ex: Unexpected token at line 1 column 20: END
 
-    Node* operator_mark = nullptr;
+    Node* operator_mark = root;
     Node* add_operator = nullptr;
     Node* add_number = nullptr;
     bool left_parenthesis = false;
@@ -59,6 +59,9 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         // checking if it is "("
         // if it is true, the next value would be child of current node
         if (current_token->value == "(") {
+            if (left_parenthesis || right_parenthesis) {
+                print_error_2(current_token);
+            }
             left_parenthesis = true;
             parenthesis_switch += 1;
             continue;
@@ -94,6 +97,9 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
 
         // if the last token was ), return to the parent node
         if (right_parenthesis) {
+            if (left_parenthesis) {
+                print_error_2(current_token);
+            }
             operator_mark = operator_mark->switch_to_parent();
             right_parenthesis = false;
             continue;
