@@ -17,8 +17,5 @@ int main() {
     parser.print();
 
     lexer.delete_tokens();
-
-
-
     return 0;
 }
