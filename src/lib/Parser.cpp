@@ -81,6 +81,9 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             else if (num_left_parenthesis != 0) {
                 print_error_2(tokens_list.at(i));
             }
+            else {
+                return;
+            }
             last_operator = false;
         }
     }
