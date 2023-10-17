@@ -22,96 +22,56 @@ void Parser::print_error_2(Token* error_token) const {
 }
 
 void Parser::read_tokens(vector<Token*> tokens_list) {
-    // checking if it has end token
-    // check it has correct end sign
-    if (tokens_list.empty()) {
-        return;
-    }
-    Token* end_token = nullptr;
-    end_token = tokens_list.at(tokens_list.size() - 1);
-    if (end_token->value != "END") {
-        cout << "Unexpected token at line " << end_token->row << " column " << end_token->column 
-            << ": " << "END" << endl;
-        exit(2);
-    }
-    //ex: Unexpected token at line 1 column 20: END
-
-    Node* operator_mark = root;
-    Node* add_operator = nullptr;
-    Node* add_number = nullptr;
-    bool left_parenthesis = false;
-    bool right_parenthesis = false;
-    // bool is_operator = false;
     Token* current_token = nullptr;
-    int parenthesis_switch = 0;
-    set<string> operator_check = {"+", "-", "*", "/"};
+    string current_value;
+    set<string> is_operator = {"+", "-", "*", "/"};
+    Node* new_node = root;
+    Node* curr_node = nullptr;
+    double check_double = 0;
 
-    // reading token until last )
-
-    for (unsigned i = 0; i < tokens_list.size()- 1; ++i) {
-        // ith token
-        current_token = tokens_list.at(i);
-        if (current_token->value == "END") {
-            cout << "Unexpected token at line " << current_token->row << " column " << current_token->column 
-                << ": " << "END" << endl;
-            exit(2);
-        }
-        // checking if it is "("
-        // if it is true, the next value would be child of current node
-        if (current_token->value == "(") {
-            if (left_parenthesis) {
-                print_error_2(current_token);
-            }
-            left_parenthesis = true;
-            parenthesis_switch += 1;
-            continue;
-        } 
-        else if (current_token->value == ")") {
-            right_parenthesis = true;
-            parenthesis_switch -= 1;
-            if (parenthesis_switch < 0 || left_parenthesis) {
-                print_error_2(current_token);
-            }
-            continue;
-        }
-        // if last Token one was (, add the value as mark_token's child
-        if (left_parenthesis) {
-            // checking if it is not a number
-            // after (, there always should be operator, no parenthesis and no number
-            if (operator_check.find((tokens_list.at(i))->value) == operator_check.end()) {
-                print_error_2(current_token);
-            }
-            // in the case where root node does not exist
-            if (root == nullptr) {
-                root = new Operator(nullptr, current_token);
-                operator_mark = root;
-            }
-            // otherwise
-            else {
-                add_operator = new Operator(operator_mark, current_token);
-                operator_mark->add_child(add_operator);
-                operator_mark = add_operator;
-            }
-            left_parenthesis = false;
-            continue;
-        }
-        else if (right_parenthesis) {
-            operator_mark = operator_mark->switch_to_parent();
-            right_parenthesis = false;
-        }       
-        if (operator_check.find(current_token->value) != operator_check.end()) {
-            print_error_2(current_token);
-        } 
-        // if ), finished with the current )
-        // in the  case of numbers
-        if (parenthesis_switch < 1) {
-            print_error_2(current_token);          
-        }
-        add_number = new Number(operator_mark,current_token);
-        operator_mark->add_child(add_number);
+    current_token = (tokens_list.at(tokens_list.size() - 1));
+    if (current_token->value != "END") {
+        cout << "Unexpected token at line " << current_token->row << " column " << current_token->column << ": "
+            << current_token->value << endl; 
     }
-    if ((tokens_list.at(tokens_list.size() - 2))->value != ")") {
-        print_error_2(tokens_list.at(tokens_list.size() - 2));
+
+    for (unsigned int i = 0; i < tokens_list.size(); ++i) {
+        current_token = tokens_list.at(i);
+        current_value = current_token->value;
+        if (is_operator.find(current_value) != is_operator.end()) {
+            if (i - 1 < 0) {
+                print_error_2(current_token);
+            }
+            if (tokens_list.at(i - 1) != "(" || i > tokens_list.size() - 2) {
+                print_error_2(current_token);
+            }
+            new_node = new Operator(curr_node, current_node);
+            if (root == nullptr) {
+                root = new_operator;
+            }
+            curr_node->add_child(new_node);
+            curr_node = new_node; 
+        }
+        else if (current_value == ")") {
+            if (curr_node == nullptr) {
+                print_error_2(current_token);
+            }
+            if ((curr_node->children).size() < 2) {
+                print_error_2(current_token);
+            }
+            curr_node = curr_node->switch_to_parent();
+        }
+        else if (current_value == "(" ) {
+            if (i != 0) {
+                if (tokens_list.at(i - 1) == "(") {
+                    print_error_2(current_token);
+                }
+            }
+        }
+        else {
+            new_node = new Number(curr_node, current_token);
+            curr_node->add_child(new_node);
+        }
     }
 }
 
