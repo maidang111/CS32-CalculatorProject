@@ -21,98 +21,78 @@ void Parser::print_error_2(Token* error_token) const {
 
 
 void Parser::read_tokens(vector<Token*> tokens_list) {
-    if (tokens_list.size() == 1) {
-        return;
-    }
+    string val;
+    set<string> operators = { "+", "-" , "*", "/"};
+    Node* curr = nullptr;
+    Node* create = nullptr;
+    bool num_single = false; 
+    int num_parenthesis = 0;
+    bool last_parenthesis = false;
 
-    // operator list
-    set<string> operator_list = {"+", "-", "*", "/"};
-    bool last_left_parenthesis = false;
-    int number_parenthesis = 0;
-    bool only_number = false;
-    Node* curr_node = root;
-    Node* new_node = nullptr;
-    // bool is_operator = false;
-    bool is_zero = false;
-    int num_operator = 0;
-
-    // go through the vector and convert them into AST
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
-        // first case
-        // not operator, so number
-        if ((tokens_list.at(i))->value == "(") {
-            // parenthesis 
-            number_parenthesis += 1;
-            //in case of (number)
-            last_left_parenthesis = true;
-            if (only_number || is_zero) {
-                print_error_2(tokens_list.at(i));
-            }
-
-        } 
-        else if ((tokens_list.at(i))->value == ")") {
-            if (number_parenthesis <= 0) {
-                print_error_2(tokens_list.at(i));
-            }
-            if (only_number) {
-                only_number = false;
-            }
-
-            // case * 1 or *
-            if ((curr_node->children).size() >= 2) {
-                num_operator -= 1;
-            }
-            if (num_operator < 0) {
-                print_error_2(tokens_list.at(i));
-            }
-            last_left_parenthesis = false;
-            number_parenthesis -= 1;
-            if (number_parenthesis == 0) {
-                is_zero = true;
-            }
+        if (num_parenthesis < 0) {
+            print_error_2(tokens_list.at(i));
         }
-        else if ((tokens_list.at(i))->value == "END") {
-            if (number_parenthesis != 0) {
+        val = (tokens_list.at(i))->value;
+        if (val == "END") {
+            if (num_parenthesis != 0) {
                 print_error_2(tokens_list.at(i));
             }
             return;
         }
-        // oeprator
-        else if (operator_list.find(((tokens_list.at(i))->value)) != operator_list.end()) {
-            num_operator += 1;
-            if (only_number || is_zero) {
+        if (operators.find(val) != operators.end()) {
+            if (num_single) {
                 print_error_2(tokens_list.at(i));
             }
-            new_node = new Node(curr_node, tokens_list.at(i), true);
+            if (i != 0) {
+                if ((tokens_list.at(i - 1))->value != "(") {
+                    print_error_2(tokens_list.at(i));
+                }
+            }
+            create = new Node(curr, tokens_list.at(i), true);
             if (!root) {
-                root = new_node;
+                root = create;
+                curr = root;
             }
             else {
-                curr_node->add_child(new_node);
-                curr_node = new_node;
+                curr->add_child(create);
+                curr = create;
             }
-            last_left_parenthesis = false;
-            // in case of (* 1) or (*)
-        } 
-        // number
-        else {
-            if (only_number || is_zero) {
-                print_error_2(tokens_list.at(i));
-            }
-            if (last_left_parenthesis) {
-                only_number = true;
-            }
-            new_node = new Node(curr_node, tokens_list.at(i), false);
-            if (!root) {
-                root = new_node;
-                curr_node = root;
-            }
-            else {
-                curr_node->add_child(new_node);
-            }
-            last_left_parenthesis = false;
         }
+        else if (val == "(") {
+            if (num_single) {
+                print_error_2(tokens_list.at(i));
+            }
+            num_parenthesis += 1;
+            last_parenthesis = true;
 
+        }
+        else if (val == ")") {
+            if (num_single) {
+                num_single = false;
+            }
+            if (last_parenthesis) {
+                print_error_2(tokens_list.at(i));
+            }
+            num_parenthesis -= 1;
+            
+        }
+        else {
+            if (num_single) {
+                print_error_2(tokens_list.at(i));
+            }
+            create = new Node(curr, tokens_list.at(i), false);
+            if (last_parenthesis) {
+                num_single = true;
+            }
+            if (!root) {
+                root = create;
+                curr = root;
+            }
+            else {
+                curr->add_child(create);
+            }
+        }
     }
 }
 
