@@ -33,9 +33,14 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     Node* curr_operator = root;
     Node* new_node = nullptr;
     bool is_operator = false;
+    bool is_zero = false;
 
     // go through the vector and convert them into AST
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
+        if (!is_zero && i != tokens_list.size() - 1){
+            print_error_2(tokens_list.at(i));
+        }
+
         // in the case of ( or ) or END, it does not create node 
         // in the case of (, previous token cannot be (
         if ((tokens_list.at(i))->value == "(") {
@@ -62,6 +67,9 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 only_number = false;
             }
             number_of_left_parenthesis -= 1;
+            if (number_of_left_parenthesis <= 0) {
+                is_zero = true;
+            }
             if (number_of_left_parenthesis < 1) {
                 print_error_2(tokens_list.at(i));
             }
