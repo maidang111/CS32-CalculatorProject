@@ -21,6 +21,9 @@ void Parser::print_error_2(Token* error_token) const {
 
 
 void Parser::read_tokens(vector<Token*> tokens_list) {
+    if (tokens_list.size() == 1) {
+        print_error_2(tokens_list.at(0));
+    }
     string val;
     set<string> operators = { "+", "-" , "*", "/"};
     // Node* curr = nullptr;
