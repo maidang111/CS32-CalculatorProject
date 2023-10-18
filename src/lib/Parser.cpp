@@ -93,7 +93,6 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             }
             last_left_parenthesis = false;
             // in case of (* 1) or (*)
-            is_operator = true;
         } 
         // number
         else {
