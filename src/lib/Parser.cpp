@@ -161,6 +161,9 @@ Parser::~Parser() {
 }
 
 void Parser::delete_help(Node* current_node) {
+    if (!current_node) {
+        return;
+    }
     // delete the node if the node is number
     if (!current_node->node_type()) {
         delete current_node;
