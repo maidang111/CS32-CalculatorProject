@@ -177,9 +177,7 @@ void Parser::print() const {
         return;
     }
     print_help(root, false);
-    if  (root->node_type()) {
-        cout << calculate();
-    }
+    cout << calculate();
     cout << endl;
 }
 
