@@ -178,8 +178,9 @@ void Parser::print() const {
     }
     print_help(root, false);
     if  (root->node_type()) {
-        cout << calculate() << endl;
+        cout << calculate();
     }
+    cout << endl;
 }
 
 void Parser::print_help(Node* in_node, bool parenthesis) const {
