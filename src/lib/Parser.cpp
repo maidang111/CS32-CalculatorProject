@@ -27,107 +27,42 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
 
     // operator list
     set<string> operator_list = {"+", "-", "*", "/"};
-    bool last_left_parenthesis = false;
-    int number_of_left_parenthesis = 0;
-    bool only_number = false;
-    Node* curr_operator = root;
+    // bool last_left_parenthesis = false;
+    // int number_of_left_parenthesis = 0;
+    // bool only_number = false;
+    Node* curr_node = root;
     Node* new_node = nullptr;
-    bool is_operator = false;
-    bool is_zero = false;
+    // bool is_operator = false;
+    // bool is_zero = false;
 
     // go through the vector and convert them into AST
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
-        if (!is_zero && i != tokens_list.size() - 1){
-            print_error_2(tokens_list.at(i));
-        }
-
-        // in the case of ( or ) or END, it does not create node 
-        // in the case of (, previous token cannot be (
+        // first case
+        // not operator, so number
         if ((tokens_list.at(i))->value == "(") {
-            if (last_left_parenthesis || only_number) {
-                print_error_2(tokens_list.at(i));
-            }
-            last_left_parenthesis = true;
-            number_of_left_parenthesis += 1;
-            is_operator = false;
-        }
-        // if the last token was (, error 
-        else if ((tokens_list.at(i))->value == ")"){
-            if (last_left_parenthesis) {
-                print_error_2(tokens_list.at(i));
-            }
-            if (!only_number) {
-                if ((curr_operator->children).size() >= 2) {
-                    print_error_2(tokens_list.at(i));
-                }
-                // move operator to its parent node
-                curr_operator = curr_operator->switch_to_parent();
-            }
-            else {
-                only_number = false;
-            }
-            number_of_left_parenthesis -= 1;
-            if (number_of_left_parenthesis <= 0) {
-                is_zero = true;
-            }
-            if (number_of_left_parenthesis < 1) {
-                print_error_2(tokens_list.at(i));
-            }
-            last_left_parenthesis = false;
-            is_operator = false;
+
+        } 
+        else if ((tokens_list.at(i))->value == ")") {
+
         }
         else if ((tokens_list.at(i))->value == "END") {
-            if (number_of_left_parenthesis != 0 || is_operator) {
-                print_error_2(tokens_list.at(i));
-            }
             return;
         }
-        // in case of operator and number token it create node
+        else if (operator_list.find(((tokens_list.at(i))->value)) != operator_list.end()) {
+
+        } 
         else {
-            if (number_of_left_parenthesis < 0) {
-                print_error_2(tokens_list.at(i));
+            if (!root) {
+                new_node = new Node(nullptr, tokens_list.at(i), false);
+                curr_node = new_node;
+                root = curr_node;
             }
-            if (only_number) {
-                print_error_2(tokens_list.at(i));
-            }
-            // in case of the operator 
-            // create the node with the child node
-            if (operator_list.find(tokens_list.at(i)->value) != operator_list.end()) {
-                if (is_operator) {
-                    print_error_2(tokens_list.at(i));
-                }
-                new_node = new Node(curr_operator, tokens_list.at(i), true);
-                if (!root) {
-                    root = new_node;
-                }
-                else {
-                    curr_operator->add_child(new_node);
-
-                }
-                curr_operator = new_node;
-                is_operator = true;
-            }
-            // in case of number
-            // just add new node as the child of the pointer
             else {
-                is_operator = false;
-                if (last_left_parenthesis) {
-                    only_number = true;
-                }
-                new_node = new Node(curr_operator, tokens_list.at(i), false);
-                if (!root) {
-                    root = new_node;
-                    curr_operator = new_node; 
-                }
-                else {
-                    curr_operator->add_child(new_node);
-                }
 
             }
-            last_left_parenthesis = false; 
         }
+
     }
-    
 }
 
 
