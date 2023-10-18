@@ -177,6 +177,7 @@ void Parser::print() const {
         return;
     }
     print_help(root, false);
+    cout << endl;
     cout << calculate();
     cout << endl;
 }
