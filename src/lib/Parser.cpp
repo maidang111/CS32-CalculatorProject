@@ -6,6 +6,7 @@
 #include <string>
 #include <set>
 #include <cstdlib>
+#include <stack>
 
 using namespace std;
 
@@ -21,55 +22,51 @@ void Parser::print_error_2(Token* error_token) const {
 
 
 void Parser::read_tokens(vector<Token*> tokens_list) {
+    // no expression
     if (tokens_list.size() == 1) {
         print_error_2(tokens_list.at(0));
     }
     string val;
-    set<string> operators = { "+", "-" , "*", "/"};
+    // set<string> operators = { "+", "-" , "*", "/"};
+    stack<string> parenthesis;
     // Node* curr = nullptr;
     // Node* create = nullptr;
-    bool num_single = false; 
-    int num_parenthesis = 0;
+    // bool num_single = false; 
+    // int num_parenthesis = 0;
     bool last_parenthesis = false;
     bool first_zero = false;
 
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
         val = tokens_list.at(i)->value;
-        if (first_zero && val != "END") {
+        if (val == "END") {
+            if (!parenthesis.empty()) {
+                print_error_2(tokens_list.at(i));
+            }
+            else {
+                return;
+            }
+        }
+        else if (first_zero) {
             print_error_2(tokens_list.at(i));
         }
-        else if (val == "END") {
-            return;
-        }
         if (val == "(") {
-            num_parenthesis += 1;
+            parenthesis.push(val);
             last_parenthesis = true;
         }
         else if (val == ")") {
-            num_parenthesis -= 1;
-            if (num_parenthesis < 0) {
+            if (parenthesis.empty() || last_parenthesis) {
                 print_error_2(tokens_list.at(i));
             }
-            if (num_parenthesis == 0) {
-                first_zero = true;
-            }
-            if (num_single) {
-                num_single = false;
+            else {
+                parenthesis.pop();
             }
             last_parenthesis = false;
-        }
-        else if (operators.find(val) != operators.end()){
+            if (parenthesis.empty()) {
+                first_zero = true;
+            }
         }
         else {
-            if (last_parenthesis) {
-                last_parenthesis = false;
-                num_single = true;
-                continue;
-            }
-            if (num_single) {
-                print_error_2(tokens_list.at(i));
-            }
-
+            last_parenthesis = false;
         }
     }
 }
