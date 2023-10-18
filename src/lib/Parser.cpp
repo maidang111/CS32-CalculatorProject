@@ -21,6 +21,10 @@ void Parser::print_error_2(Token* error_token) const {
 
 
 void Parser::read_tokens(vector<Token*> tokens_list) {
+    if (tokens_list.size() == 1) {
+        return;
+    }
+
     // operator list
     set<string> operator_list = {"+", "-", "*", "/"};
     bool last_left_parenthesis = false;
