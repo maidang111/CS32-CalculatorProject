@@ -109,7 +109,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 curr_node = root;
             }
             else {
-                curr_node->add_child();
+                curr_node->add_child(new_node);
             }
             last_left_parenthesis = false;
         }
