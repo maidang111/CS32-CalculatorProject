@@ -32,7 +32,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     bool only_number = false;
     Node* curr_node = root;
     Node* new_node = nullptr;
-    bool is_operator = false;
+    // bool is_operator = false;
     bool is_zero = false;
     int num_operator = 0;
 
