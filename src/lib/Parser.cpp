@@ -23,75 +23,50 @@ void Parser::print_error_2(Token* error_token) const {
 void Parser::read_tokens(vector<Token*> tokens_list) {
     string val;
     set<string> operators = { "+", "-" , "*", "/"};
-    Node* curr = nullptr;
-    Node* create = nullptr;
+    // Node* curr = nullptr;
+    // Node* create = nullptr;
     bool num_single = false; 
     int num_parenthesis = 0;
     bool last_parenthesis = false;
+    bool first_zero = false;
 
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
-        if (num_parenthesis < 0) {
+        val = tokens_list.at(i)->value;
+        if (first_zero && val != "END") {
             print_error_2(tokens_list.at(i));
         }
-        val = (tokens_list.at(i))->value;
-        if (val == "END") {
-            if (num_parenthesis != 0) {
-                print_error_2(tokens_list.at(i));
-            }
+        else if (val == "END") {
             return;
         }
-        if (operators.find(val) != operators.end()) {
-            if (num_single) {
-                print_error_2(tokens_list.at(i));
-            }
-            if (i != 0) {
-                if ((tokens_list.at(i - 1))->value != "(") {
-                    print_error_2(tokens_list.at(i));
-                }
-            }
-            create = new Node(curr, tokens_list.at(i), true);
-            if (!root) {
-                root = create;
-                curr = root;
-            }
-            else {
-                curr->add_child(create);
-                curr = create;
-            }
-        }
-        else if (val == "(") {
-            if (num_single) {
-                print_error_2(tokens_list.at(i));
-            }
+        if (val == "(") {
             num_parenthesis += 1;
             last_parenthesis = true;
-
         }
         else if (val == ")") {
+            num_parenthesis -= 1;
+            if (num_parenthesis < 0) {
+                print_error_2(tokens_list.at(i));
+            }
+            if (num_parenthesis == 0) {
+                first_zero = true;
+            }
             if (num_single) {
                 num_single = false;
             }
-            if (last_parenthesis) {
-                print_error_2(tokens_list.at(i));
-            }
-            num_parenthesis -= 1;
-            
+            last_parenthesis = false;
+        }
+        else if (operators.find(val) != operators.end()){
         }
         else {
+            if (last_parenthesis) {
+                last_parenthesis = false;
+                num_single = true;
+                continue;
+            }
             if (num_single) {
                 print_error_2(tokens_list.at(i));
             }
-            create = new Node(curr, tokens_list.at(i), false);
-            if (last_parenthesis) {
-                num_single = true;
-            }
-            if (!root) {
-                root = create;
-                curr = root;
-            }
-            else {
-                curr->add_child(create);
-            }
+
         }
     }
 }
