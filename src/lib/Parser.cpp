@@ -176,29 +176,35 @@ void Parser::print() const {
     if (!root) {
         return;
     }
-    print_help(root);
-    cout << endl << calculate() << endl;
+    print_help(root, false);
+    if  (root->node_type()) {
+        cout << calculate() << endl;
+    }
 }
 
-void Parser::print_help(Node* in_node) const {
+void Parser::print_help(Node* in_node, bool parenthesis) const {
     if (!in_node->node_type()) {
         cout << in_node->get_number();
+        return;
     }
-
     string expression;
-    cout << "(";
+    if (parenthesis) {
+        cout << "(";
+    }
     expression = in_node->return_operator();
 
     vector<Node*>& list_children = in_node->children;
 
     for (unsigned int i = 0; i < list_children.size(); ++i) {
-        print_help(list_children.at(i));
+        print_help(list_children.at(i), true);
         if (i != list_children.size() - 1) {
             cout << (list_children.at(i))->return_operator();
 
         }
     }
-    cout << ")";
+    if (parenthesis) {
+        cout << ")";
+    }
 }
 
 Parser::~Parser() {
