@@ -1,6 +1,6 @@
 CC=g++ -std=c++17
 CFLAGS= -Wall -Wextra -Werror
-OBJS =src/lex.o src/parse.o src/lib/AST.o src/lib/Lexer.o src/lib/Number.o src/lib/Node.o src/lib/Operator.o src/lib/Parser.o
+OBJS =src/lex.o src/parse.o src/lib/AST.o src/lib/Lexer.o src/lib/Node.o src/lib/Parser.o
 MAIN= lex
 
 all: $(MAIN)

@@ -1,8 +1,6 @@
 #include "Parser.h"
 #include "AST.h"
 #include "Node.h"
-#include "Operator.h"
-#include "Number.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -21,81 +19,103 @@ void Parser::print_error_2(Token* error_token) const {
     exit(2);
 }
 
-void Parser::read_tokens(vector<Token*> tokens_list) {
-    // operator look up
-    set<string> is_operator = { "+", "-", "*", "/"};
-    bool left = false;
-    bool last_operator = false;
-    Node* curr_node = root;
-    int num_left_parenthesis = 0;
-    Node* create_operator = nullptr;
-    Node* create_number = nullptr;
-    bool is_zero = false;
 
-    // read each token and make each of them as a node for AST
-    for (unsigned int i = 0; i < tokens_list.size(); ++i) {
-        // verify the token type
-        if (is_zero && i != tokens_list.size() - 1) {
-            print_error_2(tokens_list.at(i));
-        }
-        if (tokens_list.at(i)->value == "(") {
-            if (left || i == tokens_list.size() - 2) {
+void Parser::read_tokens(vector<Token*> tokens_list) {
+    // operator list
+    set<string> operator_list = {"+", "-", "*", "/"};
+    bool last_left_parenthesis = false;
+    int number_of_left_parenthesis = 0;
+    bool only_number = false;
+    Node* curr_operator = root;
+    Node* new_node = nullptr;
+    bool is_operator = false;
+
+    // go through the vector and convert them into AST
+    for (unsigned i = 0; i < tokens_list.size(); ++i) {
+        // in the case of ( or ) or END, it does not create node 
+        // in the case of (, previous token cannot be (
+        if ((tokens_list.at(i))->value == "(") {
+            if (last_left_parenthesis || only_number) {
                 print_error_2(tokens_list.at(i));
             }
-            num_left_parenthesis += 1;
-            left = true;
-            last_operator = false;
+            last_left_parenthesis = true;
+            number_of_left_parenthesis += 1;
+            is_operator = false;
         }
-        else if (tokens_list.at(i)->value == ")") {
-            if (left || last_operator) {
+        // if the last token was (, error 
+        else if ((tokens_list.at(i))->value == ")"){
+            if (last_left_parenthesis) {
                 print_error_2(tokens_list.at(i));
             }
-            num_left_parenthesis -= 1;
-            if (num_left_parenthesis == 0) {
-                is_zero = true;
-            }
-            curr_node = curr_node->switch_to_parent();
-            last_operator = true;
-        }
-        else if (is_operator.find((tokens_list.at(i))->value) != is_operator.end()) {
-            // operator token
-            if (!left) {
-                print_error_2(tokens_list.at(i));
-            }
-            left = false;
-            create_operator = new Operator(curr_node, tokens_list.at(i));
-            if (curr_node == root) {
-                root = create_operator;
-            }
-            else {
-                curr_node->add_child(create_operator);
-            }
-            curr_node = create_operator;
-            last_operator = false;
-        }
-        else {
-            // number or END token
-            // number
-            if (i < tokens_list.size() - 1) {
-                create_number = new Number(curr_node, tokens_list.at(i));
-                if (curr_node == nullptr) {
-                    root = create_number;
-                    curr_node = root;
-                }
-                if (!curr_node->node_type()){
-                    delete create_number;
+            if (!only_number) {
+                if ((curr_operator->children).size() >= 2) {
                     print_error_2(tokens_list.at(i));
                 }
-                else {
-                    curr_node->add_child(create_number);
-                }
+                // move operator to its parent node
+                curr_operator = curr_operator->switch_to_parent();
             }
-            else if (num_left_parenthesis != 0) {
+            else {
+                only_number = false;
+            }
+            number_of_left_parenthesis -= 1;
+            if (number_of_left_parenthesis < 1) {
                 print_error_2(tokens_list.at(i));
             }
-            last_operator = false;
+            last_left_parenthesis = false;
+            is_operator = false;
+        }
+        else if ((tokens_list.at(i))->value == "END") {
+            if (number_of_left_parenthesis != 0 || is_operator) {
+                print_error_2(tokens_list.at(i));
+            }
+            return;
+        }
+        // in case of operator and number token it create node
+        else {
+            if (number_of_left_parenthesis < 0) {
+                print_error_2(tokens_list.at(i));
+            }
+            if (only_number) {
+                print_error_2(tokens_list.at(i));
+            }
+            // in case of the operator 
+            // create the node with the child node
+            if (operator_list.find(tokens_list.at(i)->value) != operator_list.end()) {
+                if (is_operator) {
+                    print_error_2(tokens_list.at(i));
+                }
+                new_node = new Node(curr_operator, tokens_list.at(i), true);
+                if (!root) {
+                    root = new_node;
+                }
+                else {
+                    curr_operator->add_child(new_node);
+
+                }
+                curr_operator = new_node;
+                is_operator = true;
+            }
+            // in case of number
+            // just add new node as the child of the pointer
+            else {
+                is_operator = false;
+                if (last_left_parenthesis) {
+                    only_number = true;
+                }
+                new_node = new Node(curr_operator, tokens_list.at(i), false);
+                if (!root) {
+                    root = new_node;
+                    curr_operator = new_node; 
+                }
+                else {
+                    curr_operator->add_child(new_node);
+                }
+
+            }
+            last_left_parenthesis = false; 
         }
     }
+    
 }
 
 
@@ -116,7 +136,7 @@ double Parser::calculate_help(Node* operator_node) const {
 
 
     // go through the children nodes
-    string operator_sign = operator_node->check_operator();
+    string operator_sign = operator_node->return_operator();
     vector<Node*>& list_children = operator_node->children;
     double division_check = 0;
 
@@ -158,19 +178,19 @@ void Parser::print() const {
 
 void Parser::print_help(Node* in_node) const {
     if (!in_node->node_type()) {
-        cout << to_string(in_node->get_number());
+        cout << in_node->get_number();
     }
 
     string expression;
     cout << "(";
-    expression = in_node->check_operator();
+    expression = in_node->return_operator();
 
     vector<Node*>& list_children = in_node->children;
 
     for (unsigned int i = 0; i < list_children.size(); ++i) {
         print_help(list_children.at(i));
         if (i != list_children.size() - 1) {
-            cout << (list_children.at(i))->check_operator();
+            cout << (list_children.at(i))->return_operator();
 
         }
     }

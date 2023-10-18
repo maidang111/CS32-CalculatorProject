@@ -6,20 +6,20 @@
 using namespace std;
 
 class Node {
-    protected:
+    private:
     Node* parent;
     Token* data;
+    bool is_operator;
 
     public:
-    Node();
-    virtual ~Node();
-    virtual bool node_type() const = 0;
+    Node(Node* parent, Token* in_data, bool in_is_operator);
+    ~Node();
+    bool node_type() const;
     void add_child(Node* child_node);
     Node* switch_to_parent() const;
-    virtual double get_number() const = 0;
-    virtual string check_operator() const = 0;
+    double get_number() const;
+    string return_operator() const;
     vector<Node*> children;
-
 };
 
 #endif
