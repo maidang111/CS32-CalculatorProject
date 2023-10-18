@@ -27,39 +27,91 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
 
     // operator list
     set<string> operator_list = {"+", "-", "*", "/"};
-    // bool last_left_parenthesis = false;
-    // int number_of_left_parenthesis = 0;
-    // bool only_number = false;
+    bool last_left_parenthesis = false;
+    int number_parenthesis = 0;
+    bool only_number = false;
     Node* curr_node = root;
     Node* new_node = nullptr;
-    // bool is_operator = false;
-    // bool is_zero = false;
+    bool is_operator = false;
+    bool is_zero = false;
+    int num_operator = 0;
 
     // go through the vector and convert them into AST
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
         // first case
         // not operator, so number
         if ((tokens_list.at(i))->value == "(") {
+            // parenthesis 
+            number_parenthesis += 1;
+            //in case of (number)
+            last_left_parenthesis = true;
+            if (only_number || is_zero) {
+                print_error_2(tokens_list.at(i));
+            }
 
         } 
         else if ((tokens_list.at(i))->value == ")") {
+            if (number_parenthesis <= 0) {
+                print_error_2(tokens_list.at(i));
+            }
+            if (only_number) {
+                only_number = false;
+            }
 
+            // case * 1 or *
+            if ((curr_node->children).size() >= 2) {
+                num_operator -= 1;
+            }
+            if (num_operator < 0) {
+                print_error_2(tokens_list.at(i));
+            }
+            last_left_parenthesis = false;
+            number_parenthesis -= 1;
+            if (number_parenthesis == 0) {
+                is_zero = true;
+            }
         }
         else if ((tokens_list.at(i))->value == "END") {
+            if (number_parenthesis != 0) {
+                print_error_2(tokens_list.at(i));
+            }
             return;
         }
+        // oeprator
         else if (operator_list.find(((tokens_list.at(i))->value)) != operator_list.end()) {
-
-        } 
-        else {
+            num_operator += 1;
+            if (only_number || is_zero) {
+                print_error_2(tokens_list.at(i));
+            }
+            new_node = new Node(curr_node, tokens_list.at(i), true);
             if (!root) {
-                new_node = new Node(nullptr, tokens_list.at(i), false);
-                curr_node = new_node;
-                root = curr_node;
+                root = new_node;
             }
             else {
-
+                curr_node->add_child(new_node);
+                curr_node = new_node;
             }
+            last_left_parenthesis = false;
+            // in case of (* 1) or (*)
+            is_operator = true;
+        } 
+        // number
+        else {
+            if (only_number || is_zero) {
+                print_error_2(tokens_list.at(i));
+            }
+            if (last_left_parenthesis) {
+                only_number = true;
+            }
+            new_node = new Node(curr_node, tokens_list.at(i), false);
+            if (!root) {
+                root = new_node;
+                curr_node = root;
+            }
+            else {
+                curr_node->add_child();
+            }
+            last_left_parenthesis = false;
         }
 
     }
