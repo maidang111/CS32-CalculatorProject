@@ -31,8 +31,8 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     // int num_left_parenthesis = 0; 
     // int num_parenthesis = 0;
     // int num_operator = 0;
-    // Node* curr = nullptr;
-    // Node* create = nullptr;
+    Node* curr = nullptr;
+    Node* create = nullptr;
     bool num_single = false; 
     int num_parenthesis = 0;
     bool last_left = false;
@@ -56,13 +56,20 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 print_error_2(tokens_list.at(i));
             }
             last_left = false;
+            // AST
+            create = new Node(curr, tokens_list.at(i), true);
+            if (!root) {
+                curr = create;
+                root = create;
+            }
+            else {
+                curr->add_child(create);
+                create = curr;
+            }
         }
         else if (val == ")") {
             if (last_left) {
                 print_error_2(tokens_list.at(i));
-            }
-            if (num_single) {
-                num_single = false;
             }
             num_parenthesis -= 1;
             if (num_parenthesis < 0) {
@@ -70,6 +77,18 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             }
             else if (num_parenthesis == 0) {
                 first_zero = true;
+            }
+            // AST check if the operator has two child
+            if (!num_single) {
+                if ((curr->children).size() < 2) {
+                    print_error_2(tokens_list.at(i));
+                }
+                else {
+                    curr = curr->switch_to_parent();
+                }
+            }
+            else {
+                num_single = false;
             }
         }
         else if (val == "(") {
@@ -87,7 +106,14 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 num_single = true;
             }
             last_left = false;
-
+            // AST
+            create = new Node(curr, tokens_list.at(i), false);
+            if (!root) {
+                root = create;
+            }
+            else {
+                curr->add_child(create);
+            }
         }
     }
 }
