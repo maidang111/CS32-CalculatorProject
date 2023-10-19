@@ -136,7 +136,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             if (last_left || i == 0) {
                 num_single = true;
                 if (last_left && tokens_list.at(i + 1)->value != ")") {
-                    // cout << "7" << endl;
+                    cout << "7" << endl;
                     print_error_2(tokens_list.at(i));
                 }
             }
