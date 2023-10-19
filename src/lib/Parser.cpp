@@ -50,7 +50,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         // cout << "check: " << val << endl;
         // cout << i << endl;
         if (first_zero && val != "END") {
-            cout << "first zero" << endl;
+            // cout << "first zero" << endl;
             print_error_2(tokens_list.at(i));
         }
         else if (val == "END") {
