@@ -12,6 +12,7 @@ using namespace std;
 
 Parser::Parser() {
     root = nullptr;
+    first_parenthesis = false;
 }
 
 void Parser::print_error_2(Token* error_token) {
@@ -39,8 +40,8 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     int num_parenthesis = 0;
     bool last_left = false;
     bool first_zero = false;
-    if (tokens_list.at(0)->value != "(") {
-        first_parenthesis = false;
+    if (tokens_list.at(0)->value == "(") {
+        first_parenthesis = true;
     }
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
         val = tokens_list.at(i)->value;
@@ -204,7 +205,7 @@ void Parser::print_help(Node* in_node, bool parenthesis) const {
     for (unsigned int i = 0; i < list_children.size(); ++i) {
         print_help(list_children.at(i), true);
         if (i != list_children.size() - 1) {
-            cout << (list_children.at(i))->return_operator();
+            cout << expression;
 
         }
     }
