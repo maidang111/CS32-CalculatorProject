@@ -41,6 +41,8 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     bool first_zero = false;
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
         val = tokens_list.at(i)->value;
+        // for testing
+        cout << "check: " << val << endl;
         if (first_zero && val != "END") {
             print_error_2(tokens_list.at(i));
         }
@@ -59,6 +61,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             }
             last_left = false;
             // AST
+            // testing
             create = new Node(curr, tokens_list.at(i), true);
             if (!root) {
                 curr = create;
@@ -109,9 +112,11 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             }
             last_left = false;
             // AST
+            // testing
             create = new Node(curr, tokens_list.at(i), false);
             if (!root) {
                 root = create;
+                curr = root;
             }
             else {
                 curr->add_child(create);
@@ -138,22 +143,21 @@ double Parser::calculate_help(Node* operator_node) {
 
 
     // go through the children nodes
-    string operator_sign = operator_node->return_operator();
-    vector<Node*>& list_children = operator_node->children;
-    double division_check = 0;
-
-    double result = 0;
     Node* current_node = nullptr;
-    for (unsigned int i = 0; i < list_children.size(); ++i) {
+    string operator_sign = operator_node->return_operator();
+    double division_check = 0;
+    double first_child = calculate_help((operator_node->children).at(0));
+    vector<Node*>& list_children = operator_node->children;
+    for (unsigned int i = 1; i < list_children.size(); ++i) {
         current_node = list_children.at(i);
         if (operator_sign == "+") {
-            result += calculate_help(current_node);
+            first_child += calculate_help(current_node);
         }
         else if (operator_sign == "-") {
-            result -= calculate_help(current_node);
+            first_child -= calculate_help(current_node);
         }
         else if (operator_sign == "*") {
-            result *= calculate_help(current_node);
+            first_child *= calculate_help(current_node);
         }
         else if (operator_sign == "/") {
             division_check = calculate_help(current_node);
@@ -163,11 +167,11 @@ double Parser::calculate_help(Node* operator_node) {
                 exit(3);
             }
             else {
-                result /= division_check;
+                first_child /= division_check;
             }
         }
     }
-    return result;
+    return first_child;
 }
 
 
