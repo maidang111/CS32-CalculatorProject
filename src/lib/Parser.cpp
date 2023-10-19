@@ -98,7 +98,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                 else {
                     num_operator -= 1;
                     // cout << "Go to parent" << endl;
-                    if (num_operator > 1) {
+                    if (num_operator >= 1) {
                         curr = curr->switch_to_parent();
                     }
                     // cout << "Seg fault for going to parent\n";
