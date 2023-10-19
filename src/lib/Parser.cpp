@@ -182,6 +182,9 @@ double Parser::calculate_help(Node* operator_node) {
     double division_check = 0;
     double first_child = calculate_help((operator_node->children).at(0));
     vector<Node*>& list_children = operator_node->children;
+    if (list_children.size() <= 1) {
+        return first_child;
+    }
     for (unsigned int i = 1; i < list_children.size(); ++i) {
         current_node = list_children.at(i);
         if (operator_sign == "+") {
