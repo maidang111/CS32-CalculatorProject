@@ -45,7 +45,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             print_error_2(tokens_list.at(i));
         }
         else if (val == "END") {
-            if (!first_zero) {
+            if (num_parenthesis != 0) {
                 print_error_2(tokens_list.at(i));
             }
             return;
