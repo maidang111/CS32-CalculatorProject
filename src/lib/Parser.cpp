@@ -205,7 +205,7 @@ void Parser::print_help(Node* in_node, bool parenthesis) const {
     for (unsigned int i = 0; i < list_children.size(); ++i) {
         print_help(list_children.at(i), true);
         if (i != list_children.size() - 1) {
-            cout << " " << expression;
+            cout << " " << expression << " ";
         }
     }
     if (parenthesis) {
