@@ -56,7 +56,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         else if (val == "END") {
             cout << "END" << endl;
             if (num_parenthesis != 0) {
-                cout << "1" << endl;
+                // cout << "1" << endl;
                 print_error_2(tokens_list.at(i));
             }
             return;
@@ -65,11 +65,11 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             operator_list.push(val);
             // cout << "Operator: " << val << endl;
             if (num_single) {
-                cout << "2" << endl;
+                // cout << "2" << endl;
                 print_error_2(tokens_list.at(i));
             }
             if (!last_left) {
-                cout << "3" << endl;
+                // cout << "3" << endl;
                 print_error_2(tokens_list.at(i));
             }
             last_left = false;
@@ -89,12 +89,12 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         else if (val == ")") {
             if (last_left) {
-                cout << "last_left" << endl;
+                // cout << "last_left" << endl;
                 print_error_2(tokens_list.at(i));
             }
             num_parenthesis -= 1;
             if (num_parenthesis < 0) {
-                cout << "num_parenthesis < 0" << endl;                
+                // cout << "num_parenthesis < 0" << endl;                
                 print_error_2(tokens_list.at(i));
             }
             else if (num_parenthesis == 0) {
@@ -122,7 +122,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         else if (val == "(") {
             if (num_single) {
-                cout << "3" << endl;
+                // cout << "3" << endl;
                 print_error_2(tokens_list.at(i));
             }
             last_left = true;
@@ -130,13 +130,13 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         else {
             if (num_single) {
-                cout << "5" << endl;
+                // cout << "5" << endl;
                 print_error_2(tokens_list.at(i));
             }
             if (last_left || i == 0) {
                 num_single = true;
                 if (last_left && tokens_list.at(i + 1)->value != ")") {
-                    cout << "7" << endl;
+                    // cout << "7" << endl;
                     print_error_2(tokens_list.at(i));
                 }
             }
