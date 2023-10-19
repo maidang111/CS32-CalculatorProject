@@ -14,7 +14,7 @@ class Parser {
     public:
     Parser();
     void read_tokens(vector<Token*> tokens_list);
-    void print() const;
+    void print();
     double calculate();
     void print_error_2(Token* error_token);
     ~Parser();

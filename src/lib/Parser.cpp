@@ -171,7 +171,7 @@ double Parser::calculate_help(Node* operator_node) {
 }
 
 
-void Parser::print() const {
+void Parser::print() {
     if (!root) {
         return;
     }
