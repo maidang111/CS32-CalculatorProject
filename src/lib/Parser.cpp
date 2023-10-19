@@ -81,10 +81,12 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         else if (val == ")") {
             if (last_left) {
+                cout << "last_left" << endl;
                 print_error_2(tokens_list.at(i));
             }
             num_parenthesis -= 1;
             if (num_parenthesis < 0) {
+                cout << "num_parenthesis < 0" << endl;
                 print_error_2(tokens_list.at(i));
             }
             else if (num_parenthesis == 0) {
@@ -94,6 +96,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             if (!num_single) {
                 if ((curr->children).size() < 2) {
                     print_error_2(tokens_list.at(i));
+                    cout << "!curr->children.size().at(i)" << endl;
                 }
                 else {
                     num_operator -= 1;
