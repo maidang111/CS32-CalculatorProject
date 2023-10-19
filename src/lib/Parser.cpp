@@ -50,7 +50,6 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         // cout << "check: " << val << endl;
         // cout << i << endl;
         if (first_zero && val != "END") {
-            // cout << "first zero" << endl;
             print_error_2(tokens_list.at(i));
         }
         else if (val == "END") {
@@ -170,9 +169,6 @@ double Parser::calculate() {
 }
 
 double Parser::calculate_help(Node* operator_node) {
-    if (!operator_node) {
-        return;
-    }
     // check if the node is operator, if not, return the value;
     if (!operator_node->node_type()) {
         return operator_node->get_number();
@@ -185,6 +181,14 @@ double Parser::calculate_help(Node* operator_node) {
     double division_check = 0;
     double first_child = calculate_help((operator_node->children).at(0));
     vector<Node*>& list_children = operator_node->children;
+    if (list_children.size() == 1) {
+        if (operator_sign == "+") {
+            return first_child;
+        }
+        else if (operator_sign == "-"){
+            return -1 * first_child;
+        }
+    }
     for (unsigned int i = 1; i < list_children.size(); ++i) {
         current_node = list_children.at(i);
         if (operator_sign == "+") {
