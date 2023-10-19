@@ -28,44 +28,66 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     }
     string val;
     set<string> operators = { "+", "-" , "*", "/"};
-    int num_left_parenthesis = 0; 
-    int num_parenthesis = 0;
-    int num_operator = 0;
+    // int num_left_parenthesis = 0; 
+    // int num_parenthesis = 0;
+    // int num_operator = 0;
     // Node* curr = nullptr;
     // Node* create = nullptr;
-    // bool num_single = false; 
-    // int num_parenthesis = 0;
-    bool last_parenthesis = false;
+    bool num_single = false; 
+    int num_parenthesis = 0;
+    bool last_left = false;
     bool first_zero = false;
-
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
+        val = tokens_list.at(i)->value;
         if (first_zero && val != "END") {
             print_error_2(tokens_list.at(i));
         }
-        val = tokens_list.at(i)->value;
-        if (val == "(") {
-            num_left_parenthesis += 1;
-            num_parenthesis += 1;
-            last_parenthesis = true;
+        else if (val == "END") {
+            if (!first_zero) {
+                print_error_2(tokens_list.at(i));
+            }
+            return;
+        }
+        if (operators.find(val) != operators.end()) {
+            if (num_single) {
+                print_error_2(tokens_list.at(i));
+            }
+            if (!last_left) {
+                print_error_2(tokens_list.at(i));
+            }
+            last_left = false;
         }
         else if (val == ")") {
+            if (last_left) {
+                print_error_2(tokens_list.at(i));
+            }
+            if (num_single) {
+                num_single = false;
+            }
             num_parenthesis -= 1;
-            if (num_parenthesis < 0 || last_parenthesis) {
+            if (num_parenthesis < 0) {
                 print_error_2(tokens_list.at(i));
             }
             else if (num_parenthesis == 0) {
                 first_zero = true;
             }
-            last_parenthesis = false;
         }
-        else if (operators.find(val) != operators.end()) {
-            if (num_operator >= num_left_parenthesis || !last_parenthesis) {
+        else if (val == "(") {
+            if (num_single) {
                 print_error_2(tokens_list.at(i));
-            } 
-            last_parenthesis = false;
+            }
+            last_left = true;
+            num_parenthesis += 1;
         }
         else {
-            last_parenthesis = false;
+            if (num_single) {
+                print_error_2(tokens_list.at(i));
+            }
+            if (last_left || i == 0) {
+                num_single = true;
+            }
+            last_left = false;
+
         }
     }
 }
