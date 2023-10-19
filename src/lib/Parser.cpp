@@ -170,6 +170,9 @@ double Parser::calculate() {
 }
 
 double Parser::calculate_help(Node* operator_node) {
+    if (!operator_node) {
+        return;
+    }
     // check if the node is operator, if not, return the value;
     if (!operator_node->node_type()) {
         return operator_node->get_number();
