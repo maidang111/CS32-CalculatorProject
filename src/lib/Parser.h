@@ -11,6 +11,7 @@ class Parser {
     void print_help(Node* in_node, bool parenthesis) const;
     double calculate_help(Node* operator_node);
     void delete_help(Node* current_node);
+    bool first_parenthesis = false;
     public:
     Parser();
     void read_tokens(vector<Token*> tokens_list);

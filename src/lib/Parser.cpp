@@ -39,6 +39,9 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     int num_parenthesis = 0;
     bool last_left = false;
     bool first_zero = false;
+    if (tokens_list.at(0)->value != "(") {
+        first_parenthesis = false;
+    }
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
         val = tokens_list.at(i)->value;
         // for testing
@@ -179,7 +182,7 @@ void Parser::print() {
     if (!root) {
         return;
     }
-    print_help(root, false);
+    print_help(root, first_parenthesis);
     cout << endl;
     cout << calculate();
     cout << endl;
