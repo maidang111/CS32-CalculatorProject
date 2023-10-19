@@ -27,8 +27,10 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         print_error_2(tokens_list.at(0));
     }
     string val;
-    // set<string> operators = { "+", "-" , "*", "/"};
-    stack<string> parenthesis;
+    set<string> operators = { "+", "-" , "*", "/"};
+    int num_left_parenthesis = 0; 
+    int num_parenthesis = 0;
+    int num_operator = 0;
     // Node* curr = nullptr;
     // Node* create = nullptr;
     // bool num_single = false; 
@@ -37,33 +39,30 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     bool first_zero = false;
 
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
-        val = tokens_list.at(i)->value;
-        if (val == "END") {
-            if (!parenthesis.empty()) {
-                print_error_2(tokens_list.at(i));
-            }
-            else {
-                return;
-            }
-        }
-        else if (first_zero) {
+        if (first_zero && val != "END") {
             print_error_2(tokens_list.at(i));
         }
+        val = tokens_list.at(i)->value;
         if (val == "(") {
-            parenthesis.push(val);
+            num_left_parenthesis += 1;
+            num_parenthesis += 1;
             last_parenthesis = true;
         }
         else if (val == ")") {
-            if (parenthesis.empty() || last_parenthesis) {
+            num_parenthesis -= 1;
+            if (num_parenthesis < 0 || last_parenthesis) {
                 print_error_2(tokens_list.at(i));
             }
-            else {
-                parenthesis.pop();
-            }
-            last_parenthesis = false;
-            if (parenthesis.empty()) {
+            else if (num_parenthesis == 0) {
                 first_zero = true;
             }
+            last_parenthesis = false;
+        }
+        else if (operators.find(val) != operators.end()) {
+            if (num_operator >= num_left_parenthesis || !last_parenthesis) {
+                print_error_2(tokens_list.at(i));
+            } 
+            last_parenthesis = false;
         }
         else {
             last_parenthesis = false;
