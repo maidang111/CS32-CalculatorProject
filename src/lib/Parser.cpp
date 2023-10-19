@@ -103,7 +103,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             // AST check if the operator has two child
             if (!num_single) {
                 if ((curr->children).size() < 2 && operator_list.top() != "/" && operator_list.top() != "*") {
-                    cout << "!curr->children.size().at(i)" << endl;
+                    // cout << "!curr->children.size().at(i)" << endl;
                     print_error_2(tokens_list.at(i));
                 }
                 else {
@@ -122,7 +122,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         else if (val == "(") {
             if (num_single) {
-                cout << "3" << endl;
+                // cout << "3" << endl;
                 print_error_2(tokens_list.at(i));
             }
             last_left = true;
@@ -130,13 +130,13 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
         }
         else {
             if (num_single) {
-                cout << "5" << endl;
+                // cout << "5" << endl;
                 print_error_2(tokens_list.at(i));
             }
             if (last_left || i == 0) {
                 num_single = true;
                 if (last_left && tokens_list.at(i + 1)->value != ")") {
-                    cout << "7" << endl;
+                    // cout << "7" << endl;
                     print_error_2(tokens_list.at(i));
                 }
             }
