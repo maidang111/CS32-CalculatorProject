@@ -8,7 +8,7 @@ using namespace std;
 class Parser {
     private:
     Node* root;
-    void print_help(Node* in_node, bool parenthesis) const;
+    void print_help(Node* in_node, bool parenthesis);
     double calculate_help(Node* operator_node);
     void delete_help(Node* current_node);
     bool first_parenthesis;
