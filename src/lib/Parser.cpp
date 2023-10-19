@@ -33,7 +33,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     set<string> operators = { "+", "-" , "*", "/"};
     // int num_left_parenthesis = 0; 
     // int num_parenthesis = 0;
-    // int num_operator = 0;
+    int num_operator = 0;
     Node* curr = nullptr;
     Node* create = nullptr;
     bool num_single = false; 
@@ -57,6 +57,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             return;
         }
         if (operators.find(val) != operators.end()) {
+            // cout << "Operator: " << val << endl;
             if (num_single) {
                 print_error_2(tokens_list.at(i));
             }
@@ -66,14 +67,16 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             last_left = false;
             // AST
             // testing
+            // cout << "Create Operator " << val << endl;
             create = new Node(curr, tokens_list.at(i), true);
+            num_operator += 1;
             if (!root) {
                 curr = create;
                 root = create;
             }
             else {
                 curr->add_child(create);
-                create = curr;
+                curr = create;
             }
         }
         else if (val == ")") {
@@ -93,7 +96,12 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
                     print_error_2(tokens_list.at(i));
                 }
                 else {
-                    curr = curr->switch_to_parent();
+                    num_operator -= 1;
+                    // cout << "Go to parent" << endl;
+                    if (num_operator > 1) {
+                        curr = curr->switch_to_parent();
+                    }
+                    // cout << "Seg fault for going to parent\n";
                 }
             }
             else {
@@ -120,13 +128,17 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
             last_left = false;
             // AST
             // testing
+            // cout << "Creating number: " << val << endl;
             create = new Node(curr, tokens_list.at(i), false);
             if (!root) {
+                // cout << "1" << endl;
                 root = create;
                 curr = root;
             }
             else {
+                // cout << "2" << endl;
                 curr->add_child(create);
+                // cout << "3" << endl;
             }
         }
     }

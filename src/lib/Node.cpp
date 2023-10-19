@@ -20,6 +20,7 @@ Node* Node::switch_to_parent() const {
 }
 
 void Node::add_child(Node* child_node) {
+    // cout << "connect " << "parent: " << data->value << " to child: " << (child_node->data)->value << endl;
     children.push_back(child_node);
 }
 
