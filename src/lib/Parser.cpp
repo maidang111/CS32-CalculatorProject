@@ -27,7 +27,6 @@ void Parser::print_error_2(Token* error_token) {
 void Parser::read_tokens(vector<Token*> tokens_list) {
     // no expression
     if (tokens_list.size() == 1) {
-        cout << "a" << endl;
         print_error_2(tokens_list.at(0));
     }
     string val;
