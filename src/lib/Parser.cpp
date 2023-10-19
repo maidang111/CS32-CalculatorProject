@@ -42,7 +42,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
     for (unsigned i = 0; i < tokens_list.size(); ++i) {
         val = tokens_list.at(i)->value;
         // for testing
-        cout << "check: " << val << endl;
+        // cout << "check: " << val << endl;
         if (first_zero && val != "END") {
             print_error_2(tokens_list.at(i));
         }
