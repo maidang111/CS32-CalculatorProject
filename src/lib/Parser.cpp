@@ -122,7 +122,7 @@ void Parser::read_tokens(vector<Token*> tokens_list) {
 
 
 
-double Parser::calculate() const {
+double Parser::calculate() {
     if (root == nullptr) {
         return 0;
     }
@@ -130,7 +130,7 @@ double Parser::calculate() const {
     return calculate_help(current_node);
 }
 
-double Parser::calculate_help(Node* operator_node) const {
+double Parser::calculate_help(Node* operator_node) {
     // check if the node is operator, if not, return the value;
     if (!operator_node->node_type()) {
         return operator_node->get_number();
@@ -159,6 +159,7 @@ double Parser::calculate_help(Node* operator_node) const {
             division_check = calculate_help(current_node);
             if (i != 0 && division_check == 0) {
                 cout << "Runtime error: division by zero." << endl;
+                delete_help(root);
                 exit(3);
             }
             else {
