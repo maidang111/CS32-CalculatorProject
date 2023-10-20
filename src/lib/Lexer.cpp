@@ -10,9 +10,13 @@
 using namespace std; 
 
 Lexer::Lexer(){
-    this->possible_values = {'(', ')', '+', '-', '*', '/'};
+    this->possible_values = {'(', ')', '+', '-', '*', '/'}; 
+    // possible token values excluding the END
+
     string line = "";
-    while (!cin.eof()){
+    while (!cin.eof()){ 
+        //gets user input and stores it in a vector as a series of strings
+
         getline(cin, line);
         this->whole_input.push_back(line);
     }
@@ -26,10 +30,16 @@ void Lexer::create_tokens(){
     int column = 1;
     int prev_index = 1;
 
-    for(size_t i = 0; i < whole_input.size(); i++){
+    for(size_t i = 0; i < whole_input.size(); i++){ 
+        // looping through each string and it's char from user input
+
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
-            if(possible_values.count(whole_input.at(i).at(j))){
+            if(possible_values.count(whole_input.at(i).at(j))){ 
+                // checks if char is a valid token type
+
                 if(value.length() > 0){
+                    // creates token for a number
+                
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = prev_index;
@@ -38,6 +48,8 @@ void Lexer::create_tokens(){
                     value = "";
                     prev_index = column;
                 }
+                // creates a token for a valid token type that isn't a number
+
                 Token* new_token = new Token();
                 new_token->value = whole_input.at(i).at(j);
                 new_token->column = prev_index;
@@ -45,18 +57,28 @@ void Lexer::create_tokens(){
                 tokens.push_back(new_token);
                 prev_index = column + 1;
             } else if(isdigit(whole_input.at(i).at(j))){
+                // checking if a char is a number and adding it to a string
+
                 value += whole_input.at(i).at(j);
             } else if(value.length() > 0){
+                // checking if a string storing numbers is empty
+
                 if(whole_input.at(i).at(j) == '.'){
                     value += whole_input.at(i).at(j);
-                    if(count(value.begin(), value.end(), '.') > 1){ // multiple decimals
+                    if(count(value.begin(), value.end(), '.') > 1){ 
+                        // multiple decimals errors out
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         exit(1);
+
                     } else if(j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1))){
+                        // if number ends w/ a decimal
+
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
                         exit(1);
                     }
-                } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){ // ending decimal
+                } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){ 
+                    // if it's a number w/ len 1 followed by a space
+
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = column - 1;
@@ -73,7 +95,9 @@ void Lexer::create_tokens(){
                     value = "";
                     prev_index = column + 1;
                 }
-            } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
+            } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ 
+                // not a possible token
+
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
                 exit(1);
             } 
@@ -82,6 +106,7 @@ void Lexer::create_tokens(){
             }
             column++;
         }
+        // adding last token of a string if any
         if (value.length() > 0){
             Token* new_token = new Token();
             new_token->value = value;
@@ -89,6 +114,7 @@ void Lexer::create_tokens(){
             new_token->row = row;
             tokens.push_back(new_token);
         }
+        // adding END token to vector
         if (i == whole_input.size() - 1){
             Token* new_token = new Token();
             new_token->value = "END";
