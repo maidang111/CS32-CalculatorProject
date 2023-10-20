@@ -19,4 +19,27 @@ Some examples of invaild inputs includes:
 
 ### Track B: 
 #### Purpose: 
-  
+The purpose of this tract is to write a parser that takes in the vector of pointers for tokens that lexer already created to print and calculate numerical value. The possible token value includes:
+* Numbers.
+* Operators(/, *, + -)
+* END token
+
+The Parser is a class that contains the following fucntions:
+* Parser() (the constructor without any parameters)
+* Parser.read_tokens() (read in the vector of token pointers and build AST by creating AST nodes for each token)
+* Parser.print_error_2() (print out that there was an error in during parsing, it exit the code immediately)
+* Parser.calculate() (evaluate and calculate the expression)
+* Parser.calculate_help() (helper function for calculate() that calculate the value for AST node recursively)
+* Parser.print() (print out expression and print out the calculated value)
+* Parser.print_help() (helper function for print() that output the AST node value recursively)
+* ~Parser() (desctructor that calls the helper function to delete nodes) 
+* Parser.delete_help() (helper function for destructor that delete the AST node recursively)
+
+Some examples of invalid inputs includes:
+* invalid parenthesis: the number of left parenthesis should always be equal or greater than that of right
+* invalid parenthesis: if the last token was left parenthesis and the current is right parenthesis, it yields error
+* operators should come after left parenthesis
+* no input value
+* division by 0
+* the number of operators should not exceed the number of left parenthesis
+

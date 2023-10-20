@@ -8,14 +8,16 @@ using namespace std;
 class Parser {
     private:
     Node* root;
-    string print_help(Node* in_node) const;
-    double calculate_help(Node* operator_node) const;
+    void print_help(Node* in_node, bool parenthesis);
+    double calculate_help(Node* operator_node);
     void delete_help(Node* current_node);
+    bool first_parenthesis;
     public:
     Parser();
     void read_tokens(vector<Token*> tokens_list);
-    void print() const;
-    double calculate() const;
+    void print();
+    double calculate();
+    void print_error_2(Token* error_token);
     ~Parser();
 
 
