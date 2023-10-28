@@ -6,19 +6,21 @@
 #include <iomanip>
 #include "Lexer.h"
 #include <algorithm>
+#include <cctype>
 
 using namespace std; 
 
 Lexer::Lexer(){
-    this->possible_values = {'(', ')', '+', '-', '*', '/'}; 
-    // possible token values excluding the END
-
+    // change here
+    this->possible_values = {'=', '(', ')', '+', '-', '*', '/'};
     string line = "";
-    while (!cin.eof()){ 
-        //gets user input and stores it in a vector as a series of strings
-
+    num_line = 0;
+    while (!cin.eof()){
+        ++num_line;
         getline(cin, line);
         this->whole_input.push_back(line);
+        // for testing
+        // cout << line << endl;
     }
 }
 
@@ -29,17 +31,13 @@ void Lexer::create_tokens(){
     int row = 1; 
     int column = 1;
     int prev_index = 1;
+    bool variable = false;
+    bool last_digit = false;
 
-    for(size_t i = 0; i < whole_input.size(); i++){ 
-        // looping through each string and it's char from user input
-
+    for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
-            if(possible_values.count(whole_input.at(i).at(j))){ 
-                // checks if char is a valid token type
-
+            if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if(value.length() > 0){
-                    // creates token for a number
-                
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = prev_index;
@@ -48,37 +46,49 @@ void Lexer::create_tokens(){
                     value = "";
                     prev_index = column;
                 }
-                // creates a token for a valid token type that isn't a number
-
                 Token* new_token = new Token();
                 new_token->value = whole_input.at(i).at(j);
                 new_token->column = prev_index;
                 new_token->row = row;
                 tokens.push_back(new_token);
                 prev_index = column + 1;
-            } else if(isdigit(whole_input.at(i).at(j))){
-                // checking if a char is a number and adding it to a string
-
+                last_digit = false;
+                variable = false;
+                // change here for variable 
+            } else if (isalpha(whole_input.at(i).at(j)) || whole_input.at(i).at(j) == '_' || variable) {
+                if (last_digit && !variable) { // variable that starts with number
+                    cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                    exit(1);
+                }
                 value += whole_input.at(i).at(j);
+                variable = true;
+                last_digit = false;
+                if (j + 1 < whole_input.at(i).size()) {
+                    if (whole_input.at(i).at(j + 1) == ' ' || whole_input.at(i).at(j + 1) == '\t') {
+                        variable = false;
+                    }
+                }
+                else if (j + 1 == whole_input.at(i).size()) {
+                    variable = false;
+                }
+            } else if(isdigit(whole_input.at(i).at(j))){
+                value += whole_input.at(i).at(j);
+                last_digit = true;
             } else if(value.length() > 0){
-                // checking if a string storing numbers is empty
-
                 if(whole_input.at(i).at(j) == '.'){
-                    value += whole_input.at(i).at(j);
-                    if(count(value.begin(), value.end(), '.') > 1){ 
-                        // multiple decimals errors out
+                    if (variable) {
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         exit(1);
-
+                    }
+                    value += whole_input.at(i).at(j);
+                    if(count(value.begin(), value.end(), '.') > 1){ // multiple decimals
+                        cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                        exit(1);
                     } else if(j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1))){
-                        // if number ends w/ a decimal
-
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
                         exit(1);
                     }
-                } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){ 
-                    // if it's a number w/ len 1 followed by a space
-
+                } else if(whole_input.at(i).at(j) == ' ' && value.length() == 1){ // ending decimal // ending variable with length 1
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = column - 1;
@@ -86,7 +96,9 @@ void Lexer::create_tokens(){
                     tokens.push_back(new_token);
                     value = "";
                     prev_index = column + 1;
-                } else{
+                    variable = false;
+                    last_digit = false;
+                } else{    // ending variable with more than length 1?
                     Token* new_token = new Token();
                     new_token->value = value;
                     new_token->column = prev_index;
@@ -94,19 +106,20 @@ void Lexer::create_tokens(){
                     tokens.push_back(new_token);
                     value = "";
                     prev_index = column + 1;
+                    variable = false;
+                    last_digit = false;
                 }
-            } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ 
-                // not a possible token
-
+            } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
                 exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
+                variable = false;
+                last_digit = false;
             }
             column++;
         }
-        // adding last token of a string if any
         if (value.length() > 0){
             Token* new_token = new Token();
             new_token->value = value;
@@ -114,7 +127,6 @@ void Lexer::create_tokens(){
             new_token->row = row;
             tokens.push_back(new_token);
         }
-        // adding END token to vector
         if (i == whole_input.size() - 1){
             Token* new_token = new Token();
             new_token->value = "END";
@@ -122,6 +134,8 @@ void Lexer::create_tokens(){
             new_token->row = row;
             tokens.push_back(new_token);
         }
+        last_digit = false;
+        variable = false;
         value = "";
         column = 1;
         prev_index = 1;

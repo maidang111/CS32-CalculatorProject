@@ -1,10 +1,13 @@
 # Scrypt Project CS32
-## Checkpoint 1: 
+## Checkpoint 2: 
 ### Track A: 
 #### Purpose: 
-The purpose of this tract is to write a lexer that takes in text input and turn it into a series of tokens for the parser to uses. The possible token types includes:
+The purpose of this tract is to implement = operator and validate the use of variables during calculation. The edition of Lexer from checkpoint 1 involved recognizing = operator and variables and converting them as tokens. The edition of Parser from checkpoint 2 involved assigning the numerical value to each of variable as well as defining the invalid operation using = operator and variables. 
+
+Lexer 
 * Numbers.
-* / , + , * , ( , ).
+* Variables
+* / , + , * , ( , ), =
 * END token (the end token is created by the create_token() and added at the end of the list of tokens).
 
 The Lexer is a class that contains the following functions:
@@ -15,17 +18,10 @@ The Lexer is a class that contains the following functions:
 
 Some examples of invaild inputs includes: 
 * A number that ends with a decimal, has multiple decimals, or a singular floating decimal.
-* Any character that isn't a possible token type.
-
-### Track B: 
-#### Purpose: 
-The purpose of this tract is to write a parser that takes in the vector of pointers for tokens that lexer already created to print and calculate numerical value. The possible token value includes:
-* Numbers.
-* Operators(/, *, + -)
-* END token
 
 The Parser is a class that contains the following fucntions:
 * Parser() (the constructor without any parameters)
+* Parser.read_all_lines() (read in entire vector of tokens and call read_tokens fucntion when each for each expression, building AST for each of them)
 * Parser.read_tokens() (read in the vector of token pointers and build AST by creating AST nodes for each token)
 * Parser.print_error_2() (print out that there was an error in during parsing, it exit the code immediately)
 * Parser.calculate() (evaluate and calculate the expression)
@@ -36,10 +32,13 @@ The Parser is a class that contains the following fucntions:
 * Parser.delete_help() (helper function for destructor that delete the AST node recursively)
 
 Some examples of invalid inputs includes:
+* after = operator, if first operand is not variable
+* = operator only has one operand
+* in the parenthesis that involve = operator, if double value exist, it should be the last element in that parenthesis. 
+* if the double was not assigned to the variable, the calculation involve that variable except for its assignment with other value causes error
 * invalid parenthesis: the number of left parenthesis should always be equal or greater than that of right
 * invalid parenthesis: if the last token was left parenthesis and the current is right parenthesis, it yields error
 * operators should come after left parenthesis
 * no input value
 * division by 0
 * the number of operators should not exceed the number of left parenthesis
-

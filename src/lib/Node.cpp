@@ -2,10 +2,12 @@
 #include "Node.h"
 using namespace std;
 
-Node::Node(Node* parent, Token* in_data, bool in_is_operator) {
+Node::Node(Node* parent, Token* in_data, bool in_is_operator, bool equality_sign, bool is_variable) {
     this->parent = parent;
     this->data = in_data;
     this->is_operator = in_is_operator;
+    this->equality_sign = equality_sign;
+    this->is_variable = is_variable;
 }
 
 Node::~Node() {
