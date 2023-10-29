@@ -21,8 +21,8 @@ class Lexer{
     ~Lexer();
 
     void print_endtokens();
-    void create_tokens();
     void print_tokens();
+    void create_tokens();
     void delete_tokens();
 };
 

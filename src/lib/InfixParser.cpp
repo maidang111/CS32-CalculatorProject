@@ -11,9 +11,9 @@ using namespace std;
 InfixParser::InfixParser(){
     Lexer lexer; 
     lexer.create_tokens();
-
     this->tokens = lexer.multi_end_tokens;
     this->count = 0;
+    lexer.delete_tokens();
 }
 InfixParser::~InfixParser(){}
 

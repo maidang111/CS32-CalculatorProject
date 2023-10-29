@@ -247,7 +247,7 @@ void Lexer::create_tokens(){
         new_token->raw_value = "END";
         new_token->column = column;
         new_token->row = row;
-        multi_end_tokens.push_back(new_token);
+        tokens.push_back(new_token);
 
         last_digit = false;
         variable = false;
