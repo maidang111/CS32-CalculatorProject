@@ -19,7 +19,7 @@ void Token::print(){
 }
 
 size_t Add::get_value(){
-    return this->value = this->left->value + this->right->value;
+    return this->left->get_value() - this->right->get_value();
 }
 
 void Add::print(){
