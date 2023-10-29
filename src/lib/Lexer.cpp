@@ -243,13 +243,11 @@ void Lexer::create_tokens(){
             multi_end_tokens.push_back(new_token);
         }
         
-        if (multi_end_tokens.size() > 1 && (multi_end_tokens.at(multi_end_tokens.size()-2)->raw_value != "END")){
-            Token* new_token = new Token();
-            new_token->raw_value = "END";
-            new_token->column = column;
-            new_token->row = row;
-            multi_end_tokens.push_back(new_token);
-        }
+        Token* new_token = new Token();
+        new_token->raw_value = "END";
+        new_token->column = column;
+        new_token->row = row;
+        tokens.push_back(new_token);
 
         last_digit = false;
         variable = false;
@@ -284,5 +282,9 @@ void Lexer::print_endtokens(){
 void Lexer::delete_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         delete tokens.at(i);
+    }
+
+    for(size_t i = 0; i < multi_end_tokens.size(); i++){
+        delete multi_end_tokens.at(i);
     }
 }
