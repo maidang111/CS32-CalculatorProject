@@ -11,12 +11,11 @@ class Token{
     string raw_value;
     size_t column;
     size_t row;
-    size_t value;
     Token* left;
     Token* right;
 
     virtual void print();
-    virtual size_t get_value();
+    virtual double get_value();
 
     Token();
     virtual ~Token() = default;
@@ -24,7 +23,7 @@ class Token{
 
 class Add: public Token{
     public:
-    size_t get_value();
+    double get_value();
     void print();
     
     ~Add() = default;
@@ -32,35 +31,35 @@ class Add: public Token{
 
 class Subtract: public Token{
     public:
-    size_t get_value();
+    double get_value();
     void print();
     ~Subtract() = default;
 };
 
 class Multiply: public Token{
     public:
-    size_t get_value();
+    double get_value();
     void print();
     ~Multiply() = default;
 };
 
 class Divide: public Token{
     public:
-    size_t get_value();
+    double get_value();
     void print();
     ~Divide() = default;
 };
 
 class Equal: public Token{
     public:
-    size_t get_value();
+    double get_value();
     void print();
     ~Equal() = default;
 };
 
 class Num: public Token{
     public:
-    size_t get_value();
+    double get_value();
     void print();
     ~Num() = default;
 
@@ -68,7 +67,7 @@ class Num: public Token{
 
 class Variable: public Token{
     public:
-    size_t get_value();
+    double get_value();
     void print();
     ~Variable() = default;
 };

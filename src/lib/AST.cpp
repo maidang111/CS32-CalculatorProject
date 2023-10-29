@@ -7,10 +7,9 @@ Token::Token(){
     this->raw_value = "";
     this->column = -1;
     this->row = -1;
-    this->value = 0;
 };
 
-size_t Token::get_value(){
+double Token::get_value(){
     cout << "token type doesn't have a get value"  << endl;
     return 0;
 }
@@ -18,8 +17,8 @@ void Token::print(){
     cout << "token type doesn't have a get print" << endl;
 }
 
-size_t Add::get_value(){
-    return this->left->get_value() - this->right->get_value();
+double Add::get_value(){
+    return this->left->get_value() + this->right->get_value();
 }
 
 void Add::print(){
@@ -30,7 +29,7 @@ void Add::print(){
     cout << ")";
 } 
 
-size_t Subtract::get_value(){
+double Subtract::get_value(){
     return this->left->get_value() - this->right->get_value();
 }
 void Subtract::print(){
@@ -41,7 +40,7 @@ void Subtract::print(){
     cout << ")";
 } 
 
-size_t Divide::get_value(){
+double Divide::get_value(){
     if ( this->right->get_value() != 0){
         return this->left->get_value() / this->right->get_value();
     } else {
@@ -57,7 +56,7 @@ void Divide::print(){
     cout << ")";
 } 
 
-size_t Multiply::get_value(){
+double Multiply::get_value(){
     return this->left->get_value() * this->right->get_value();
 }
 void Multiply::print(){
@@ -68,21 +67,21 @@ void Multiply::print(){
     cout << ")";
 } 
 
-size_t Num::get_value(){
+double Num::get_value(){
     return stod(this->raw_value);
 }
 void Num::print(){
     cout << this->raw_value;
 }
 
-size_t Variable::get_value(){
+double Variable::get_value(){
     return this->left->get_value() - this->right->get_value();
 }
 void Variable::print(){
     cout << this->raw_value;
 }
 
-size_t Equal::get_value(){
+double Equal::get_value(){
     return this->right->get_value();
 }
 void Equal::print(){
