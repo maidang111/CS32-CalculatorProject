@@ -244,13 +244,13 @@ void Lexer::create_endtokens(){
             new_token->row = row;
             multi_end_tokens.push_back(new_token);
         }
-        if (i == whole_input.size() - 1){
-            Token* new_token = new Token();
-            new_token->raw_value = "END";
-            new_token->column = column;
-            new_token->row = row;
-            multi_end_tokens.push_back(new_token);
-        }
+        
+        Token* new_token = new Token();
+        new_token->raw_value = "END";
+        new_token->column = column;
+        new_token->row = row;
+        multi_end_tokens.push_back(new_token);
+        
         last_digit = false;
         variable = false;
         raw_value = "";
