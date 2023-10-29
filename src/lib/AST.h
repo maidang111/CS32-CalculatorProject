@@ -16,7 +16,7 @@ class Token{
     Token* right;
 
     virtual void print();
-    virtual void get_value();
+    virtual size_t get_value();
 
     Token();
     virtual ~Token() = default;
@@ -24,7 +24,7 @@ class Token{
 
 class Add: public Token{
     public:
-    void get_value();
+    size_t get_value();
     void print();
     
     ~Add() = default;
@@ -32,35 +32,35 @@ class Add: public Token{
 
 class Subtract: public Token{
     public:
-    void get_value();
+    size_t get_value();
     void print();
     ~Subtract() = default;
 };
 
 class Multiply: public Token{
     public:
-    void get_value();
+    size_t get_value();
     void print();
     ~Multiply() = default;
 };
 
 class Divide: public Token{
     public:
-    void get_value();
+    size_t get_value();
     void print();
     ~Divide() = default;
 };
 
 class Equal: public Token{
     public:
-    void get_value();
+    size_t get_value();
     void print();
     ~Equal() = default;
 };
 
 class Num: public Token{
     public:
-    void get_value();
+    size_t get_value();
     void print();
     ~Num() = default;
 
@@ -68,7 +68,7 @@ class Num: public Token{
 
 class Variable: public Token{
     public:
-    void get_value();
+    size_t get_value();
     void print();
     ~Variable() = default;
 };

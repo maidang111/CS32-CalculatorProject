@@ -9,16 +9,18 @@ Token::Token(){
     this->row = -1;
     this->value = 0;
 };
-void Token::get_value(){
+
+size_t Token::get_value(){
     cout << "token type doesn't have a get value"  << endl;
+    return 0;
 }
 void Token::print(){
     cout << "token type doesn't have a get print" << endl;
 }
 
-void Add::get_value(){
-    this->value = this->left->value + this->right->value;
-};
+size_t Add::get_value(){
+    return this->value = this->left->value + this->right->value;
+}
 
 void Add::print(){
     cout << "(";
@@ -28,8 +30,8 @@ void Add::print(){
     cout << ")";
 } 
 
-void Subtract::get_value(){
-    this->value = this->left->value - this->right->value;
+size_t Subtract::get_value(){
+    return this->left->get_value() - this->right->get_value();
 }
 void Subtract::print(){
     cout << "(";
@@ -39,9 +41,9 @@ void Subtract::print(){
     cout << ")";
 } 
 
-void Divide::get_value(){
-    if (this->right->value != 0){
-        this->value = this->left->value / this->right->value;
+size_t Divide::get_value(){
+    if ( this->right->get_value() != 0){
+        return this->left->get_value() / this->right->get_value();
     } else {
         cout << "can't divide by 0" << endl;
         exit(1);
@@ -55,8 +57,8 @@ void Divide::print(){
     cout << ")";
 } 
 
-void Multiply::get_value(){
-    this->value = this->left->value * this->right->value;
+size_t Multiply::get_value(){
+    return this->left->get_value() * this->right->get_value();
 }
 void Multiply::print(){
     cout << "(";
@@ -66,22 +68,22 @@ void Multiply::print(){
     cout << ")";
 } 
 
-void Num::get_value(){
-    this->value = stod(this->raw_value);
+size_t Num::get_value(){
+    return stod(this->raw_value);
 }
 void Num::print(){
     cout << this->raw_value;
 }
 
-void Variable::get_value(){
-    this->value = stod(this->raw_value);
+size_t Variable::get_value(){
+    return this->left->get_value() - this->right->get_value();
 }
 void Variable::print(){
     cout << this->raw_value;
 }
 
-void Equal::get_value(){
-    this->value = this->right->value;
+size_t Equal::get_value(){
+    return this->right->get_value();
 }
 void Equal::print(){
     cout << "(";

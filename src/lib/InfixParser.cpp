@@ -27,6 +27,8 @@ void InfixParser::build_AST(){
             } 
             AST->print();
             cout << endl;
+            cout << AST->get_value();
+            cout << endl;
         } 
     }
 //    AST->get_value();
