@@ -1,11 +1,11 @@
 CC=g++ -std=c++17
 CFLAGS= -Wall -Wextra -Werror
-OBJS =src/lex.o src/parse.o src/lib/AST.o src/lib/Lexer.o src/lib/Node.o src/lib/Parser.o
-MAIN= lex
+OBJS = src/lib/AST.o src/lib/Lexer.o src/calc.o src/lib/InfixParser.o 
+MAIN= calc
 
 all: $(MAIN)
 
-lex: $(OBJS)
+calc: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 %.o: %.cpp

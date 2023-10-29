@@ -6,7 +6,7 @@
 using namespace std;
 
 class Node {
-    private:
+    public:
     Node* parent;
     bool is_operator;
 
@@ -23,6 +23,8 @@ class Node {
     string return_operator() const;
     vector<Node*> children;
 };
+
+
 
 #endif
 

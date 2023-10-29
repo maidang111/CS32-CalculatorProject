@@ -37,7 +37,7 @@ bool Parser::check_double(string s) const {
 
 void Parser::print_error_2(Token* error_token) {
     cout << "Unexpected token at line " << error_token->row << " column " << error_token->column 
-            << ": " << error_token->value << endl;
+            << ": " << error_token->raw_value << endl;
     for (unsigned int i = 0; i < roots.size(); ++i) {
         delete_help(roots.at(i));
     }
@@ -58,14 +58,14 @@ void Parser::read_all_lines(Lexer in_lexer) {
     while (i < whole_tokens.size()) {
         build_AST.clear();
         for (size_t j = i; j < whole_tokens.size(); ++j) {
-            if (whole_tokens.at(j)->value == "(") {
+            if (whole_tokens.at(j)->raw_value == "(") {
                 num_parenthesis += 1;
             }
-            else if (whole_tokens.at(j)->value == ")") {
+            else if (whole_tokens.at(j)->raw_value == ")") {
                 num_parenthesis -= 1;
             }
             build_AST.push_back(whole_tokens.at(j));
-            if ((num_parenthesis == 0 && j != i) || (j == i && check_double(whole_tokens.at(j)->value))) {
+            if ((num_parenthesis == 0 && j != i) || (j == i && check_double(whole_tokens.at(j)->raw_value))) {
                 i = j + 1;
                 break;
             }
@@ -109,7 +109,7 @@ Node* Parser::read_tokens(vector<Token*>& tokens_list, Node* new_root) {
     size_t error_index = 0;
     int m = 0;
 
-    if (tokens_list.at(0)->value == "(") {
+    if (tokens_list.at(0)->raw_value == "(") {
         // cout << "b" << endl;
         first_parenthesis.push_back(true);
     }
@@ -117,7 +117,7 @@ Node* Parser::read_tokens(vector<Token*>& tokens_list, Node* new_root) {
         first_parenthesis.push_back(false);
     }
     for (size_t i = 0; i < tokens_list.size(); ++i) {
-        val = tokens_list.at(i)->value;
+        val = tokens_list.at(i)->raw_value;
         // cout << val << endl;
         // for testing
         // cout << "check: " << val << endl;
@@ -155,7 +155,7 @@ Node* Parser::read_tokens(vector<Token*>& tokens_list, Node* new_root) {
             }
             else {
                 if (i + 1 < tokens_list.size()) {
-                    if (check_double(tokens_list.at(i + 1)->value) || tokens_list.at(i + 1)->value == ")") {
+                    if (check_double(tokens_list.at(i + 1)->raw_value) || tokens_list.at(i + 1)->raw_value == ")") {
                         // cout << "k" << endl;
                             print_error_2(tokens_list.at(i + 1));
                     }
@@ -170,10 +170,10 @@ Node* Parser::read_tokens(vector<Token*>& tokens_list, Node* new_root) {
                 // check error inside of = 
                 m = 0;
                 for (size_t w = begin; w < tokens_list.size(); ++w) {
-                    if (tokens_list.at(w)->value == "(") {
+                    if (tokens_list.at(w)->raw_value == "(") {
                         ++m;
                     }
-                    else if (tokens_list.at(w)->value == ")") {
+                    else if (tokens_list.at(w)->raw_value == ")") {
                         --m;
                     }
                     if (m == -1) {        
@@ -199,7 +199,7 @@ Node* Parser::read_tokens(vector<Token*>& tokens_list, Node* new_root) {
                     if (w == breakpoint.at(begin + 1)) {
                         begin += 1;
                     }
-                    if (operators.find(tokens_list.at(w)->value) != operators.end()) {
+                    if (operators.find(tokens_list.at(w)->raw_value) != operators.end()) {
                         equal_error = true;
                         error_index = breakpoint.at(begin);
                         // change here
@@ -211,7 +211,7 @@ Node* Parser::read_tokens(vector<Token*>& tokens_list, Node* new_root) {
                         print_error_2(tokens_list.at(breakpoint.at(breakpoint.size() - 1)));
                         break;
                     }
-                    else if (check_double(tokens_list.at(w)->value)) {
+                    else if (check_double(tokens_list.at(w)->raw_value)) {
                         equal_error = true;
                         error_index = w;
                         // change here;
@@ -246,7 +246,7 @@ Node* Parser::read_tokens(vector<Token*>& tokens_list, Node* new_root) {
             else if (num_parenthesis == 0) {
                 first_zero = true;
             }
-            if (curr->data->value == "=" && num_parenthesis + 1 == equal_parenthesis) {
+            if (curr->data->raw_value == "=" && num_parenthesis + 1 == equal_parenthesis) {
                 if (curr->children.size() < 2) {
                     print_error_2(tokens_list.at(i));
                 }
@@ -287,12 +287,12 @@ Node* Parser::read_tokens(vector<Token*>& tokens_list, Node* new_root) {
             }
             if (last_left || i == 0) {
                 num_single = true;
-                if (last_left && tokens_list.at(i + 1)->value != ")") {
+                if (last_left && tokens_list.at(i + 1)->raw_value != ")") {
                     // cout << "l" << endl;
                     print_error_2(tokens_list.at(i));
                 }
             }
-            // if (curr->data->value == "=" && single_operand) {
+            // if (curr->data->raw_value == "=" && single_operand) {
             //     single_operand = false;
             // }
             last_left = false;
@@ -351,15 +351,15 @@ double Parser::calculate(Node* root) {
 double Parser::calculate_help(Node* operator_node) {
     // in case of variable
     if (operator_node->is_variable) {
-        if (!known_variables.at(operator_node->data->value)) {
-            cout << "Runtime error: unknown identifier " << operator_node->data->value << endl;
+        if (!known_variables.at(operator_node->data->raw_value)) {
+            cout << "Runtime error: unknown identifier " << operator_node->data->raw_value << endl;
             for (unsigned int i = 0; i < roots.size(); ++i) {
                 delete_help(roots.at(i));
             }
             exit(3);
         }
         else {
-            return variables.at(operator_node->data->value);
+            return variables.at(operator_node->data->raw_value);
         }
     }
     // in case of number
@@ -370,8 +370,8 @@ double Parser::calculate_help(Node* operator_node) {
     if (operator_node->equality_sign) {
         v1 = calculate_help(operator_node->children.at(operator_node->children.size() - 1));
         for (unsigned int i = 0; i + 1 < operator_node->children.size(); ++i) {
-            variables.at(operator_node->children.at(i)->data->value) = v1;
-            known_variables.at(operator_node->children.at(i)->data->value) = true;
+            variables.at(operator_node->children.at(i)->data->raw_value) = v1;
+            known_variables.at(operator_node->children.at(i)->data->raw_value) = true;
         }
         return v1;
     }
@@ -429,7 +429,7 @@ void Parser::print_help(Node* in_node, bool parenthesis) {
         return;
     }
     if (in_node->is_variable) {
-        cout << in_node->data->value;
+        cout << in_node->data->raw_value;
         return;
     }
     else if (!in_node->node_type()) {
