@@ -11,11 +11,13 @@ class Token{
     string raw_value;
     size_t column;
     size_t row;
+    double value;
     Token* left;
     Token* right;
 
     virtual void print();
     virtual double get_value();
+    void deleteToken();
 
     Token();
     virtual ~Token() = default;

@@ -7,7 +7,19 @@ Token::Token(){
     this->raw_value = "";
     this->column = -1;
     this->row = -1;
+    this->value = 0;
+    this->left = nullptr;
+    this->right = nullptr;
 };
+void Token::deleteToken(){
+    if(this->left != nullptr){
+        this->left->deleteToken();
+    }
+    if(this->right != nullptr){
+        this->right->deleteToken();
+    }
+    delete this; 
+}
 
 double Token::get_value(){
     cout << "token type doesn't have a get value"  << endl;
@@ -41,13 +53,14 @@ void Subtract::print(){
 } 
 
 double Divide::get_value(){
-    if ( this->right->get_value() != 0){
+    try{
         return this->left->get_value() / this->right->get_value();
-    } else {
-        cout << "can't divide by 0" << endl;
-        exit(1);
+    } catch (runtime_error){
+        cout << "Runtime error: division by zero." << endl;
+        return 0;
     }
 }
+
 void Divide::print(){
     cout << "(";
     this->left->print();
@@ -82,6 +95,7 @@ void Variable::print(){
 }
 
 double Equal::get_value(){
+    this->left->value = this->right->get_value();
     return this->right->get_value();
 }
 void Equal::print(){
