@@ -9,7 +9,8 @@ class InfixParser{
     public:
     InfixParser();
     ~InfixParser();
-    
+    void delete_tokens();
+
     void build_AST();
     private:
     Token* nextToken;
@@ -21,6 +22,7 @@ class InfixParser{
     vector <Token*> tokens;
 
     void scanToken();
+
     
     // build tree
     // A print function

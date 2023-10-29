@@ -128,3 +128,9 @@ Token* InfixParser::parseFactor(){
         exit(1);
     }
 }
+
+void InfixParser::delete_tokens(){
+    for(size_t i = 0; i < tokens.size(); i++){
+        delete tokens.at(i);
+    }
+}
