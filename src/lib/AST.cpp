@@ -55,7 +55,7 @@ void Subtract::print(){
 double Divide::get_value(){
     try{
         return this->left->get_value() / this->right->get_value();
-    } catch (runtime_error){
+    } catch (runtime_error i){
         cout << "Runtime error: division by zero." << endl;
         return 0;
     }
