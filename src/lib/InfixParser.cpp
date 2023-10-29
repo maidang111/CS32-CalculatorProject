@@ -10,23 +10,23 @@ using namespace std;
 
 InfixParser::InfixParser(){
     Lexer lexer; 
-    lexer.create_tokens();
+    lexer.create_endtokens();
     this->tokens = lexer.multi_end_tokens;
-    this->count = 0;
-    lexer.delete_tokens();
 }
 InfixParser::~InfixParser(){}
 
 void InfixParser::build_AST(){
     while(count != tokens.size()){
         scanToken();
-        AST = parseExpression();
         if (nextToken->raw_value != "END"){
-        cout << "next token isn't END token: " << nextToken->raw_value;
-        exit(1) ;
-        }
-        AST->print();
-        cout << endl;
+            AST = parseExpression();
+            if (nextToken->raw_value != "END"){
+            cout << "next token isn't END token: " << nextToken->raw_value;
+            exit(1) ;
+            } 
+            AST->print();
+            cout << endl;
+        } 
     }
 //    AST->get_value();
 }

@@ -141,13 +141,15 @@ void Lexer::create_tokens(){
         prev_index = 1;
         row++;
     }
+}
 
-    raw_value = "";
-    row = 1; 
-    column = 1;
-    prev_index = 1;
-    variable = false;
-    last_digit = false;
+void Lexer::create_endtokens(){
+    string raw_value = "";
+    int row = 1; 
+    int column = 1;
+    int prev_index = 1;
+    bool variable = false;
+    bool last_digit = false;
 
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
@@ -242,13 +244,13 @@ void Lexer::create_tokens(){
             new_token->row = row;
             multi_end_tokens.push_back(new_token);
         }
-        
-        Token* new_token = new Token();
-        new_token->raw_value = "END";
-        new_token->column = column;
-        new_token->row = row;
-        tokens.push_back(new_token);
-
+        if (i == whole_input.size() - 1){
+            Token* new_token = new Token();
+            new_token->raw_value = "END";
+            new_token->column = column;
+            new_token->row = row;
+            multi_end_tokens.push_back(new_token);
+        }
         last_digit = false;
         variable = false;
         raw_value = "";
@@ -256,11 +258,6 @@ void Lexer::create_tokens(){
         prev_index = 1;
         row++;
     }
-
-    if(multi_end_tokens.at(multi_end_tokens.size() - 1)->value == multi_end_tokens.at(multi_end_tokens.size() - 2)->value){
-        multi_end_tokens.pop_back();
-    }
-
 }
 
 void Lexer::print_tokens(){
@@ -271,19 +268,13 @@ void Lexer::print_tokens(){
     }
 }
 
-void Lexer::print_endtokens(){
-    for(size_t i = 0; i < multi_end_tokens.size(); i++){
-        cout << setw(4) << right << multi_end_tokens.at(i)->row;
-        cout << setw(5) << right << multi_end_tokens.at(i)->column;
-        cout << "  " << multi_end_tokens.at(i)->raw_value << endl;
-    }
-}
-
 void Lexer::delete_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         delete tokens.at(i);
     }
+}
 
+void Lexer::delete_endtokens(){
     for(size_t i = 0; i < multi_end_tokens.size(); i++){
         delete multi_end_tokens.at(i);
     }

@@ -20,10 +20,13 @@ class Lexer{
 
     ~Lexer();
 
-    void print_endtokens();
     void print_tokens();
+    
     void create_tokens();
+    void create_endtokens();
+
     void delete_tokens();
+    void delete_endtokens();
 };
 
 #endif
