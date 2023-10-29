@@ -283,4 +283,8 @@ void Lexer::delete_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         delete tokens.at(i);
     }
+
+    for(size_t i = 0; i < multi_end_tokens.size(); i++){
+        delete multi_end_tokens.at(i);
+    }
 }

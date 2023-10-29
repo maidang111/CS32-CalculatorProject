@@ -23,7 +23,7 @@ void Add::get_value(){
 void Add::print(){
     cout << "(";
     this->left->print();
-    cout << "+";
+    cout << " + ";
     this->right->print();
     cout << ")";
 } 
@@ -34,7 +34,7 @@ void Subtract::get_value(){
 void Subtract::print(){
     cout << "(";
     this->left->print();
-    cout << "-";
+    cout << " - ";
     this->right->print();
     cout << ")";
 } 
@@ -50,7 +50,7 @@ void Divide::get_value(){
 void Divide::print(){
     cout << "(";
     this->left->print();
-    cout << "/";
+    cout << " / ";
     this->right->print();
     cout << ")";
 } 
@@ -61,7 +61,7 @@ void Multiply::get_value(){
 void Multiply::print(){
     cout << "(";
     this->left->print();
-    cout << "*";
+    cout << " * ";
     this->right->print();
     cout << ")";
 } 
@@ -86,7 +86,7 @@ void Equal::get_value(){
 void Equal::print(){
     cout << "(";
     this->left->print();
-    cout << "=";
+    cout << " = ";
     this->right->print();
     cout << ")";
 } 
