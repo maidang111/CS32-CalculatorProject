@@ -29,6 +29,7 @@ void InfixParser::build_AST(){
             cout << endl;
             cout << AST->get_value();
             cout << endl;
+            deleteAST(AST);
         } 
     }
 //    AST->get_value();
@@ -132,5 +133,13 @@ Token* InfixParser::parseFactor(){
 void InfixParser::delete_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         delete tokens.at(i);
+    }
+}
+
+void InfixParser::deleteAST(Token* AST){
+    if (AST->raw_value != ""){
+        deleteAST(AST->left);
+        deleteAST(AST->right);
+        free(AST);
     }
 }

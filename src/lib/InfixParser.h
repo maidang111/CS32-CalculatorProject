@@ -21,6 +21,7 @@ class InfixParser{
     Token* parseTerm();
     vector <Token*> tokens;
 
+    void deleteAST(Token* AST);
     void scanToken();
 
     
