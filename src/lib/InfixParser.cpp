@@ -11,27 +11,30 @@ using namespace std;
 InfixParser::InfixParser(){
     Lexer lexer; 
     lexer.create_tokens();
+    lexer.print_endtokens();
 
-    this->tokens = lexer.tokens;
+    this->tokens = lexer.multi_end_tokens;
     this->count = 0;
 }
 InfixParser::~InfixParser(){}
 
 void InfixParser::build_AST(){
-   scanToken();
-   AST = parseExpression();
-   if (nextToken->raw_value != "END"){
-    cout << "next token isn't END token: " << nextToken->raw_value;
-    exit(1) ;
-   }
-   AST->print();
+    while(count != tokens.size()){
+        scanToken();
+        AST = parseExpression();
+        if (nextToken->raw_value != "END"){
+        cout << "next token isn't END token: " << nextToken->raw_value;
+        exit(1) ;
+        }
+        AST->print();
+        cout << endl;
+    }
 //    AST->get_value();
 }
 
 void InfixParser::scanToken(){
     if (count != tokens.size()){
         this->nextToken = tokens.at(count);
-        cout << this->nextToken->raw_value << endl;;
         count++;
     }
 }

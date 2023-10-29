@@ -16,8 +16,11 @@ class Lexer{
     vector <string> whole_input;
     set <char> possible_values;
     vector <Token*> tokens;
+    vector <Token*> multi_end_tokens;
+
     ~Lexer();
 
+    void print_endtokens();
     void create_tokens();
     void print_tokens();
     void delete_tokens();
