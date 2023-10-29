@@ -13,7 +13,6 @@ int main() {
     Parser parser;
 
     lexer.create_tokens();
-    lexer.delete_tokens();
     parser.read_all_lines(lexer);
     // cout << "Done reading" << endl;
     parser.print();
