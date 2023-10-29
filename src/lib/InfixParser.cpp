@@ -12,6 +12,7 @@ InfixParser::InfixParser(){
     Lexer lexer; 
     lexer.create_endtokens();
     this->tokens = lexer.multi_end_tokens;
+    this->count = 0;
 }
 InfixParser::~InfixParser(){}
 
