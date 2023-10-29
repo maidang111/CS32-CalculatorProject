@@ -53,12 +53,18 @@ void Subtract::print(){
 } 
 
 double Divide::get_value(){
-    try{
+    if ( this->right->get_value() != 0){
         return this->left->get_value() / this->right->get_value();
-    } catch (runtime_error i){
-        cout << "Runtime error: division by zero." << endl;
-        return 0;
+    } else {
+        cout << "can't divide by 0" << endl;
+        exit(1);
     }
+    // try{
+    //     return this->left->get_value() / this->right->get_value();
+    // } catch (runtime_error i){
+    //     cout << "Runtime error: division by zero." << endl;
+    //     return 0;
+    // }
 }
 
 void Divide::print(){
