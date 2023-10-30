@@ -71,6 +71,7 @@ class Variable: public Token{
     public:
     double get_value();
     void print();
+    void deleteToken();
     ~Variable() = default;
 };
 

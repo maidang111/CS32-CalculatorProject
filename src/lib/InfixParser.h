@@ -21,6 +21,8 @@ class InfixParser{
     Token* parseTerm();
     vector <Token*> tokens;
 
+    vector <Token> variables;
+
     void scanToken();
 
     

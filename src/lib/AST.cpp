@@ -94,7 +94,7 @@ void Num::print(){
 }
 
 double Variable::get_value(){
-    return this->left->get_value() - this->right->get_value();
+    return this->value;
 }
 void Variable::print(){
     cout << this->raw_value;
@@ -111,6 +111,5 @@ void Equal::print(){
     this->right->print();
     cout << ")";
 } 
-
 
 
