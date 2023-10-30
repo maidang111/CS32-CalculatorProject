@@ -14,6 +14,7 @@ class Token{
     double value;
     Token* left;
     Token* right;
+    Token* parent;
 
     virtual void print();
     virtual double get_value();

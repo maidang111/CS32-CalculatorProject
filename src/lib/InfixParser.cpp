@@ -90,7 +90,7 @@ Token* InfixParser::parseExpression(){
         } else {
             return term;
         }
-    }
+    } 
 }
 
 Token* InfixParser::parseTerm(){
@@ -154,8 +154,7 @@ Token* InfixParser::parseFactor(){
             return nullptr;
         }
     } else {
-        cout << "Invalid factor " << nextToken->raw_value << endl;
-        exit(1);
+        cout << "Unexpected token at line " << nextToken->row << " column " << nextToken->row << endl;
     }
 }
 

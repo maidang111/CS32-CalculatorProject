@@ -175,7 +175,6 @@ void Lexer::create_endtokens(){
             } else if (isalpha(whole_input.at(i).at(j)) || whole_input.at(i).at(j) == '_' || variable) {
                 if (last_digit && !variable) { // variable that starts with number
                     cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                    exit(1);
                 }
                 raw_value += whole_input.at(i).at(j);
                 variable = true;
