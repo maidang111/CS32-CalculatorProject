@@ -56,10 +56,10 @@ Token* InfixParser::parseEqual(){
             exit(1);
         } else if(nextToken->raw_value == "="){
             scanToken();
-            Token* term1 = parseExpression();
+            Token* equal1 = parseExpression();
             Equal* temp = new Equal;
             temp->left = equal;
-            temp->right = term1;
+            temp->right = equal1;
             equal = temp;
         } else {
             return equal;
