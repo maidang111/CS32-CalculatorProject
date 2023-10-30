@@ -23,6 +23,7 @@ void InfixParser::build_AST(){
             AST = parseEqual();
             if (nextToken->raw_value != "END"){
             cout << "next token isn't END token: " << nextToken->raw_value;
+            exit(1);
             } 
             AST->print();
             cout << endl;
@@ -142,7 +143,7 @@ Token* InfixParser::parseFactor(){
         return variable;
     } else if (nextToken->raw_value == "("){
         scanToken();
-        Token* expression = parseExpression();
+        Token* expression = parseEqual();
         if (expression == nullptr) {
             return nullptr;
         }
