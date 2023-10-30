@@ -118,6 +118,7 @@ Token* InfixParser::parseFactor(){
         Variable* variable2 = new Variable;
         for(size_t i = 0; i < variables.size(); i++){
             if(nextToken->raw_value == variables.at(i)->raw_value){
+                variable->raw_value = variables.at(i)->raw_value;
                 variable->value = variables.at(i)->value;
                 scanToken();
                 return variable;
