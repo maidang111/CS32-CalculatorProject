@@ -10,6 +10,7 @@ class InfixParser{
     InfixParser();
     ~InfixParser();
     void delete_tokens();
+    void delete_variables();
 
     void build_AST();
     private:
@@ -20,8 +21,7 @@ class InfixParser{
     Token* parseFactor();
     Token* parseTerm();
     vector <Token*> tokens;
-
-    vector <Token> variables;
+    vector <Token*> variables;
 
     void scanToken();
 

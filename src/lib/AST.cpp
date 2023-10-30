@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include "AST.h"
 
@@ -14,9 +15,11 @@ Token::Token(){
 void Token::deleteToken(){
     if(this->left != nullptr){
         this->left->deleteToken();
+        this->left = nullptr;
     }
     if(this->right != nullptr){
         this->right->deleteToken();
+        this->right = nullptr;
     }
     delete this; 
 }
@@ -111,5 +114,3 @@ void Equal::print(){
     this->right->print();
     cout << ")";
 } 
-
-

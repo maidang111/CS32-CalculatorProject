@@ -27,7 +27,13 @@ void InfixParser::build_AST(){
             } 
             AST->print();
             cout << endl;
-            cout << AST->get_value();
+            double value = AST->get_value();
+            cout << value;
+            for(size_t i = 0; i < variables.size(); i++){
+                if (variables.at(i)->value == 0.0){
+                    variables.at(i)->value = value;
+                }
+            }
             cout << endl;
             AST->deleteToken();
         } 
@@ -62,13 +68,6 @@ Token* InfixParser::parseExpression(){
             temp->left = term;
             temp->right = term1;
             term = temp;
-        } else if(nextToken->raw_value == "="){
-            scanToken();
-            Token* term1 = parseTerm();
-            Equal* temp = new Equal;
-            temp->left = term;
-            temp->right = term1;
-            term = temp;
         } else {
             return term;
         }
@@ -95,6 +94,13 @@ Token* InfixParser::parseTerm(){
             temp->left = factor;
             temp->right = factor1;
             factor = temp;
+        } else if(nextToken->raw_value == "="){
+            scanToken();
+            Token* factor1 = parseTerm();
+            Equal* temp = new Equal;
+            temp->left = factor;
+            temp->right = factor1;
+            factor = temp;
         } else {
             return factor;
         }
@@ -109,13 +115,16 @@ Token* InfixParser::parseFactor(){
         return num;
     } else if (isalpha(nextToken->raw_value[0])){
         Variable* variable = new Variable;
+        Variable* variable2 = new Variable;
         for(size_t i = 0; i < variables.size(); i++){
-            if(nextToken->raw_value == variables.at(i).raw_value){
-                variable->value = variables.at(i).value;
+            if(nextToken->raw_value == variables.at(i)->raw_value){
+                variable->value = variables.at(i)->value;
                 scanToken();
                 return variable;
             }
         }
+        variables.push_back(variable2);
+        variable2->raw_value = nextToken->raw_value;
         variable->raw_value = nextToken->raw_value;
         scanToken();
         return variable;
@@ -140,5 +149,11 @@ Token* InfixParser::parseFactor(){
 void InfixParser::delete_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         delete tokens.at(i);
+    }
+}
+
+void InfixParser::delete_variables(){
+    for(size_t i = 0; i < variables.size(); i++){
+        delete variables.at(i);
     }
 }
