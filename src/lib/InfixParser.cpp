@@ -155,6 +155,7 @@ Token* InfixParser::parseFactor(){
         }
     } else {
         cout << "Unexpected token at line " << nextToken->row << " column " << nextToken->row << endl;
+        return nullptr;
     }
 }
 
