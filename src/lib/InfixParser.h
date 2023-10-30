@@ -20,6 +20,7 @@ class InfixParser{
     Token* parseExpression();
     Token* parseFactor();
     Token* parseTerm();
+    Token* parseEqual();
     vector <Token*> tokens;
     vector <Token*> variables;
 
