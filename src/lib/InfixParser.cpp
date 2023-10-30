@@ -54,6 +54,13 @@ Token* InfixParser::parseExpression(){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
             exit(1);
+        } else if(nextToken->raw_value == "="){
+            scanToken();
+            Token* term1 = parseTerm();
+            Equal* temp = new Equal;
+            temp->left = term;
+            temp->right = term1;
+            term = temp;
         } else if(nextToken->raw_value == "+"){
             scanToken();
             Token* term1 = parseTerm();
@@ -91,13 +98,6 @@ Token* InfixParser::parseTerm(){
             scanToken();
             Token* factor1 = parseFactor();
             Divide* temp = new Divide;
-            temp->left = factor;
-            temp->right = factor1;
-            factor = temp;
-        } else if(nextToken->raw_value == "="){
-            scanToken();
-            Token* factor1 = parseTerm();
-            Equal* temp = new Equal;
             temp->left = factor;
             temp->right = factor1;
             factor = temp;
