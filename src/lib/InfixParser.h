@@ -25,6 +25,7 @@ class InfixParser{
     vector <Token*> variables;
 
     void scanToken();
+    void prevToken();
 
     
     // build tree

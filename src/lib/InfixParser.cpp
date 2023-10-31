@@ -48,6 +48,13 @@ void InfixParser::scanToken(){
     }
 }
 
+void InfixParser::prevToken(){
+    if (count != 0){
+        count--;
+        this->nextToken = tokens.at(count);
+    }
+}
+
 Token* InfixParser::parseEqual(){
     Token* equal = parseExpression();
     while (true){
@@ -56,7 +63,7 @@ Token* InfixParser::parseEqual(){
             exit(1);
         } else if(nextToken->raw_value == "="){
             scanToken();
-            Token* equal1 = parseExpression();
+            Token* equal1 = parseEqual();
             Equal* temp = new Equal;
             temp->left = equal;
             temp->right = equal1;
