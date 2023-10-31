@@ -27,16 +27,12 @@ void InfixParser::build_AST(){
             } 
             AST->print();
             cout << endl;
-            double value = AST->get_value();
-            cout << value;
-            for(size_t i = 0; i < variables.size(); i++){
-                if (variables.at(i)->value == 0.0){
-                    variables.at(i)->value = value;
-                }
-            }
-            cout << endl;
-            AST->deleteToken();
+            cout << AST->get_value() << endl;
+            ASTheads.push_back(AST);
         } 
+    }
+    for(size_t i = 0; i < ASTheads.size(); i++){
+        ASTheads.at(i)->deleteToken();
     }
 //    AST->get_value();
 }
@@ -67,6 +63,8 @@ Token* InfixParser::parseEqual(){
             Equal* temp = new Equal;
             temp->left = equal;
             temp->right = equal1;
+            temp->left->value = equal1->get_value();   
+            variables.push_back(temp->left);      
             equal = temp;
         } else {
             return equal;
