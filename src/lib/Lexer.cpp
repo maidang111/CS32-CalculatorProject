@@ -58,7 +58,6 @@ void Lexer::create_tokens(){
             } else if (isalpha(whole_input.at(i).at(j)) || whole_input.at(i).at(j) == '_' || variable) {
                 if (last_digit && !variable) { // variable that starts with number
                     cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                    exit(1);
                 }
                 raw_value += whole_input.at(i).at(j);
                 variable = true;
@@ -78,15 +77,12 @@ void Lexer::create_tokens(){
                 if(whole_input.at(i).at(j) == '.'){
                     if (variable) {
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                        exit(1);
                     }
                     raw_value += whole_input.at(i).at(j);
                     if(count(raw_value.begin(), raw_value.end(), '.') > 1){ // multiple decimals
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                        exit(1);
                     } else if(j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1))){
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
-                        exit(1);
                     }
                 } else if(whole_input.at(i).at(j) == ' ' && raw_value.length() == 1){ // ending decimal // ending variable with length 1
                     Token* new_token = new Token();
@@ -111,7 +107,6 @@ void Lexer::create_tokens(){
                 }
             } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
@@ -194,15 +189,12 @@ void Lexer::create_endtokens(){
                 if(whole_input.at(i).at(j) == '.'){
                     if (variable) {
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                        exit(1);
                     }
                     raw_value += whole_input.at(i).at(j);
                     if(count(raw_value.begin(), raw_value.end(), '.') > 1){ // multiple decimals
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                        exit(1);
                     } else if(j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1))){
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
-                        exit(1);
                     }
                 } else if(whole_input.at(i).at(j) == ' ' && raw_value.length() == 1){ // ending decimal // ending variable with length 1
                     Token* new_token = new Token();
@@ -227,7 +219,6 @@ void Lexer::create_endtokens(){
                 }
             } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
