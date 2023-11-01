@@ -149,9 +149,6 @@ Token* InfixParser::parseFactor(){
                 variable->value = variables.at(i)->value;
                 scanToken();
                 return variable;
-            } else {
-                cout << "Runtime error: unknown identifier " << endl;
-                exit(1);
             }
         }
         variable->raw_value = nextToken->raw_value;
