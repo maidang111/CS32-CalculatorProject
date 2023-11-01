@@ -21,9 +21,9 @@ void InfixParser::build_AST(){
         scanToken();
         if (nextToken->raw_value != "END"){
             AST = parseEqual();
-            if (nextToken->raw_value != "END"){
-            cout << "Unexpected token at line " << nextToken->row << " column 1 " << nextToken->raw_value << endl;
-            scanToken();
+            if (nextToken->raw_value != "END" || AST == nullptr){
+                cout << "Unexpected token at line " << nextToken->row << " column 1 " << nextToken->raw_value << endl;
+                scanToken();
             } else {
                 AST->print();
                 cout << endl;
@@ -169,6 +169,7 @@ Token* InfixParser::parseFactor(){
         }
     } else {
         cout << "Unexpected token at line " << nextToken->row << " column 1 " << nextToken->raw_value << endl;
+        AST = nullptr;
         return nullptr;
     }
 }
