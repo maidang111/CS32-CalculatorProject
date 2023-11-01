@@ -8,7 +8,6 @@ Token::Token(){
     this->raw_value = "";
     this->column = -1;
     this->row = -1;
-    this->value = 0;
     this->left = nullptr;
     this->right = nullptr;
 };
@@ -59,15 +58,8 @@ double Divide::get_value(){
     if ( this->right->get_value() != 0){
         return this->left->get_value() / this->right->get_value();
     } else {
-        cout << "can't divide by 0" << endl;
-        exit(1);
+        throw runtime_error(" Runtime error: division by zero.");
     }
-    // try{
-    //     return this->left->get_value() / this->right->get_value();
-    // } catch (runtime_error i){
-    //     cout << "Runtime error: division by zero." << endl;
-    //     return 0;
-    // }
 }
 
 void Divide::print(){
@@ -97,6 +89,9 @@ void Num::print(){
 }
 
 double Variable::get_value(){
+    if(this->value == -10000){
+        throw runtime_error("Runtime error: unknown identifier " + this->raw_value);
+    }
     return this->value;
 }
 void Variable::print(){

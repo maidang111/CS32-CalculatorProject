@@ -23,6 +23,7 @@ class InfixParser{
     Token* parseEqual();
     vector <Token*> tokens;
     vector <Token*> variables;
+    vector <Token*> tempVariables;
     vector <Token*> ASTheads;
 
     void scanToken();
