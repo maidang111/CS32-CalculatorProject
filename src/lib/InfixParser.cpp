@@ -19,10 +19,11 @@ InfixParser::~InfixParser(){}
 void InfixParser::build_AST(){
     while(count != tokens.size()){
         scanToken();
+        is_vaild = true;
         if (nextToken->raw_value != "END"){
             AST = parseEqual();
-            if (nextToken->raw_value != "END" || AST == nullptr){
-                cout << "Unexpected token at line 1" << " column " << nextToken->column << " " << nextToken->raw_value << endl;
+            if (nextToken->raw_value != "END" || is_vaild == false){
+                cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
                 scanToken();
             } else {
                 AST->print();
@@ -57,6 +58,7 @@ Token* InfixParser::parseEqual(){
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
+            is_vaild = false;
             exit(1);
         } else if(nextToken->raw_value == "="){
             scanToken();
@@ -89,6 +91,7 @@ Token* InfixParser::parseExpression(){
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
+            is_vaild = false;
             exit(1);
         } else if(nextToken->raw_value == "+"){
             scanToken();
@@ -115,6 +118,7 @@ Token* InfixParser::parseTerm(){
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
+            is_vaild = false;
             exit(1);
         } else if(nextToken->raw_value == "*"){
             scanToken();
@@ -159,21 +163,21 @@ Token* InfixParser::parseFactor(){
         scanToken();
         Token* expression = parseEqual();
         if (expression == nullptr) {
-            cout << "Unexpected token at line 1" << " column " << nextToken->column << " " << nextToken->raw_value << endl;
-            AST = nullptr;
+            cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+            is_vaild = false;
             return nullptr;
         }
         if(nextToken->raw_value == ")"){
             scanToken();
             return expression;
         } else {
-            cout << "Unexpected token at line 1" << " column " << nextToken->column << " " << nextToken->raw_value << endl;
-            AST = nullptr;
+            cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+            is_vaild = false;
             return nullptr;
         }
     } else {
-            cout << "Unexpected token at line 1" << " column " << nextToken->column << " " << nextToken->raw_value << endl;
-        AST = nullptr;
+            cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+        is_vaild = false;
         return nullptr;
     }
 }
