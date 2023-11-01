@@ -38,6 +38,8 @@ void InfixParser::build_AST(){
     for(size_t i = 0; i < ASTheads.size(); i++){
         ASTheads.at(i)->deleteToken();
     }
+    delete AST;
+    delete nextToken;
 //    AST->get_value();
 }
 
