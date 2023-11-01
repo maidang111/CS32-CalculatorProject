@@ -32,7 +32,10 @@ void Token::print(){
 }
 
 double Add::get_value(){
-    return this->left->get_value() + this->right->get_value();
+    if (this->left != nullptr && this->right != nullptr){
+        return this->left->get_value() + this->right->get_value();
+    }
+    return 0;
 }
 
 void Add::print(){
@@ -46,7 +49,10 @@ void Add::print(){
 } 
 
 double Subtract::get_value(){
-    return this->left->get_value() - this->right->get_value();
+    if (this->left != nullptr && this->right != nullptr){
+        return this->left->get_value() - this->right->get_value();
+    }
+    return 0;
 }
 void Subtract::print(){
     if (this->left != nullptr && this->right != nullptr){
@@ -59,6 +65,9 @@ void Subtract::print(){
 } 
 
 double Divide::get_value(){
+    if (this->left == nullptr || this->right == nullptr){
+        return 0;
+    }
     if ( this->right->get_value() != 0){
         return this->left->get_value() / this->right->get_value();
     } else {
@@ -76,13 +85,33 @@ void Divide::print(){
 } 
 
 double Multiply::get_value(){
-    return this->left->get_value() * this->right->get_value();
+    if (this->left != nullptr && this->right != nullptr){
+        return this->left->get_value() * this->right->get_value();
+    }
+    return 0;
 }
 void Multiply::print(){
     if (this->left != nullptr && this->right != nullptr){
         cout << "(";
         this->left->print();
         cout << " * ";
+        this->right->print();
+        cout << ")";
+    }
+} 
+
+double Equal::get_value(){
+    if (this->left != nullptr && this->right != nullptr){
+        this->left->value = this->right->get_value();
+        return this->right->get_value();
+    }
+    return 0;
+}
+void Equal::print(){
+    if (this->left != nullptr && this->right != nullptr){
+        cout << "(";
+        this->left->print();
+        cout << " = ";
         this->right->print();
         cout << ")";
     }
@@ -101,17 +130,3 @@ double Variable::get_value(){
 void Variable::print(){
     cout << this->raw_value;
 }
-
-double Equal::get_value(){
-    this->left->value = this->right->get_value();
-    return this->right->get_value();
-}
-void Equal::print(){
-    if (this->left != nullptr && this->right != nullptr){
-        cout << "(";
-        this->left->print();
-        cout << " = ";
-        this->right->print();
-        cout << ")";
-    }
-} 
