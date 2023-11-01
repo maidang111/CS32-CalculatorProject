@@ -36,22 +36,26 @@ double Add::get_value(){
 }
 
 void Add::print(){
-    cout << "(";
-    this->left->print();
-    cout << " + ";
-    this->right->print();
-    cout << ")";
+    if (this->left != nullptr && this->right != nullptr){
+        cout << "(";
+        this->left->print();
+        cout << " + ";
+        this->right->print();
+        cout << ")";
+    }
 } 
 
 double Subtract::get_value(){
     return this->left->get_value() - this->right->get_value();
 }
 void Subtract::print(){
-    cout << "(";
-    this->left->print();
-    cout << " - ";
-    this->right->print();
-    cout << ")";
+    if (this->left != nullptr && this->right != nullptr){
+        cout << "(";
+        this->left->print();
+        cout << " - ";
+        this->right->print();
+        cout << ")";
+    }
 } 
 
 double Divide::get_value(){
@@ -61,24 +65,27 @@ double Divide::get_value(){
         throw runtime_error(" Runtime error: division by zero.");
     }
 }
-
 void Divide::print(){
-    cout << "(";
-    this->left->print();
-    cout << " / ";
-    this->right->print();
-    cout << ")";
+    if (this->left != nullptr && this->right != nullptr){
+        cout << "(";
+        this->left->print();
+        cout << " / ";
+        this->right->print();
+        cout << ")";
+    }
 } 
 
 double Multiply::get_value(){
     return this->left->get_value() * this->right->get_value();
 }
 void Multiply::print(){
-    cout << "(";
-    this->left->print();
-    cout << " * ";
-    this->right->print();
-    cout << ")";
+    if (this->left != nullptr && this->right != nullptr){
+        cout << "(";
+        this->left->print();
+        cout << " * ";
+        this->right->print();
+        cout << ")";
+    }
 } 
 
 double Num::get_value(){
@@ -100,9 +107,11 @@ double Equal::get_value(){
     return this->right->get_value();
 }
 void Equal::print(){
-    cout << "(";
-    this->left->print();
-    cout << " = ";
-    this->right->print();
-    cout << ")";
+    if (this->left != nullptr && this->right != nullptr){
+        cout << "(";
+        this->left->print();
+        cout << " = ";
+        this->right->print();
+        cout << ")";
+    }
 } 
