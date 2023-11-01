@@ -15,6 +15,7 @@ class Token{
     Token* left;
     Token* right;
     Token* parent;
+    bool is_operator;
 
     virtual void print();
     virtual double get_value();
@@ -26,6 +27,7 @@ class Token{
 
 class Add: public Token{
     public:
+    bool is_operator = true;
     double get_value();
     void print();
     
@@ -34,6 +36,7 @@ class Add: public Token{
 
 class Subtract: public Token{
     public:
+    bool is_operator = true;
     double get_value();
     void print();
     ~Subtract() = default;
@@ -41,6 +44,7 @@ class Subtract: public Token{
 
 class Multiply: public Token{
     public:
+    bool is_operator = true;
     double get_value();
     void print();
     ~Multiply() = default;
@@ -48,6 +52,7 @@ class Multiply: public Token{
 
 class Divide: public Token{
     public:
+    bool is_operator = true;
     double get_value();
     void print();
     ~Divide() = default;
@@ -55,6 +60,7 @@ class Divide: public Token{
 
 class Equal: public Token{
     public:
+    bool is_operator = true;
     double get_value();
     void print();
     ~Equal() = default;
@@ -62,6 +68,7 @@ class Equal: public Token{
 
 class Num: public Token{
     public:
+    bool is_operator = false;
     double get_value();
     void print();
     ~Num() = default;
@@ -70,6 +77,7 @@ class Num: public Token{
 
 class Variable: public Token{
     public:
+    bool is_operator = false;
     double get_value();
     void print();
     ~Variable() = default;

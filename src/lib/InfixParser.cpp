@@ -171,7 +171,7 @@ Token* InfixParser::parseFactor(){
         return variable;
     } else if (nextToken->raw_value == "("){
         scanToken();
-        if(!isdigit(nextToken->raw_value[0])){
+        if(!isdigit(nextToken->raw_value[0]) && !isalpha(nextToken->raw_value[0])){
             cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
             return nullptr;
         }
