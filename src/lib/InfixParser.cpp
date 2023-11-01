@@ -34,6 +34,7 @@ void InfixParser::build_AST(){
     for(size_t i = 0; i < ASTheads.size(); i++){
         ASTheads.at(i)->deleteToken();
     }
+//    AST->get_value();
 }
 
 void InfixParser::scanToken(){
@@ -148,6 +149,8 @@ Token* InfixParser::parseFactor(){
                 variable->value = variables.at(i)->value;
                 scanToken();
                 return variable;
+            } else {
+                cout << "Runtime error: unknown identifier " << endl;
             }
         }
         variable->raw_value = nextToken->raw_value;
