@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -181,7 +180,8 @@ Token* InfixParser::parseFactor(){
             cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
             is_vaild = false;
             return nullptr;
-        } else if (nextToken->raw_value == ")"){
+        }
+        if(nextToken->raw_value == ")"){
             scanToken();
             return expression;
         } else {
@@ -189,14 +189,6 @@ Token* InfixParser::parseFactor(){
             is_vaild = false;
             return nullptr;
         }
-        // if(nextToken->raw_value == ")"){
-        //     scanToken();
-        //     return expression;
-        // } else {
-        //     cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-        //     is_vaild = false;
-        //     return nullptr;
-        // }
     } else {
         cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
         is_vaild = false;

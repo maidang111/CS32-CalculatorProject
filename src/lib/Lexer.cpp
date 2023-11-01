@@ -232,9 +232,7 @@ void Lexer::create_endtokens(){
                     last_digit = false;
                 }
             } else if(!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))){ // not a possible token
-                cout << "exit here 4";
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
