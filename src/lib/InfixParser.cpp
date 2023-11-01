@@ -25,7 +25,6 @@ void InfixParser::build_AST(){
                 cout << "Unexpected token at line " << nextToken->row << " column 1 " << nextToken->raw_value << endl;
                 scanToken();
             } else {
-                cout << AST->raw_value;
                 AST->print();
                 cout << endl;
                 cout << AST->get_value() << endl;
@@ -55,13 +54,10 @@ void InfixParser::prevToken(){
 
 Token* InfixParser::parseEqual(){
     Token* equal = parseExpression();
-    if (equal == nullptr){
-        return nullptr;
-    }
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
-            return nullptr;
+            exit(1);
         } else if(nextToken->raw_value == "="){
             scanToken();
             Token* equal1 = parseEqual();
@@ -90,13 +86,10 @@ Token* InfixParser::parseEqual(){
 //             }
 Token* InfixParser::parseExpression(){
     Token* term = parseTerm();
-    if (term == nullptr){
-        return nullptr;
-    }
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
-            return nullptr;
+            exit(1);
         } else if(nextToken->raw_value == "+"){
             scanToken();
             Token* term1 = parseTerm();
@@ -119,13 +112,10 @@ Token* InfixParser::parseExpression(){
 
 Token* InfixParser::parseTerm(){
     Token* factor = parseFactor();
-    if (factor == nullptr){
-        return nullptr;
-    }
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
-            return nullptr;
+            exit(1);
         } else if(nextToken->raw_value == "*"){
             scanToken();
             Token* factor1 = parseFactor();
@@ -170,8 +160,8 @@ Token* InfixParser::parseFactor(){
         Token* expression = parseEqual();
         if (expression == nullptr) {
             cout << "Unexpected token at line " << nextToken->row << " column 1 " << nextToken->raw_value << endl;
-            return nullptr;
             AST = nullptr;
+            return nullptr;
         }
         if(nextToken->raw_value == ")"){
             scanToken();
