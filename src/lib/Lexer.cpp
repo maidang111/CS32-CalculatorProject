@@ -261,6 +261,13 @@ void Lexer::create_endtokens(){
     }
 }
 
+void Lexer::print_endtokens(){
+    for(size_t i = 0; i < multi_end_tokens.size(); i++){
+        cout << setw(4) << right << multi_end_tokens.at(i)->row;
+        cout << setw(5) << right << multi_end_tokens.at(i)->column;
+        cout << "  " << multi_end_tokens.at(i)->raw_value << endl;
+    }
+}
 void Lexer::print_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         cout << setw(4) << right << tokens.at(i)->row;
