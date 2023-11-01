@@ -49,6 +49,7 @@ void InfixParser::scanToken(){
 
 Token* InfixParser::parseEqual(){
     if(is_vaild == false){
+        return nullptr;
         return;
     }
     Token* equal = parseExpression();
@@ -85,7 +86,7 @@ Token* InfixParser::parseEqual(){
 //             }
 Token* InfixParser::parseExpression(){
     if(is_vaild == false){
-        return;
+        return nullptr;
     }
     Token* term = parseTerm();
     while (true){
@@ -115,7 +116,7 @@ Token* InfixParser::parseExpression(){
 
 Token* InfixParser::parseTerm(){
     if(is_vaild == false){
-        return;
+        return nullptr;
     }
     Token* factor = parseFactor();
     while (true){
@@ -145,7 +146,7 @@ Token* InfixParser::parseTerm(){
 
 Token* InfixParser::parseFactor(){
     if(is_vaild == false){
-        return;
+        return nullptr;
     }
     if(isdigit(nextToken->raw_value[0])){
         Num* num = new Num;
