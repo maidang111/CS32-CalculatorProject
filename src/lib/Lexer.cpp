@@ -159,18 +159,14 @@ void Lexer::create_endtokens(){
                 if(raw_value.length() > 0){
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
-                    new_token->column = prev_index;
                     new_token->row = row;
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
-                    prev_index = column;
                 }
                 Token* new_token = new Token();
                 new_token->raw_value = whole_input.at(i).at(j);
-                new_token->column = prev_index;
                 new_token->row = row;
                 multi_end_tokens.push_back(new_token);
-                prev_index = column + 1;
                 last_digit = false;
                 variable = false;
                 // change here for variable 
@@ -211,21 +207,17 @@ void Lexer::create_endtokens(){
                 } else if(whole_input.at(i).at(j) == ' ' && raw_value.length() == 1){ // ending decimal // ending variable with length 1
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
-                    new_token->column = column - 1;
                     new_token->row = row;
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
-                    prev_index = column + 1;
                     variable = false;
                     last_digit = false;
                 } else{    // ending variable with more than length 1?
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
-                    new_token->column = prev_index;
                     new_token->row = row;
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
-                    prev_index = column + 1;
                     variable = false;
                     last_digit = false;
                 }
@@ -233,30 +225,25 @@ void Lexer::create_endtokens(){
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
             } 
             if (isspace(whole_input.at(i).at(j))){
-                prev_index = column + 1;
                 variable = false;
                 last_digit = false;
             }
-            column++;
         }
         if (raw_value.length() > 0){
             Token* new_token = new Token();
             new_token->raw_value = raw_value;
-            new_token->column = prev_index;
             new_token->row = row;
             multi_end_tokens.push_back(new_token);
         }
         
         Token* new_token = new Token();
         new_token->raw_value = "END";
-        new_token->column = column;
         new_token->row = row;
         multi_end_tokens.push_back(new_token);
         
         last_digit = false;
         variable = false;
         raw_value = "";
-        column = 1;
         prev_index = 1;
         row++;
     }
