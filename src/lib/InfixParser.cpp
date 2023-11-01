@@ -51,6 +51,7 @@ void InfixParser::scanToken(){
 Token* InfixParser::parseEqual(){
     Token* equal = parseExpression();
     if(is_vaild == false){
+        delete equal;
         return nullptr;
     }
     while (true){
@@ -87,6 +88,7 @@ Token* InfixParser::parseEqual(){
 Token* InfixParser::parseExpression(){
     Token* term = parseTerm();
     if(is_vaild == false){
+        delete term;
         return nullptr;
     }
     while (true){
@@ -117,6 +119,7 @@ Token* InfixParser::parseExpression(){
 Token* InfixParser::parseTerm(){
     Token* factor = parseFactor();
     if(is_vaild == false){
+        delete factor;
         return nullptr;
     }
     while (true){
@@ -153,7 +156,7 @@ Token* InfixParser::parseFactor(){
         num->raw_value = nextToken->raw_value;
         scanToken();
         return num;
-    } else if (isalpha(nextToken->raw_value[0]) && nextToken->raw_value.length() == 1){
+    } else if (isalpha(nextToken->raw_value[0]) && nextToken->raw_value != "END"){
         Variable* variable = new Variable;
         for(size_t i = 0; i < variables.size(); i++){
             if(nextToken->raw_value == variables.at(i)->raw_value){
