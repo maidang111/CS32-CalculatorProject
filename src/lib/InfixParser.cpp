@@ -132,7 +132,6 @@ Token* InfixParser::parseFactor(){
         return num;
     } else if (isalpha(nextToken->raw_value[0])){
         Variable* variable = new Variable;
-        Variable* variable2 = new Variable;
         for(size_t i = 0; i < variables.size(); i++){
             if(nextToken->raw_value == variables.at(i)->raw_value){
                 variable->raw_value = variables.at(i)->raw_value;
@@ -141,8 +140,6 @@ Token* InfixParser::parseFactor(){
                 return variable;
             }
         }
-        variables.push_back(variable2);
-        variable2->raw_value = nextToken->raw_value;
         variable->raw_value = nextToken->raw_value;
         scanToken();
         return variable;
