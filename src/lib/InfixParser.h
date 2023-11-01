@@ -15,6 +15,7 @@ class InfixParser{
     void build_AST();
     private:
     bool is_vaild = true;
+    bool leftparethese = false;
     Token* nextToken;
     size_t count;
     Token* AST;
