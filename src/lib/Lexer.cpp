@@ -149,7 +149,6 @@ void Lexer::create_endtokens(){
     string raw_value = "";
     int row = 1; 
     int column = 1;
-    int prev_index = 1;
     bool variable = false;
     bool last_digit = false;
 
