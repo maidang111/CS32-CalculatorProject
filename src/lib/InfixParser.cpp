@@ -115,10 +115,10 @@ Token* InfixParser::parseExpression(){
 }
 
 Token* InfixParser::parseTerm(){
+    Token* factor = parseFactor();
     if(is_vaild == false){
         return nullptr;
     }
-    Token* factor = parseFactor();
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
