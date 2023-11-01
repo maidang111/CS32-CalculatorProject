@@ -89,9 +89,6 @@ void Num::print(){
 }
 
 double Variable::get_value(){
-    if(this->value == -10000){
-        throw runtime_error("Runtime error: unknown identifier " + this->raw_value);
-    }
     return this->value;
 }
 void Variable::print(){
