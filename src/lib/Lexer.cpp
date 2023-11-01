@@ -243,7 +243,6 @@ void Lexer::create_endtokens(){
         last_digit = false;
         variable = false;
         raw_value = "";
-        prev_index = 1;
         row++;
     }
 }
