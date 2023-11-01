@@ -205,6 +205,7 @@ void Lexer::create_endtokens(){
                         exit(1);
                     } else if(j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1))){
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
+                        exit(0);
                     }
                 } else if(whole_input.at(i).at(j) == ' ' && raw_value.length() == 1){ // ending decimal // ending variable with length 1
                     Token* new_token = new Token();
