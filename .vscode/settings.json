@@ -45,6 +45,8 @@
         "unordered_map": "cpp",
         "variant": "cpp",
         "__memory": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "__config": "cpp",
+        "__nullptr": "cpp"
     }
 }
