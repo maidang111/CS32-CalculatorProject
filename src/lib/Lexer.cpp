@@ -38,6 +38,9 @@ void Lexer::create_tokens(){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
             if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if(raw_value.length() > 0){
+                    if(raw_value[raw_value.length()-1] == '.'){
+                        cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                    }
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
