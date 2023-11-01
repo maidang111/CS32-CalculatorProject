@@ -11,7 +11,6 @@ using namespace std;
 InfixParser::InfixParser(){
     Lexer lexer; 
     lexer.create_endtokens();
-    lexer.print_endtokens();
     this->tokens = lexer.multi_end_tokens;
     this->count = 0;
 }
@@ -24,8 +23,10 @@ void InfixParser::build_AST(){
         if (nextToken->raw_value != "END"){
             AST = parseEqual();
             if (nextToken->raw_value != "END" || is_vaild == false){
-                cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-                scanToken();
+                // cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+                while(nextToken->raw_value != "END"){
+                    scanToken();
+                }
             } else {
                 AST->print();
                 cout << endl;
@@ -48,10 +49,10 @@ void InfixParser::scanToken(){
 }
 
 Token* InfixParser::parseEqual(){
+    Token* equal = parseExpression();
     if(is_vaild == false){
         return nullptr;
     }
-    Token* equal = parseExpression();
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
@@ -84,10 +85,10 @@ Token* InfixParser::parseEqual(){
 //                 }
 //             }
 Token* InfixParser::parseExpression(){
+    Token* term = parseTerm();
     if(is_vaild == false){
         return nullptr;
     }
-    Token* term = parseTerm();
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
@@ -182,7 +183,7 @@ Token* InfixParser::parseFactor(){
             return nullptr;
         }
     } else {
-            cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+        cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
         is_vaild = false;
         return nullptr;
     }
