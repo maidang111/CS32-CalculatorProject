@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -50,12 +51,6 @@ void InfixParser::scanToken(){
 
 Token* InfixParser::parseEqual(){
     Token* equal = parseExpression();
-    if(nextToken->raw_value == ")" && leftparethese == false){
-        // cout << "here 4" << endl;
-        cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-        is_vaild = false;
-        return nullptr;
-    }
     if(is_vaild == false){
         delete equal;
         return nullptr;
@@ -162,10 +157,6 @@ Token* InfixParser::parseFactor(){
         num->raw_value = nextToken->raw_value;
         scanToken();
         return num;
-    // } else if (nextToken->raw_value == ")"){
-    //     cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-    //     is_vaild = false;
-    //     return nullptr;
     } else if (isalpha(nextToken->raw_value[0]) && nextToken->raw_value != "END"){
         Variable* variable = new Variable;
         for(size_t i = 0; i < variables.size(); i++){
@@ -180,40 +171,35 @@ Token* InfixParser::parseFactor(){
         scanToken();
         return variable;
     } else if (nextToken->raw_value == "("){
-        leftparethese = true;
         scanToken();
         if(!isdigit(nextToken->raw_value[0]) && !isalpha(nextToken->raw_value[0])){
-            // cout << "here 3" << endl;
             cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-            is_vaild = false;
             return nullptr;
         }
         Token* expression = parseEqual();
-        if (expression != nullptr) {
-            // cout << "here 2" << endl;
+        if (expression == nullptr) {
             cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
             is_vaild = false;
             return nullptr;
         } else if (nextToken->raw_value == ")"){
             scanToken();
-            leftparethese = false;
             return expression;
+        } else {
+            cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+            is_vaild = false;
+            return nullptr;
         }
-        return nullptr;
+        // if(nextToken->raw_value == ")"){
+        //     scanToken();
+        //     return expression;
         // } else {
         //     cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
         //     is_vaild = false;
         //     return nullptr;
         // }
     } else {
-        // if (nextToken->raw_value != ")" && nextToken->raw_value != "END"){
-        //     cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-        // }
-        if (nextToken->raw_value != ")"){
-            // cout << "here 1" << endl;
-            cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-            is_vaild = false;
-        }
+        cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+        is_vaild = false;
         return nullptr;
     }
 }
