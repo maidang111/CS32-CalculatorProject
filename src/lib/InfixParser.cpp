@@ -47,14 +47,10 @@ void InfixParser::scanToken(){
     }
 }
 
-void InfixParser::prevToken(){
-    if (count != 0){
-        count--;
-        this->nextToken = tokens.at(count);
-    }
-}
-
 Token* InfixParser::parseEqual(){
+    if(is_vaild == false){
+        return;
+    }
     Token* equal = parseExpression();
     while (true){
         if (nextToken == nullptr){
@@ -88,6 +84,9 @@ Token* InfixParser::parseEqual(){
 //                 }
 //             }
 Token* InfixParser::parseExpression(){
+    if(is_vaild == false){
+        return;
+    }
     Token* term = parseTerm();
     while (true){
         if (nextToken == nullptr){
@@ -115,6 +114,9 @@ Token* InfixParser::parseExpression(){
 }
 
 Token* InfixParser::parseTerm(){
+    if(is_vaild == false){
+        return;
+    }
     Token* factor = parseFactor();
     while (true){
         if (nextToken == nullptr){
@@ -142,6 +144,9 @@ Token* InfixParser::parseTerm(){
 }
 
 Token* InfixParser::parseFactor(){
+    if(is_vaild == false){
+        return;
+    }
     if(isdigit(nextToken->raw_value[0])){
         Num* num = new Num;
         num->raw_value = nextToken->raw_value;

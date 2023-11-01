@@ -28,7 +28,6 @@ class InfixParser{
     vector <Token*> ASTheads;
 
     void scanToken();
-    void prevToken();
 
     
     // build tree
