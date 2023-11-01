@@ -29,6 +29,7 @@ void InfixParser::build_AST(){
             cout << endl;
             cout << AST->get_value() << endl;
             ASTheads.push_back(AST);
+            
         } 
     }
     for(size_t i = 0; i < ASTheads.size(); i++){
