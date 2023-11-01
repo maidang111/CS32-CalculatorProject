@@ -50,7 +50,6 @@ void InfixParser::scanToken(){
 Token* InfixParser::parseEqual(){
     if(is_vaild == false){
         return nullptr;
-        return;
     }
     Token* equal = parseExpression();
     while (true){
