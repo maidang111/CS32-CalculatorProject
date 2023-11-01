@@ -176,11 +176,11 @@ Token* InfixParser::parseFactor(){
             return nullptr;
         }
         Token* expression = parseEqual();
-        // if (expression == nullptr) {
-        //     cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-        //     is_vaild = false;
-        //     return nullptr;
-        // }
+        if (expression == nullptr) {
+            cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+            is_vaild = false;
+            return nullptr;
+        }
         if(nextToken->raw_value == ")"){
             scanToken();
             return expression;
