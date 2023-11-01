@@ -23,6 +23,7 @@ void InfixParser::build_AST(){
             AST = parseEqual();
             if (nextToken->raw_value != "END"){
             cout << "Unexpected token at line " << nextToken->row << " column " << nextToken->row << " " << nextToken->raw_value << endl;
+            exit(1);
             } 
             AST->print();
             cout << endl;
