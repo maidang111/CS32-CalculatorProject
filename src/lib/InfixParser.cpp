@@ -171,12 +171,16 @@ Token* InfixParser::parseFactor(){
         return variable;
     } else if (nextToken->raw_value == "("){
         scanToken();
-        Token* expression = parseEqual();
-        if (expression == nullptr) {
+        if(!isdigit(nextToken->raw_value[0])){
             cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-            is_vaild = false;
             return nullptr;
         }
+        Token* expression = parseEqual();
+        // if (expression == nullptr) {
+        //     cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+        //     is_vaild = false;
+        //     return nullptr;
+        // }
         if(nextToken->raw_value == ")"){
             scanToken();
             return expression;
