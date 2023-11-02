@@ -90,9 +90,6 @@ Token* InfixParser::parseEqual(){
     //     return nullptr;
     // }
     Token* equal = parseExpression();
-    if (!equal) {
-        return nullptr;
-    }
     if(is_vaild == false){
         equal->delete_token(equal);
         return nullptr;
@@ -108,6 +105,10 @@ Token* InfixParser::parseEqual(){
             Equal* temp = new Equal;
             temp->left = equal;
             temp->right = equal1;
+            if (!equal || !equal1) {
+                delete temp;
+                return nullptr;
+            }
             temp->left->value = equal1->get_value();
             for(size_t i = 0; i < variables.size(); i++){
                 if(variables.at(i)->raw_value == temp->left->raw_value){
