@@ -174,7 +174,7 @@ bool InfixParser::error_assignment(size_t index) {
                 if (tokens.at(i - 1)->raw_value == "=" || tokens.at(i - 1)->raw_value == "(") {
 
                     is_error = true;
-                    cout << 1 << endl;
+                    // cout << 1 << endl;
                     last_error = tokens.at(i);
 
                 }
@@ -187,7 +187,7 @@ bool InfixParser::error_assignment(size_t index) {
         if (not_variable && tokens.at(i)->raw_value == "=") {
 
             is_error = true;
-            cout << 2 << endl;
+            // cout << 2 << endl;
             last_error = tokens.at(i);
 
         }
@@ -204,7 +204,7 @@ bool InfixParser::error_assignment(size_t index) {
                 if (tokens.at(i)->raw_value == "=") {
 
                     is_error = true;
-                    cout << 3 << endl;
+                    // cout << 3 << endl;
                     last_error = tokens.at(i);
 
                 }
@@ -231,7 +231,7 @@ bool InfixParser::error_assignment(size_t index) {
 
                 count = i;
 
-                cout << "Unexpected token at line 1 column " << last_error->column << ": " << last_error->raw_value << 11 << endl;
+                cout << "Unexpected token at line 1 column " << last_error->column << ": " << last_error->raw_value << endl;
 
             }
 
@@ -251,7 +251,7 @@ void InfixParser::build_AST(){
 
 
     while(count != tokens.size()){
-        cout << "each iteration" << endl;
+        // cout << "each iteration" << endl;
 
         // cout << "Token size: " << tokens.size() << endl;
 
@@ -268,7 +268,7 @@ void InfixParser::build_AST(){
         // cout << "after check: " << count << endl;
 
         if (check_parenthesis) {
-            cout << "p" << endl;
+            // cout << "p" << endl;
 
             continue;
 
@@ -279,11 +279,11 @@ void InfixParser::build_AST(){
             bool check_assignment = error_assignment(count);
 
             if (check_assignment) {
-                cout << "a" << endl;
+                // cout << "a" << endl;
                 continue;
 
             }
-            cout << "e" << endl;
+            // cout << "e" << endl;
 
         }
 
