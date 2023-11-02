@@ -91,7 +91,7 @@ Token* InfixParser::parseEqual(){
     // }
     Token* equal = parseExpression();
     if(is_vaild == false){
-        delete equal;
+        equal->delete_token(equal);
         return nullptr;
     }
     while (true){
@@ -128,7 +128,7 @@ Token* InfixParser::parseEqual(){
 Token* InfixParser::parseExpression(){
     Token* term = parseTerm();
     if(is_vaild == false){
-        delete term;
+        term->delete_token(term);
         return nullptr;
     }
     while (true){
@@ -159,7 +159,7 @@ Token* InfixParser::parseExpression(){
 Token* InfixParser::parseTerm(){
     Token* factor = parseFactor();
     if(is_vaild == false){
-        delete factor;
+        factor->delete_token(factor);
         return nullptr;
     }
     while (true){
