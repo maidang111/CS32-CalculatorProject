@@ -105,7 +105,7 @@ Token* InfixParser::parseEqual(){
             Equal* temp = new Equal;
             temp->left = equal;
             temp->right = equal1;
-            if (temp->left) {
+            if (temp->left && equal1) {
                 temp->left->value = equal1->get_value();
                 for(size_t i = 0; i < variables.size(); i++){
                     if(variables.at(i)->raw_value == temp->left->raw_value){
