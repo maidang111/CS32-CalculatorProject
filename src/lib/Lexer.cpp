@@ -160,6 +160,7 @@ void Lexer::create_endtokens(){
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
+                    new_token->row = row;
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
@@ -167,6 +168,7 @@ void Lexer::create_endtokens(){
                 Token* new_token = new Token();
                 new_token->raw_value = whole_input.at(i).at(j);
                 new_token->column = prev_index;
+                new_token->row = row;
                 multi_end_tokens.push_back(new_token);
                 prev_index = column + 1;
                 last_digit = false;
@@ -210,6 +212,7 @@ void Lexer::create_endtokens(){
                 } else if(whole_input.at(i).at(j) == ' ' && raw_value.length() == 1){ // ending decimal // ending variable with length 1
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
+                    new_token->row = row;
                     new_token->column = column - 1;
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
@@ -220,6 +223,7 @@ void Lexer::create_endtokens(){
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
+                    new_token->row = row;
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
                     prev_index = column + 1;
@@ -240,12 +244,14 @@ void Lexer::create_endtokens(){
             Token* new_token = new Token();
             new_token->raw_value = raw_value;
             new_token->column = prev_index;
+            new_token->row = row;
             multi_end_tokens.push_back(new_token);
         }
         
         Token* new_token = new Token();
         new_token->raw_value = "END";
         new_token->column = column;
+        new_token->row = row;
         multi_end_tokens.push_back(new_token);
         
         last_digit = false;
@@ -253,6 +259,7 @@ void Lexer::create_endtokens(){
         raw_value = "";
         column = 1;
         prev_index = 1;
+        ++row;
     }
 }
 

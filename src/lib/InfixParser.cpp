@@ -17,6 +17,11 @@ InfixParser::InfixParser(){
     lexer.create_endtokens();
 
     this->tokens = lexer.multi_end_tokens;
+    // cout << "checking lexer: " << endl;
+    // for (auto a: lexer.multi_end_tokens) {
+    //     cout << "row: " << a->row << endl;
+    // }
+    // cout << "finish checking" << endl;
 
     this->count = 0;
 
@@ -33,7 +38,7 @@ bool InfixParser::error_parenthesis(size_t index) {
     }
     for (size_t i = index; i < tokens.size(); ++i) {
         // cout << num_parenthesis << endl;
-        // cout << tokens.at(i)->raw_value << endl;
+        cout << tokens.at(i)->row << endl;
         if (tokens.at(i)->raw_value == "(") {
             // cout << 3 << endl;
             num_parenthesis += 1;
@@ -50,10 +55,11 @@ bool InfixParser::error_parenthesis(size_t index) {
             if (num_parenthesis > 0) {
                 // cout << 1 << endl;
                 cout << "Unexpected token at line " << tokens.at(i)->row << " column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
+                error_parenthesis = true;
 
             }
             if (error_parenthesis) {
-                count = i - 1;
+                count = i;
             }
             break;
         }
@@ -64,6 +70,7 @@ bool InfixParser::error_parenthesis(size_t index) {
 void InfixParser::build_AST(){
 
     while(count != tokens.size()){
+        // cout << "Token size: " << tokens.size() << endl;
 
         scanToken();
 
