@@ -28,8 +28,14 @@ InfixParser::~InfixParser(){}
 bool InfixParser::error_parenthesis(size_t index) {
     bool error_parenthesis = false;
     int num_parenthesis = 0;
+    if (index != 0) {
+        index -= 1;
+    }
     for (size_t i = index; i < tokens.size(); ++i) {
+        // cout << num_parenthesis << endl;
+        // cout << tokens.at(i)->raw_value << endl;
         if (tokens.at(i)->raw_value == "(") {
+            // cout << 3 << endl;
             num_parenthesis += 1;
         }
         else if (tokens.at(i)->raw_value == ")") {
@@ -37,15 +43,17 @@ bool InfixParser::error_parenthesis(size_t index) {
         }
         if (num_parenthesis < 0) {
             error_parenthesis = true;
+            // cout<< 2 << endl;
             cout << "Unexpected token at line " << tokens.at(i)->row << " column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
         }
         if (tokens.at(i)->raw_value == "END") {
             if (num_parenthesis > 0) {
-                error_parenthesis = true;
+                // cout << 1 << endl;
                 cout << "Unexpected token at line " << tokens.at(i)->row << " column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
+
             }
             if (error_parenthesis) {
-                count = i;
+                count = i - 1;
             }
             break;
         }
@@ -60,7 +68,9 @@ void InfixParser::build_AST(){
         scanToken();
 
         is_vaild = true;
+        // cout << "before check " << count << endl;
         bool check_parenthesis = error_parenthesis(count);
+        // cout << "after check: " << count << endl;
         if (check_parenthesis) {
             continue;
         }
@@ -69,7 +79,7 @@ void InfixParser::build_AST(){
             AST = parseEqual();
 
             if (nextToken->raw_value != "END" || is_vaild == false){
-
+                // cout << 10 << endl;
                 cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
 
                 while(nextToken->raw_value != "END"){
@@ -444,7 +454,7 @@ Token* InfixParser::parseFactor(){
 
         scanToken();
 
-        if(!isdigit(nextToken->raw_value[0]) && !isalpha(nextToken->raw_value[0])){
+        if(!isdigit(nextToken->raw_value[0]) && !isalpha(nextToken->raw_value[0]) && (nextToken->raw_value != "(")){
 
             // cout << "here 4";
 
