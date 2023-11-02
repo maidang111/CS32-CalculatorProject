@@ -137,8 +137,9 @@ bool InfixParser::error_assignment(size_t index) {
     bool is_error = false;
 
     bool not_variable = false;
-
+    int num_parenthesis = 0;
     Token* last_error = nullptr;
+    vector<int> assign_parenthesis;
 
     if (index != 0) {
 
@@ -148,11 +149,20 @@ bool InfixParser::error_assignment(size_t index) {
 
 
     for (size_t i = index; i < tokens.size(); ++i) {
+        if (tokens.at(i)->raw_value == "=") {
+            assign_parenthesis.push_back(num_parenthesis);
+        }
 
         // (a =) case, no right value
 
         if (tokens.at(i)->raw_value == ")") {
-
+            --num_parenthesis;
+            if (!assign_parenthesis.empty()) {
+                if (num_parenthesis < assign_parenthesis.at(assign_parenthesis.size() - 1)) {
+                    assign_parenthesis.pop_back();
+                    //
+                }
+            }
             if (i > 0) {
 
                 if (tokens.at(i - 1)->raw_value == "=" || tokens.at(i - 1)->raw_value == "(") {
@@ -168,7 +178,6 @@ bool InfixParser::error_assignment(size_t index) {
         }
 
         // number case
-
         if (not_variable && tokens.at(i)->raw_value == "=") {
 
             is_error = true;
@@ -180,6 +189,7 @@ bool InfixParser::error_assignment(size_t index) {
         // (= a) case, no left value
 
         if (tokens.at(i)->raw_value == "(") {
+            num_parenthesis++;
 
             not_variable = false;
 
@@ -200,7 +210,12 @@ bool InfixParser::error_assignment(size_t index) {
         // (1 = a) case, left side number
 
         if (isdigit(tokens.at(i)->raw_value.at(0)) || operators.count(tokens.at(i)->raw_value)) {
-            not_variable = true;
+            if (assign_parenthesis.empty()) {
+                not_variable = true;
+            }
+            else if (num_parenthesis <= assign_parenthesis.at(assign_parenthesis.size() - 1)) {
+                not_variable = true;
+            }
 
         }
 
