@@ -15,7 +15,8 @@ Token::Token(){
 };
 
 bool Token::error_ = false;
-
+map<string,Token*> Token::variable_update;
+map<string, double> Token::variable_value;
 set<string> Token::variable_list;
 
 void Token::deleteToken(){
@@ -111,6 +112,7 @@ double Equal::get_value(){
     if (this->left != nullptr && this->right != nullptr){
         this->left->value = this->right->get_value();
         variable_list.insert(left->raw_value);
+        variable_update.emplace(left->raw_value, left);
         return this->right->get_value();
     }
     return 0;
@@ -136,6 +138,21 @@ double Variable::get_value(){
     if (variable_list.find(raw_value) == variable_list.end()) {
         cout << "Runtime error: unknown identifier " << raw_value << endl;
         error_ = true;
+    }
+    if (error_) {
+        if (variable_value.empty()) {
+            variable_update.clear();
+        }
+        else {
+            for (auto& var: variable_update) {
+                var.second->value = variable_value.at(var.first);
+            }
+        }
+    }
+    else {
+        for (auto& var: variable_value) {
+            var.second = variable_update.at(var.first)->value;
+        }
     }
     return this->value;
 }
