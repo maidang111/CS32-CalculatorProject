@@ -81,7 +81,7 @@ double Divide::get_value(){
     if ( this->right->get_value() != 0){
         return this->left->get_value() / this->right->get_value();
     } else {
-        cout << endl << " Runtime error: division by zero." << endl;
+        cout << "Runtime error: division by zero." << endl;
         error_ = true;
         return 0;
     }
