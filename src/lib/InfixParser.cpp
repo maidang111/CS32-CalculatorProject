@@ -25,6 +25,7 @@ InfixParser::InfixParser(){
     // cout << "finish checking" << endl;
 
     this->count = 0;
+    operators = {"+", "-", "*", "/"};
 
 }
 
@@ -105,7 +106,7 @@ bool InfixParser::error_assignment(size_t index) {
             }
         }
         // (1 = a) case, left side number
-        if (isdigit(tokens.at(i)->raw_value.at(0))) {
+        if (isdigit(tokens.at(i)->raw_value.at(0)) || operators.count(tokens.at(i)->raw_value)) {
             not_variable = true;
         }
         if (tokens.at(i)->raw_value == "END") {

@@ -13,6 +13,7 @@ class InfixParser{
     void delete_variables();
     bool error_parenthesis(size_t index);
     bool error_assignment(size_t index);
+    set<string> operators;
 
     void build_AST();
     private:
