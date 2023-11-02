@@ -38,7 +38,7 @@ bool InfixParser::error_parenthesis(size_t index) {
     }
     for (size_t i = index; i < tokens.size(); ++i) {
         // cout << num_parenthesis << endl;
-        cout << tokens.at(i)->row << endl;
+        // cout << tokens.at(i)->row << endl;
         if (tokens.at(i)->raw_value == "(") {
             // cout << 3 << endl;
             num_parenthesis += 1;
