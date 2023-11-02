@@ -151,7 +151,7 @@ bool InfixParser::error_assignment(size_t index) {
     for (size_t i = index; i < tokens.size(); ++i) {
         if (tokens.at(i)->raw_value == "=") {
             if (i > 0) {
-                if (!isalpha(tokens.at(i - 1)->raw_value.at(0)) && tokens.at(i - 1)->raw_value.at(0) != "_") {
+                if (!isalpha(tokens.at(i - 1)->raw_value.at(0)) && tokens.at(i - 1)->raw_value.at(0) != '_') {
                     is_error = true;
                     last_error = tokens.at(i);
                 }
