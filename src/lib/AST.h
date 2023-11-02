@@ -28,7 +28,7 @@ class Token{
     void delete_token(Token* node);
 
     Token();
-    virtual ~Token() = default;
+    virtual ~Token();
 };
 
 class Add: public Token{
@@ -37,7 +37,7 @@ class Add: public Token{
     double get_value();
     void print();
     
-    ~Add() = default;
+    // ~Add() = default;
 };
 
 class Subtract: public Token{
@@ -45,7 +45,7 @@ class Subtract: public Token{
     bool is_operator = true;
     double get_value();
     void print();
-    ~Subtract() = default;
+    // ~Subtract() = default;
 };
 
 class Multiply: public Token{
@@ -53,7 +53,7 @@ class Multiply: public Token{
     bool is_operator = true;
     double get_value();
     void print();
-    ~Multiply() = default;
+    // ~Multiply() = default;
 };
 
 class Divide: public Token{
@@ -61,7 +61,7 @@ class Divide: public Token{
     bool is_operator = true;
     double get_value();
     void print();
-    ~Divide() = default;
+    // ~Divide() = default;
 };
 
 class Equal: public Token{
@@ -69,7 +69,7 @@ class Equal: public Token{
     bool is_operator = true;
     double get_value();
     void print();
-    ~Equal() = default;
+    // ~Equal() = default;
 };
 
 class Num: public Token{
@@ -77,7 +77,7 @@ class Num: public Token{
     bool is_operator = false;
     double get_value();
     void print();
-    ~Num() = default;
+    // ~Num() = default;
 
 };
 
@@ -86,7 +86,7 @@ class Variable: public Token{
     bool is_operator = false;
     double get_value();
     void print();
-    ~Variable() = default;
+    // ~Variable() = default;
 };
 
 // class LeftP: public Token{

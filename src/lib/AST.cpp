@@ -29,6 +29,10 @@ void Token::delete_token(Token* node){
     delete node; 
 }
 
+Token::~Token() {
+    // cout << "deleting value: " << raw_value << endl;
+}
+
 double Token::get_value(){
     cout << "token type doesn't have a get value"  << endl;
     return 0;
