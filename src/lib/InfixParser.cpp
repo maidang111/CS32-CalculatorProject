@@ -79,7 +79,9 @@ bool InfixParser::error_assignment(size_t index) {
     if (index != 0) {
         index -= 1;
     }
-
+    for (size_t j = 0; j < tokens.size(); ++j) {
+        cout << tokens.at(j)->raw_value << endl;
+    }
     for (size_t i = index; i < tokens.size(); ++i) {
         // (a =) case, no right value
         if (tokens.at(i)->raw_value == ")") {
