@@ -132,7 +132,7 @@ bool InfixParser::error_parenthesis(size_t index) {
 
 
 bool InfixParser::error_assignment(size_t index) {
-    cout << 100 << endl;
+    // cout << 100 << endl;
 
     bool is_error = false;
 
