@@ -11,6 +11,7 @@ class InfixParser{
     ~InfixParser();
     void delete_tokens();
     void delete_variables();
+    bool error_parenthesis(size_t index);
 
     void build_AST();
     private:
