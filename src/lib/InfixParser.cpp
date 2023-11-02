@@ -126,6 +126,7 @@ bool InfixParser::error_parenthesis(size_t index) {
         }
 
     }
+    cout << "k" << endl;
 
     return error_parenthesis;
 
