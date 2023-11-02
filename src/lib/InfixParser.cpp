@@ -149,6 +149,12 @@ bool InfixParser::error_assignment(size_t index) {
 
     for (size_t i = index; i < tokens.size(); ++i) {
         if (tokens.at(i)->raw_value == "=") {
+            if (i > 0) {
+                if (isdigit(tokens.at(i - 1)->raw_value.at(0))) {
+                    is_error = true;
+                    last_error = tokens.at(i);
+                }
+            }
             assign_parenthesis.push_back(num_parenthesis);
         }
 
