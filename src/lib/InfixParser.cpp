@@ -251,6 +251,7 @@ void InfixParser::build_AST(){
 
 
     while(count != tokens.size()){
+        cout << "each iteration" << endl;
 
         // cout << "Token size: " << tokens.size() << endl;
 
