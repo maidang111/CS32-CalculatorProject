@@ -150,8 +150,15 @@ double Variable::get_value(){
         }
     }
     else {
-        for (auto& var: variable_value) {
-            var.second = variable_update.at(var.first)->value;
+        if (!variable_value.empty()) {
+            for (auto& var: variable_value) {
+                var.second = variable_update.at(var.first)->value;
+            }
+        }
+        else {
+            for (auto& var: variable_update) {
+                variable_value.emplace(var.first, var.second->value);
+            }
         }
     }
     return this->value;
