@@ -62,6 +62,11 @@ void InfixParser::build_AST(){
                         }
                         else {
                             Token::variable_list.erase(a.first);
+                            for (size_t j = 0; j < variables.size(); ++j) {
+                                if (a.first == variables.at(j)->raw_value) {
+                                    variables.erase(variables.begin() + j);
+                                }
+                            }
                         }
                     }
                 }
