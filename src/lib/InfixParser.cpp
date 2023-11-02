@@ -81,11 +81,6 @@ bool InfixParser::error_assignment(size_t index) {
     }
 
     for (size_t i = index; i < tokens.size(); ++i) {
-        // number case
-        if (not_variable && tokens.at(i)->raw_value == "=") {
-            is_error = true;
-            last_error = tokens.at(i);
-        }
         // (a =) case, no right value
         if (tokens.at(i)->raw_value == ")") {
             if (i > 0) {
@@ -94,6 +89,11 @@ bool InfixParser::error_assignment(size_t index) {
                     last_error = tokens.at(i);
                 }
             }
+        }
+        // number case
+        if (not_variable && tokens.at(i)->raw_value == "=") {
+            is_error = true;
+            last_error = tokens.at(i);
         }
         // (= a) case, no left value
         if (tokens.at(i)->raw_value == "(") {
