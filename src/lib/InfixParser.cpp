@@ -307,7 +307,7 @@ Token* InfixParser::parseEqual(){
 
             temp->right = equal1;
 
-            if (temp->left) {
+            if (temp->left && equal1) {
 
                 temp->left->value = equal1->get_value();
 
