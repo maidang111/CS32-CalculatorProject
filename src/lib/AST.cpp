@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include "AST.h"
+#include <set>
 
 using namespace std; 
 
@@ -11,6 +12,9 @@ Token::Token(){
     this->left = nullptr;
     this->right = nullptr;
 };
+
+set<string> Token::variable_list;
+
 void Token::deleteToken(){
     if(this->left != nullptr){
         this->left->deleteToken();
@@ -103,6 +107,7 @@ void Multiply::print(){
 double Equal::get_value(){
     if (this->left != nullptr && this->right != nullptr){
         this->left->value = this->right->get_value();
+        variable_list.insert(left->raw_value);
         return this->right->get_value();
     }
     return 0;
@@ -125,6 +130,10 @@ void Num::print(){
 }
 
 double Variable::get_value(){
+    if (variable_list.find(raw_value) == variable_list.end()) {
+        cout << "Runtime error: unknown identifier ID" << endl;
+        exit(3);
+    }
     return this->value;
 }
 void Variable::print(){

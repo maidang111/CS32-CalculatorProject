@@ -14,6 +14,7 @@ InfixParser::InfixParser(){
     this->tokens = lexer.multi_end_tokens;
     this->count = 0;
 }
+
 InfixParser::~InfixParser(){}
 
 void InfixParser::build_AST(){

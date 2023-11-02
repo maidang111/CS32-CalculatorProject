@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <set>
+#include <map>
 
 using namespace std;
 
@@ -16,6 +17,7 @@ class Token{
     Token* right;
     Token* parent;
     bool is_operator;
+    static set<string> variable_list;
 
     virtual void print();
     virtual double get_value();
