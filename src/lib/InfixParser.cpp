@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cctype>
 #include "InfixParser.h"
 #include "Node.h"
 #include "Lexer.h"
@@ -70,6 +71,55 @@ bool InfixParser::error_parenthesis(size_t index) {
     return error_parenthesis;
 }
 
+bool InfixParser::error_assignment(size_t index) {
+    bool is_error = false;
+    bool not_variable = false;
+    Token* last_error = nullptr;
+    if (index != 0) {
+        index -= 1;
+    }
+
+    for (size_t i = index; i < tokens.size(); ++i) {
+        // number case
+        if (not_variable && tokens.at(i)->raw_value == "=") {
+            is_error = true;
+            last_error = tokens.at(i);
+        }
+        // (a =) case, no right value
+        if (tokens.at(i)->raw_value == ")") {
+            if (i > 0) {
+                if (tokens.at(i - 1)->raw_value == "=") {
+                    is_error = true;
+                    last_error = tokens.at(i);
+                }
+            }
+        }
+        // (= a) case, no left value
+        if (tokens.at(i)->raw_value == "(") {
+            not_variable = false;
+            if (i + 1 < tokens.size()) {
+                if (tokens.at(i)->raw_value == "=") {
+                    is_error = true;
+                    last_error = tokens.at(i);
+                }
+            }
+        }
+        // (1 = a) case, left side number
+        if (isdigit(tokens.at(i)->raw_value.at(0))) {
+            not_variable = true;
+        }
+        if (tokens.at(i)->raw_value == "END") {
+            if (last_error) {
+                count = i;
+                cout << "Unexpected token at line 1 column " << last_error->column << ": " << last_error->raw_value << endl;
+            }
+            break;
+        }
+    }
+
+    return is_error;
+}
+
 void InfixParser::build_AST(){
 
     while(count != tokens.size()){
@@ -83,6 +133,12 @@ void InfixParser::build_AST(){
         // cout << "after check: " << count << endl;
         if (check_parenthesis) {
             continue;
+        }
+        else {
+            bool check_assignment = error_assignment(count);
+            if (check_assignment) {
+                continue;
+            }
         }
         if (nextToken->raw_value != "END"){
 
