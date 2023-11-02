@@ -132,6 +132,7 @@ bool InfixParser::error_parenthesis(size_t index) {
 
 
 bool InfixParser::error_assignment(size_t index) {
+    cout << 100 << endl;
 
     bool is_error = false;
 
@@ -150,7 +151,7 @@ bool InfixParser::error_assignment(size_t index) {
     for (size_t i = index; i < tokens.size(); ++i) {
         if (tokens.at(i)->raw_value == "=") {
             if (i > 0) {
-                if (isdigit(tokens.at(i - 1)->raw_value.at(0))) {
+                if (isdigit(tokens.at(i - 1)->raw_value.at(0)) || operators.count(tokens.at(i - 1)->raw_value)) {
                     is_error = true;
                     last_error = tokens.at(i);
                 }
@@ -266,6 +267,7 @@ void InfixParser::build_AST(){
         // cout << "after check: " << count << endl;
 
         if (check_parenthesis) {
+            cout << "p" << endl;
 
             continue;
 
@@ -276,10 +278,11 @@ void InfixParser::build_AST(){
             bool check_assignment = error_assignment(count);
 
             if (check_assignment) {
-
+                cout << "a" << endl;
                 continue;
 
             }
+            cout << "e" << endl;
 
         }
 
