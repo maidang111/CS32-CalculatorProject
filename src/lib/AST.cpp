@@ -132,7 +132,6 @@ void Num::print(){
 double Variable::get_value(){
     if (variable_list.find(raw_value) == variable_list.end()) {
         cout << "Runtime error: unknown identifier ID" << endl;
-        exit(3);
     }
     return this->value;
 }
