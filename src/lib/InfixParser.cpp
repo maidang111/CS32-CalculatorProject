@@ -71,7 +71,7 @@ void InfixParser::build_AST(){
         } 
     }
     for(size_t i = 0; i < ASTheads.size(); i++){
-        ASTheads.at(i)->deleteToken();
+        ASTheads.at(i)->delete_token(ASTheads.at(i));
     }
 //    AST->get_value();
 }
@@ -91,7 +91,7 @@ Token* InfixParser::parseEqual(){
     // }
     Token* equal = parseExpression();
     if(is_vaild == false){
-        equal->deleteToken();
+        equal->delete_token(equal);
         return nullptr;
     }
     while (true){
@@ -128,7 +128,7 @@ Token* InfixParser::parseEqual(){
 Token* InfixParser::parseExpression(){
     Token* term = parseTerm();
     if(is_vaild == false){
-        term->deleteToken();
+        term->delete_token(term);
         return nullptr;
     }
     while (true){
@@ -159,7 +159,7 @@ Token* InfixParser::parseExpression(){
 Token* InfixParser::parseTerm(){
     Token* factor = parseFactor();
     if(is_vaild == false){
-        factor->deleteToken();
+        factor->delete_token(factor);
         return nullptr;
     }
     while (true){

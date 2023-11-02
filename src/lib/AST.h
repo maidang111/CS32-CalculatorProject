@@ -25,7 +25,7 @@ class Token{
 
     virtual void print();
     virtual double get_value();
-    void deleteToken();
+    void delete_token(Token* node);
 
     Token();
     virtual ~Token() = default;

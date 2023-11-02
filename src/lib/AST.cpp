@@ -19,19 +19,14 @@ map<string,Token*> Token::variable_update;
 map<string, double> Token::variable_value;
 set<string> Token::variable_list;
 
-void Token::deleteToken(){
-    if (!this) {
+
+void Token::delete_token(Token* node){
+    if (!node) {
         return;
     }
-    if(this->left != nullptr){
-        this->left->deleteToken();
-        this->left = nullptr;
-    }
-    if(this->right != nullptr){
-        this->right->deleteToken();
-        this->right = nullptr;
-    }
-    delete this; 
+    delete_token(node->left);
+    delete_token(node->right);
+    delete node; 
 }
 
 double Token::get_value(){
