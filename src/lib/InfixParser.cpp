@@ -33,6 +33,7 @@ InfixParser::~InfixParser(){}
 bool InfixParser::error_parenthesis(size_t index) {
     bool error_parenthesis = false;
     int num_parenthesis = 0;
+    bool print_error = false;
     if (index != 0) {
         index -= 1;
     }
@@ -46,14 +47,16 @@ bool InfixParser::error_parenthesis(size_t index) {
         else if (tokens.at(i)->raw_value == ")") {
             num_parenthesis -= 1;
         }
-        if (num_parenthesis < 0) {
+        if (num_parenthesis < 0 && !print_error) {
             error_parenthesis = true;
             // cout<< 2 << endl;
+            print_error = true;
             cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
         }
         if (tokens.at(i)->raw_value == "END") {
-            if (num_parenthesis > 0) {
+            if (num_parenthesis > 0 && !print_error) {
                 // cout << 1 << endl;
+                print_error = true;
                 cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
                 error_parenthesis = true;
 
