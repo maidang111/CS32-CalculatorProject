@@ -91,9 +91,8 @@ Token* InfixParser::parseEqual(){
     // }
     Token* equal = parseExpression();
     if(is_vaild == false){
-        // equal->delete_token(equal);
-        // return nullptr;
-        return equal;
+        equal->delete_token(equal);
+        return nullptr;
     }
     while (true){
         if (nextToken == nullptr){
@@ -106,10 +105,12 @@ Token* InfixParser::parseEqual(){
             Equal* temp = new Equal;
             temp->left = equal;
             temp->right = equal1;
-            temp->left->value = equal1->get_value();
-            for(size_t i = 0; i < variables.size(); i++){
-                if(variables.at(i)->raw_value == temp->left->raw_value){
-                    variables.erase(variables.begin()+i);
+            if (temp->left) {
+                temp->left->value = equal1->get_value();
+                for(size_t i = 0; i < variables.size(); i++){
+                    if(variables.at(i)->raw_value == temp->left->raw_value){
+                        variables.erase(variables.begin()+i);
+                    }
                 }
             }
             variables.push_back(temp->left);      
@@ -129,9 +130,8 @@ Token* InfixParser::parseEqual(){
 Token* InfixParser::parseExpression(){
     Token* term = parseTerm();
     if(is_vaild == false){
-        // term->delete_token(term);
-        // return nullptr;
-        return term;
+        term->delete_token(term);
+        return nullptr;
     }
     while (true){
         if (nextToken == nullptr){
@@ -161,9 +161,8 @@ Token* InfixParser::parseExpression(){
 Token* InfixParser::parseTerm(){
     Token* factor = parseFactor();
     if(is_vaild == false){
-        // factor->delete_token(factor);
-        // return nullptr;
-        return factor;
+        factor->delete_token(factor);
+        return nullptr;
     }
     while (true){
         if (nextToken == nullptr){
