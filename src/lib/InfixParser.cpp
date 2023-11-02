@@ -91,7 +91,7 @@ Token* InfixParser::parseEqual(){
     // }
     Token* equal = parseExpression();
     if (!equal) {
-        return;
+        return nullptr;
     }
     if(is_vaild == false){
         equal->delete_token(equal);
