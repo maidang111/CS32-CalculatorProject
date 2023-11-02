@@ -40,6 +40,10 @@ bool InfixParser::error_parenthesis(size_t index) {
             cout << "Unexpected token at line " << tokens.at(i)->row << " column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
         }
         if (tokens.at(i)->raw_value == "END") {
+            if (num_parenthesis != 0) {
+                error_parenthesis = true;
+                cout << "Unexpected token at line " << tokens.at(i)->row << " column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
+            }
             count = i;
             break;
         }
