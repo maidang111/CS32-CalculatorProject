@@ -112,7 +112,9 @@ double Equal::get_value(){
     if (this->left != nullptr && this->right != nullptr){
         this->left->value = this->right->get_value();
         variable_list.insert(left->raw_value);
-        variable_update.emplace(left->raw_value, left);
+        if (variable_update.find(left->raw_value) == variable_update.end()) {
+            variable_update.emplace(left->raw_value, left);
+        }
         return this->right->get_value();
     }
     return 0;
@@ -140,24 +142,11 @@ double Variable::get_value(){
         error_ = true;
     }
     if (error_) {
-        if (variable_value.empty()) {
-            variable_update.clear();
-        }
-        else {
+        // cout << " error " << endl;
+        if (!variable_value.empty()) {
+            // cout << 1 << endl;
             for (auto& var: variable_update) {
                 var.second->value = variable_value.at(var.first);
-            }
-        }
-    }
-    else {
-        if (!variable_value.empty()) {
-            for (auto& var: variable_value) {
-                var.second = variable_update.at(var.first)->value;
-            }
-        }
-        else {
-            for (auto& var: variable_update) {
-                variable_value.emplace(var.first, var.second->value);
             }
         }
     }

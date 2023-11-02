@@ -34,6 +34,36 @@ void InfixParser::build_AST(){
                 double result = AST->get_value();
                 if (!Token::error_) {
                     cout << result << endl;
+                    if (Token::variable_value.empty()) {
+                        for (auto a: Token::variable_update) {
+                            Token::variable_value.emplace(a.first, a.second->value);
+                        }
+                    }
+                    else {
+                        for (auto a: Token::variable_update) {
+                            if (Token::variable_value.find(a.first) == Token::variable_value.end()) {
+                                Token::variable_value.emplace(a.first, a.second->value);
+                            }
+                            else {
+                                Token::variable_value.at(a.first) = a.second->value;
+                            }
+                        }
+                    }
+                }
+                else {
+                    for (auto a: Token::variable_update) {
+                        if (Token::variable_value.find(a.first) != Token::variable_value.end()) {
+                            a.second->value = Token::variable_value.at(a.first);
+                            for (size_t j = 0; j < variables.size(); ++j) {
+                                if (variables.at(j)->raw_value == a.second->raw_value) {
+                                    variables.at(j)->value = a.second->value;
+                                }
+                            }
+                        }
+                        else {
+                            Token::variable_list.erase(a.first);
+                        }
+                    }
                 }
                 Token::error_ = false;
                 ASTheads.push_back(AST);
