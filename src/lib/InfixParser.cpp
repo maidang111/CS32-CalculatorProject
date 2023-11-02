@@ -86,7 +86,7 @@ bool InfixParser::error_assignment(size_t index) {
             if (i > 0) {
                 if (tokens.at(i - 1)->raw_value == "=") {
                     is_error = true;
-                    last_error = tokens.at(i);
+                    last_error = tokens.at(i - 1);
                 }
             }
         }
