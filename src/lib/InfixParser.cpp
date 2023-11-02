@@ -106,6 +106,7 @@ Token* InfixParser::parseExpression(){
         } else if(nextToken->raw_value == "-"){
             scanToken();
             Token* term1 = parseTerm();
+            // cout << nextToken->raw_value;
             Subtract* temp = new Subtract;
             temp->left = term;
             temp->right = term1;
@@ -172,12 +173,14 @@ Token* InfixParser::parseFactor(){
     } else if (nextToken->raw_value == "("){
         scanToken();
         if(!isdigit(nextToken->raw_value[0]) && !isalpha(nextToken->raw_value[0])){
+            // cout << "here 4";
             cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
             return nullptr;
         }
         Token* expression = parseEqual();
         if (expression == nullptr) {
-            cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+            // cout << "here 3";
+            // cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
             is_vaild = false;
             return nullptr;
         }
@@ -185,11 +188,13 @@ Token* InfixParser::parseFactor(){
             scanToken();
             return expression;
         } else {
+            // cout << "here 2";
             cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
             is_vaild = false;
             return nullptr;
         }
     } else {
+        // cout << "here 1";
         cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
         is_vaild = false;
         return nullptr;
