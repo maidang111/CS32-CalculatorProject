@@ -17,6 +17,7 @@ class Token{
     Token* right;
     Token* parent;
     bool is_operator;
+    static bool error_;
     static set<string> variable_list;
 
     virtual void print();

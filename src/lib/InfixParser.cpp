@@ -31,7 +31,11 @@ void InfixParser::build_AST(){
             } else {
                 AST->print();
                 cout << endl;
-                cout << AST->get_value() << endl;
+                double result = AST->get_value();
+                if (!Token::error_) {
+                    cout << result << endl;
+                }
+                Token::error_ = false;
                 ASTheads.push_back(AST);
             }
         } 

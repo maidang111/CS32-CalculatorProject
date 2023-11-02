@@ -11,7 +11,10 @@ Token::Token(){
     this->row = -1;
     this->left = nullptr;
     this->right = nullptr;
+    this->error_ = false;
 };
+
+bool Token::error_ = false;
 
 set<string> Token::variable_list;
 
@@ -131,7 +134,8 @@ void Num::print(){
 
 double Variable::get_value(){
     if (variable_list.find(raw_value) == variable_list.end()) {
-        cout << "Runtime error: unknown identifier ID" << endl;
+        cout << "Runtime error: unknown identifier ID" << raw_value << endl;
+        error_ = true;
     }
     return this->value;
 }
