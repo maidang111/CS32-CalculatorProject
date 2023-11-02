@@ -32,7 +32,7 @@ void InfixParser::build_AST(){
                 AST->print();
                 cout << endl;
                 double result = AST->get_value();
-                if (!Token::error_) {
+                if (!Token::error_ && is_vaild) {
                     cout << result << endl;
                     if (Token::variable_value.empty()) {
                         for (auto a: Token::variable_update) {
