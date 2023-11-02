@@ -20,6 +20,9 @@ map<string, double> Token::variable_value;
 set<string> Token::variable_list;
 
 void Token::deleteToken(){
+    if (!this) {
+        return;
+    }
     if(this->left != nullptr){
         this->left->deleteToken();
         this->left = nullptr;
