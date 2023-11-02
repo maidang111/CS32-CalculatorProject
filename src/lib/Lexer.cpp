@@ -259,7 +259,6 @@ void Lexer::create_endtokens(){
         raw_value = "";
         column = 1;
         prev_index = 1;
-        ++row;
     }
 }
 
