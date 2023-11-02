@@ -84,7 +84,7 @@ bool InfixParser::error_assignment(size_t index) {
         // (a =) case, no right value
         if (tokens.at(i)->raw_value == ")") {
             if (i > 0) {
-                if (tokens.at(i - 1)->raw_value == "=" || tokens.at(i - 1) == "(") {
+                if (tokens.at(i - 1)->raw_value == "=" || tokens.at(i - 1)->raw_value == "(") {
                     is_error = true;
                     last_error = tokens.at(i);
                 }
