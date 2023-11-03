@@ -83,7 +83,6 @@ void Lexer::create_tokens(){
                 }
                 last_digit = false;
                 variable = false;
-                ++column;
             }
             else if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
