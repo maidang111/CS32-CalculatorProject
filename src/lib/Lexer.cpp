@@ -11,7 +11,9 @@ using namespace std;
 
 Lexer::Lexer(){
     // change here
-    this->possible_values = {'=', '(', ')', '+', '-', '*', '/'};
+    this->possible_values = {'=', '(', ')', '+', '-', '*', '/', '%'};
+    inequalities = {'<', '>', '!'};
+    logicals = {'|', '^', '&'};
     string line = "";
     num_line = 0;
     while (!cin.eof()){
@@ -152,10 +154,57 @@ void Lexer::create_endtokens(){
     int prev_index = 1;
     bool variable = false;
     bool last_digit = false;
+    bool last_inequalities = false;
+    Token* add_token = nullptr;
 
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
-            if(possible_values.count(whole_input.at(i).at(j))){ //operators
+            if (logicals.count(whole_input.at(i).at(j))) { // | ^ &
+                Token* new_token = new Token();
+                new_token->raw_value = whole_input.at(i).at(j);
+                new_token->column = prev_index;
+                new_token->row = row;
+                multi_end_tokens.push_back(new_token);
+                prev_index = column + 1;
+                last_digit = false;
+                variable = false;
+            }
+            else if (inequalities.count(whole_input.at(i).at(j)) || last_inequalities) {
+                if (last_inequalities) {
+                    raw_value += whole_input.at(i).at(j);
+                    add_token = new Token();
+                    add_token->raw_value = raw_value;
+                    add_token->column = prev_index;
+                    add_token->row = row;
+                    multi_end_tokens.push_back(add_token);
+                    raw_value.clear();
+                    prev_index = column + 1;
+                    last_digit = false;
+                    variable = false;
+                    last_inequalities = false;
+                    column++;
+                    continue;
+                }
+                raw_value += whole_input.at(i).at(j);
+                if (j + 1 < whole_input.at(i).size()) {
+                    if (whole_input.at(i).at(j + 1) == '=') {
+                        last_inequalities = true;
+                        column++;
+                        continue;
+                    }
+                }
+                // < > case
+                add_token = new Token();
+                add_token->raw_value = raw_value;
+                add_token->column = prev_index;
+                add_token->row = row;
+                multi_end_tokens.push_back(add_token);
+                raw_value.clear();
+                prev_index = column + 1;
+                last_digit = false;
+                variable = false;
+            }
+            else if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if(raw_value.length() > 0){
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
@@ -164,6 +213,15 @@ void Lexer::create_endtokens(){
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
+                }
+                // == case
+                if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
+                    if (whole_input.at(i).at(j + 1) == '=') {
+                        raw_value += whole_input.at(i).at(j);
+                        last_inequalities = true;
+                        ++column;
+                        continue;
+                    }
                 }
                 Token* new_token = new Token();
                 new_token->raw_value = whole_input.at(i).at(j);

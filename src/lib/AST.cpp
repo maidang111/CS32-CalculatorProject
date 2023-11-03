@@ -20,6 +20,14 @@ map<string,Token*> Token::variable_update;
 map<string, double> Token::variable_value;
 set<string> Token::variable_list;
 
+void Token::set_type(string val) {
+    if (val == "true" || val == "false") {
+        data_type = BOOL;
+    }
+    else {
+        data_type = DOUBLE;
+    }
+}
 
 void Token::delete_token(Token* node){
     if (!node) {

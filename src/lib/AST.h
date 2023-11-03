@@ -10,6 +10,10 @@ using namespace std;
 
 class Token{
     public:
+    enum type {
+        BOOL,
+        DOUBLE
+    };
     string raw_value;
     size_t column;
     size_t row;
@@ -23,10 +27,13 @@ class Token{
     static bool outside_;
     static map<string,Token*> variable_update;
     static map<string, double> variable_value;
+    type data_type;
+
 
     virtual void print();
     virtual double get_value();
     void delete_token(Token* node);
+    void set_type(string val);
 
     Token();
     virtual ~Token();
