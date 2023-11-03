@@ -649,6 +649,12 @@ Token* InfixParser::parseExpression(){
 
             Token* term1 = parseTerm();
 
+            if (!term || !term1) {
+                delete term;
+                delete term1;
+                return nullptr;
+            }
+
 
             Add* temp = new Add;
 
@@ -670,7 +676,12 @@ Token* InfixParser::parseExpression(){
 
             Token* term1 = parseTerm();
 
-
+            if (!term || !term1) {
+                delete term;
+                delete term1;
+                return nullptr;
+            }
+            
             Subtract* temp = new Subtract;
 
 
@@ -739,7 +750,11 @@ Token* InfixParser::parseTerm(){
 
 
             Token* factor1 = parseFactor();
-
+            if (!factor || !factor1) {
+                delete factor;
+                delete factor1;
+                return nullptr;
+            }
 
             Multiply* temp = new Multiply;
 
@@ -760,6 +775,12 @@ Token* InfixParser::parseTerm(){
 
 
             Token* factor1 = parseFactor();
+            if (!factor || !factor1) {
+                delete factor;
+                delete factor1;
+                return nullptr;
+            }
+
 
 
             Divide* temp = new Divide;
