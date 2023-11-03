@@ -15,6 +15,7 @@ Token::Token(){
 };
 
 bool Token::error_ = false;
+bool Token::outside_ = false;
 map<string,Token*> Token::variable_update;
 map<string, double> Token::variable_value;
 set<string> Token::variable_list;
@@ -141,7 +142,7 @@ void Num::print(){
 }
 
 double Variable::get_value(){
-    if (variable_list.find(raw_value) == variable_list.end()) {
+    if (variable_list.find(raw_value) == variable_list.end() && !outside_) {
         cout << "Runtime error: unknown identifier " << raw_value << endl;
         error_ = true;
     }

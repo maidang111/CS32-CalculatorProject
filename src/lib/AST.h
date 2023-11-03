@@ -20,6 +20,7 @@ class Token{
     bool is_operator;
     static bool error_;
     static set<string> variable_list;
+    static bool outside_;
     static map<string,Token*> variable_update;
     static map<string, double> variable_value;
 

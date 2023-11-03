@@ -261,7 +261,6 @@ void InfixParser::build_AST(){
 
 
         is_vaild = true;
-        Token::error_ = false;
 
         // cout << "before check " << count << endl;
 
@@ -271,19 +270,19 @@ void InfixParser::build_AST(){
 
         if (check_parenthesis) {
             // cout << "p" << endl;
-            Token::error_ = true;
+            Token::outside_ = true;
 
             continue;
 
         }
 
         else {
-
+            Token::outside_ = false;
             bool check_assignment = error_assignment(count);
 
             if (check_assignment) {
                 // cout << "a" << endl;
-                Token::error_ = true;
+                Token::outside_ = true;
                 continue;
 
             }
@@ -422,6 +421,10 @@ void InfixParser::build_AST(){
 
 
                 }
+
+
+                Token::error_ = false;
+
 
                 ASTheads.push_back(AST);
 
