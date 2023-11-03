@@ -42,3 +42,33 @@ Some examples of invalid inputs includes:
 * no input value
 * division by 0
 * the number of operators should not exceed the number of left parenthesis
+
+### Track B: 
+#### Purpose: The purpose of this track is to code a calculator that takes infix notations. The calculator would have defined order of operations starting with parentheses, then multiplication, subtraction, addition, subtraction. It can also set vaulues and store them with the assignment operation. The InfixParser takes in tokens parsed from a slightly modfied Lexer from track A. 
+
+InfixParser will be supporting the following operations from highest to lowest:
+*Parentheses.
+*Multiplication and division.
+*Addition and subtraction.
+*Assignment.
+
+We define the calculator to be left associative except for the equal sign which will be right associative
+
+The InfixParser is a class that contains the following functions:
+*InfixParser() (calls the Lexer to lex the user's inputs into tokens)
+*Token* parseExpression() (Evaluates + and - tokens)
+*Token* parseFactor() (Evaluates * and / tokens)
+*Token* parseTerm() (Evaluates variables, numbers and parantheses)
+*Token* parseEqual() (Evaluates equal signs)
+*void delete_tokens() (delete lex tokens)
+*void delete_variables() (delete storied variable tokens)
+*bool error_parenthesis(size_t index) (handels errors that relates to parentheses)
+*bool error_assignment(size_t index) (handel assignment errors)
+*void scanToken() (movies pointer to the next token in vector)
+*~InfixParser() (Destructor)
+
+Some examples of invaild inputs includes: 
+*Invalid Operations (some examples includes multiple operators in a row, ending with an operator)
+*Invalid Assignment (some examples includes assigning a variable to a number)
+*Invalid parentheses (some examples includes open parentheses, an absent of closing parenthese, invalid expressing inside of parenthese)
+
