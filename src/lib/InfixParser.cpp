@@ -232,6 +232,7 @@ bool InfixParser::error_assignment(size_t index) {
                 count = i;
 
                 cout << "Unexpected token at line 1 column " << last_error->column << ": " << last_error->raw_value << endl;
+                return true;
 
             }
 
