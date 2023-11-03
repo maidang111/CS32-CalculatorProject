@@ -556,15 +556,14 @@ Token* InfixParser::parseEqual(){
 
 
                 }
-
+                variables.push_back(temp->left);      
+                equal = temp;
 
             }
-
-
-            variables.push_back(temp->left);      
-
-
-            equal = temp;
+            else {
+                delete equal1;
+                delete temp;
+            }
 
 
         } else {
