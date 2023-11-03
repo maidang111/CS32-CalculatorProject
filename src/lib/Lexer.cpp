@@ -77,13 +77,16 @@ void Lexer::create_tokens(){
                     new_token->value = whole_input.at(i).at(j);
                     new_token->column = prev_index;
                     new_token->row = row;
+                    raw_value = "";
                     tokens.push_back(new_token);
                     prev_index = column + 1;
                 }
                 last_digit = false;
                 variable = false;
+                ++column;
+                continue;
             }
-            if(possible_values.count(whole_input.at(i).at(j))){ //operators
+            else if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
                     if (whole_input.at(i).at(j + 1) == '=') {
                         double_equal = true;
