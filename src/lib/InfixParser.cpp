@@ -8,6 +8,7 @@
 #include "AST.h"
 using namespace std; 
 
+// Parsing tokens using lexer and store them in parser
 InfixParser::InfixParser(){
     Lexer lexer; 
     lexer.create_endtokens();
@@ -18,6 +19,7 @@ InfixParser::InfixParser(){
 
 InfixParser::~InfixParser(){}
 
+// Checks for number of parenthesis and checks if it's a vaild input
 bool InfixParser::error_parenthesis(size_t index) {
     bool error_parenthesis = false;
     int num_parenthesis = 0;
@@ -25,11 +27,9 @@ bool InfixParser::error_parenthesis(size_t index) {
     if (index != 0) {
         index -= 1;
     }
+
     for (size_t i = index; i < tokens.size(); ++i) {
-        // cout << num_parenthesis << endl;
-        // cout << tokens.at(i)->row << endl;
         if (tokens.at(i)->raw_value == "(") {
-            // cout << 3 << endl;
             num_parenthesis += 1;
         }
         else if (tokens.at(i)->raw_value == ")") {
@@ -37,13 +37,11 @@ bool InfixParser::error_parenthesis(size_t index) {
         }
         if (num_parenthesis < 0 && !print_error) {
             error_parenthesis = true;
-            // cout<< 2 << endl;
             print_error = true;
             cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
         }
         if (tokens.at(i)->raw_value == "END") {
             if (num_parenthesis > 0 && !print_error) {
-                // cout << 1 << endl;
                 print_error = true;
                 cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
                 error_parenthesis = true;
@@ -58,7 +56,6 @@ bool InfixParser::error_parenthesis(size_t index) {
 }
 
 bool InfixParser::error_assignment(size_t index) {
-    // cout << 100 << endl;
     bool is_error = false;
     bool not_variable = false;
     int num_parenthesis = 0;
@@ -138,15 +135,10 @@ bool InfixParser::error_assignment(size_t index) {
 
 void InfixParser::build_AST(){
     while(count != tokens.size()){
-        // cout << "each iteration" << endl;
-        // cout << "Token size: " << tokens.size() << endl;
         scanToken();
         is_vaild = true;
-        // cout << "before check " << count << endl;
         bool check_parenthesis = error_parenthesis(count);
-        // cout << "after check: " << count << endl;
         if (check_parenthesis) {
-            // cout << "p" << endl;
             Token::outside_ = true;
             continue;
         }
@@ -154,16 +146,13 @@ void InfixParser::build_AST(){
             Token::outside_ = false;
             bool check_assignment = error_assignment(count);
             if (check_assignment) {
-                // cout << "a" << endl;
                 Token::outside_ = true;
                 continue;
             }
-            // cout << "e" << endl;
         }
         if (nextToken->raw_value != "END"){
             AST = parseEqual();
             if (nextToken->raw_value != "END" || is_vaild == false){
-                // cout << 10 << endl;
                 cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
                 while(nextToken->raw_value != "END"){
                     scanToken();
@@ -213,7 +202,6 @@ void InfixParser::build_AST(){
     for(size_t i = 0; i < ASTheads.size(); i++){
         ASTheads.at(i)->delete_token(ASTheads.at(i));
     }
-//    AST->get_value();
 }
 
 void InfixParser::scanToken(){
@@ -223,12 +211,8 @@ void InfixParser::scanToken(){
     }
 }
 
+// Evauluates last and reverses order of operation
 Token* InfixParser::parseEqual(){
-    // if (nextToken->raw_value == ")")
-    //     cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-    //     is_vaild = false;
-    //     return nullptr;
-    // }
     Token* equal = parseExpression();
     if(is_vaild == false){
         equal->delete_token(equal);
@@ -269,21 +253,13 @@ Token* InfixParser::parseEqual(){
     }
 }
 
-// for(size_t i = 0; i < variables.size(); i++){
-//                 if(variables.at(i)->raw_value == temp->left->raw_value){
-//                     variables.at(i)->value = temp->left->value;
-//                 }else {
-//                     variables.push_back(temp->left);      
-//                 }
-//             }
-
+// Evaluaties add subtraction after parsing terms for multiplication
 Token* InfixParser::parseExpression(){
     Token* term = parseTerm();
     if(is_vaild == false){
         term->delete_token(term);
         return nullptr;
     }
-
     while (true){
         if (nextToken == nullptr){
             cout << "null expression" << endl;
@@ -322,7 +298,7 @@ Token* InfixParser::parseExpression(){
 }
 
 
-
+// Calls parseFactor and create multiplication and division nodes with the results
 Token* InfixParser::parseTerm(){
     Token* factor = parseFactor();
     if(is_vaild == false){
@@ -367,11 +343,11 @@ Token* InfixParser::parseTerm(){
     }
 }
 
+// Create tokens for variables, numbers and prioritizes parenthese when evaluating the oppertation
 Token* InfixParser::parseFactor(){
     if(is_vaild == false){
         return nullptr;
     }
-
     if(isdigit(nextToken->raw_value[0])){
         Num* num = new Num;
         num->raw_value = nextToken->raw_value;
@@ -393,14 +369,10 @@ Token* InfixParser::parseFactor(){
     } else if (nextToken->raw_value == "("){
         scanToken();
         if(!isdigit(nextToken->raw_value[0]) && !isalpha(nextToken->raw_value[0]) && (nextToken->raw_value != "(")){
-            // cout << "here 4";
-            // cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
             return nullptr;
         }
         Token* expression = parseEqual();
         if (expression == nullptr) {
-            // cout << "here 3";
-            // cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
             is_vaild = false;
             return nullptr;
         }
@@ -408,14 +380,11 @@ Token* InfixParser::parseFactor(){
             scanToken();
             return expression;
         } else {
-            // cout << "here 2";
-            // cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
+            
             is_vaild = false;
             return nullptr;
         }
     } else {
-        // cout << "here 1";
-        // cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
         is_vaild = false;
         return nullptr;
     }
