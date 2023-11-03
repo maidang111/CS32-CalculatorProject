@@ -85,6 +85,14 @@ void Lexer::create_tokens(){
                 variable = false;
             }
             if(possible_values.count(whole_input.at(i).at(j))){ //operators
+                if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
+                    if (whole_input.at(i).at(j + 1) == '=') {
+                        raw_value += whole_input.at(i).at(j);
+                        last_inequalities = true;
+                        ++column;
+                        continue;
+                    }
+                }
                 if(raw_value.length() > 0){
                     if(raw_value[raw_value.length()-1] == '.'){
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
@@ -96,14 +104,6 @@ void Lexer::create_tokens(){
                     tokens.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
-                }
-                if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
-                    if (whole_input.at(i).at(j + 1) == '=') {
-                        raw_value += whole_input.at(i).at(j);
-                        last_inequalities = true;
-                        ++column;
-                        continue;
-                    }
                 }
                 Token* new_token = new Token();
                 new_token->raw_value = whole_input.at(i).at(j);
