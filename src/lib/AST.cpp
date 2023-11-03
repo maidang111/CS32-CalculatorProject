@@ -146,7 +146,7 @@ double Num::get_value(){
     return stod(this->raw_value);
 }
 void Num::print(){
-    cout << this->raw_value;
+    cout << this->get_value();
 }
 
 double Variable::get_value(){
