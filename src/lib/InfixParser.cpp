@@ -566,8 +566,9 @@ Token* InfixParser::parseEqual(){
                 Token::outside_ = true;
                 Token a;
                 is_vaild = false;
-                a.delete_token(equal1);
-                a.delete_token(temp);
+                delete equal1;
+                delete temp;
+                return nullptr;
             }
 
 
