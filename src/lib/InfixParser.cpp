@@ -566,8 +566,8 @@ Token* InfixParser::parseEqual(){
                 Token::outside_ = true;
                 Token a;
                 is_vaild = false;
-                delete equal1;
-                delete temp;
+                a.delete_token(equal1);
+                a.delete_token(temp);
                 return nullptr;
             }
 
@@ -650,8 +650,10 @@ Token* InfixParser::parseExpression(){
             Token* term1 = parseTerm();
 
             if (!term || !term1) {
-                delete term;
-                delete term1;
+
+                Token a;
+                a.delete_token(term);
+                a.delete_token(term1);
                 return nullptr;
             }
 
@@ -677,11 +679,12 @@ Token* InfixParser::parseExpression(){
             Token* term1 = parseTerm();
 
             if (!term || !term1) {
-                delete term;
-                delete term1;
+                Token a;
+                a.delete_token(term);
+                a.delete_token(term1);
                 return nullptr;
             }
-            
+
             Subtract* temp = new Subtract;
 
 
@@ -751,8 +754,10 @@ Token* InfixParser::parseTerm(){
 
             Token* factor1 = parseFactor();
             if (!factor || !factor1) {
-                delete factor;
-                delete factor1;
+                Token a;
+                a.delete_token(factor);
+                a.delete_token(factor1);
+                return nullptr;
                 return nullptr;
             }
 
@@ -776,8 +781,9 @@ Token* InfixParser::parseTerm(){
 
             Token* factor1 = parseFactor();
             if (!factor || !factor1) {
-                delete factor;
-                delete factor1;
+                Token a;
+                a.delete_token(factor);
+                a.delete_token(factor1);
                 return nullptr;
             }
 
