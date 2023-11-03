@@ -74,7 +74,7 @@ void Lexer::create_tokens(){
                 }
                 if (!last_inequalities) { // not equal to included
                     Token* new_token = new Token();
-                    new_token->value = whole_input.at(i).at(j);
+                    new_token->raw_value = whole_input.at(i).at(j);
                     new_token->column = prev_index;
                     new_token->row = row;
                     raw_value = "";
@@ -84,7 +84,6 @@ void Lexer::create_tokens(){
                 last_digit = false;
                 variable = false;
                 ++column;
-                continue;
             }
             else if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
