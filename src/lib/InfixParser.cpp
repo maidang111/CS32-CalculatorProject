@@ -563,6 +563,7 @@ Token* InfixParser::parseEqual(){
 
             }
             else {
+                Token::outside_ = true;
                 delete equal1;
                 delete temp;
             }
