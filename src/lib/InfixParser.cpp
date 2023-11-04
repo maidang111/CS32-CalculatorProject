@@ -14,7 +14,11 @@ InfixParser::InfixParser(){
     lexer.create_endtokens();
     this->tokens = lexer.multi_end_tokens;
     this->count = 0;
-    operators = {"+", "-", "*", "/"};
+    // for (size_t i = 0; i < tokens.size(); ++i) {
+    //     cout << tokens.at(i)->raw_value << " column: " << tokens.at(i)->column << endl;
+    // }
+    operators = {"+", "-", "*", "/", "%"};
+    
 }
 
 InfixParser::~InfixParser(){}
@@ -253,6 +257,219 @@ Token* InfixParser::parseEqual(){
     }
 }
 
+// completed parse functions for bool 
+// need to implement evaluation for bool
+Token* InfixParser::parseLogicalOrInclusive() {
+    Token* bool_expression1 = parseLogicalOrExclusive();
+    if (is_vaild = false) {
+        bool_expression1->delete_token(bool_expression1);
+    }
+    while (true) {
+        if (nextToken == nullptr) {
+            cout << "null expression" << endl;
+            is_vaild = false;
+            exit(1);
+        }
+        else if (nextToken->raw_value == "^") {
+            scanToken();
+            Token* bool_expression2 = parseLogicalOrExclusive();
+            if (!bool_expression1 || !bool_expression2) {
+                Token a;
+                a.delete_token(bool_expression1);
+                a.delete_token(bool_expression2);
+                return nullptr;
+            }
+            Logical* temp = new Logical();
+            temp->left = bool_expression1;
+            temp->right = bool_expression2;
+            bool_expression1 = temp;
+        }
+        else {
+            return bool_expression1;
+        }
+    }  
+}
+
+Token* InfixParser::parseLogicalOrExclusive() {
+    Token* bool_expression1 = parseLogicalAnd();
+    if (is_vaild = false) {
+        bool_expression1->delete_token(bool_expression1);
+    }
+    while (true) {
+        if (nextToken == nullptr) {
+            cout << "null expression" << endl;
+            is_vaild = false;
+            exit(1);
+        }
+        else if (nextToken->raw_value == "|") {
+            scanToken();
+            Token* bool_expression2 = parseLogicalAnd();
+            if (!bool_expression1 || !bool_expression2) {
+                Token a;
+                a.delete_token(bool_expression1);
+                a.delete_token(bool_expression2);
+                return nullptr;
+            }
+            Logical* temp = new Logical();
+            temp->left = bool_expression1;
+            temp->right = bool_expression2;
+            bool_expression1 = temp;
+        }
+        else {
+            return bool_expression1;
+        }
+    }  
+}
+
+Token* InfixParser::parseLogicalAnd() {
+    Token* bool_expression1 = parseEquality();
+    if (is_vaild = false) {
+        bool_expression1->delete_token(bool_expression1);
+    }
+    while (true) {
+        if (nextToken == nullptr) {
+            cout << "null expression" << endl;
+            is_vaild = false;
+            exit(1);
+        }
+        else if (nextToken->raw_value == "&") {
+            scanToken();
+            Token* bool_expression2 = parseEquality();
+            if (!bool_expression1 || !bool_expression2) {
+                Token a;
+                a.delete_token(bool_expression1);
+                a.delete_token(bool_expression2);
+                return nullptr;
+            }
+            Logical* temp = new Logical();
+            temp->left = bool_expression1;
+            temp->right = bool_expression2;
+            bool_expression1 = temp;
+        }
+        else {
+            return bool_expression1;
+        }
+    }  
+}
+
+Token* InfixParser::parseEquality() {
+    Token* equality1 = parseComparison();
+    if (is_vaild = false) {
+        equality1->delete_token(equality1);
+    }
+    while (true) {
+        if (nextToken == nullptr) {
+            cout << "null expression" << endl;
+            is_vaild = false;
+            exit(1);
+        }
+        else if (nextToken->raw_value == "==") {
+            scanToken();
+            Token* equality2 = parseComparison();
+            if (!equality1 || !equality2) {
+                Token a;
+                a.delete_token(equality1);
+                a.delete_token(equality2);
+                return nullptr;
+            }
+            Equality* temp = new Equality();
+            temp->left = equality1;
+            temp->right = equality2;
+            equality1 = temp;
+        }
+        else if (nextToken->raw_value == "!=") {
+            scanToken();
+            Token* equality2 = parseComparison();
+            if (!equality1 || !equality2) {
+                Token a;
+                a.delete_token(equality1);
+                a.delete_token(equality2);
+                return nullptr;
+            }
+            Equality* temp = new Equality();
+            temp->left = equality1;
+            temp->right = equality2;
+            equality1 = temp;
+        }
+        else {
+            return equality1;
+        }
+    }  
+}
+
+Token* InfixParser::parseComparison() {
+    Token* comparison1 = parseExpression();
+    if (is_vaild = false) {
+        comparison1->delete_token(comparison1);
+    }
+    while (true) {
+        if (nextToken == nullptr) {
+            cout << "null expression" << endl;
+            is_vaild = false;
+            exit(1);
+        }
+        else if (nextToken->raw_value == "<") {
+            scanToken();
+            Token* comparison2 = parseExpression();
+            if (!comparison1 || !comparison2) {
+                Token a;
+                a.delete_token(comparison1);
+                a.delete_token(comparison2);
+                return nullptr;
+            }
+            Comparison* temp = new Comparison();
+            temp->left = comparison1;
+            temp->right = comparison2;
+            comparison1 = temp;
+        }
+        else if (nextToken->raw_value == "<=") {
+            scanToken();
+            Token* comparison2 = parseExpression();
+            if (!comparison1 || !comparison2) {
+                Token a;
+                a.delete_token(comparison1);
+                a.delete_token(comparison2);
+                return nullptr;
+            }
+            Comparison* temp = new Comparison();
+            temp->left = comparison1;
+            temp->right = comparison2;
+            comparison1 = temp;
+        }
+        else if (nextToken->raw_value == ">") {
+            scanToken();
+            Token* comparison2 = parseExpression();
+            if (!comparison1 || !comparison2) {
+                Token a;
+                a.delete_token(comparison1);
+                a.delete_token(comparison2);
+                return nullptr;
+            }
+            Comparison* temp = new Comparison();
+            temp->left = comparison1;
+            temp->right = comparison2;
+            comparison1 = temp;
+        }
+        else if (nextToken->raw_value == ">=") {
+            scanToken();
+            Token* comparison2 = parseExpression();
+            if (!comparison1 || !comparison2) {
+                Token a;
+                a.delete_token(comparison1);
+                a.delete_token(comparison2);
+                return nullptr;
+            }
+            Comparison* temp = new Comparison();
+            temp->left = comparison1;
+            temp->right = comparison2;
+            comparison1 = temp;            
+        }
+        else {
+            return comparison1;
+        }
+    }
+}
+
 // Evaluaties add subtraction after parsing terms for multiplication
 Token* InfixParser::parseExpression(){
     Token* term = parseTerm();
@@ -337,6 +554,21 @@ Token* InfixParser::parseTerm(){
             temp->left = factor;
             temp->right = factor1;
             factor = temp;
+        }
+        // implemented % token
+        else if (nextToken->raw_value == "%") {
+            scanToken();
+            Token* factor1 = parseFactor();
+            if (!factor || !factor1) {
+                Token a;
+                a.delete_token(factor);
+                a.delete_token(factor1);
+                return nullptr;
+            }
+            Mode* temp = new Mode;
+            temp->left = factor;
+            temp->right = factor1;
+            factor = temp;
         } else {
             return factor;
         }
@@ -353,8 +585,16 @@ Token* InfixParser::parseFactor(){
         num->raw_value = nextToken->raw_value;
         scanToken();
         return num;
-    } else if (isalpha(nextToken->raw_value[0]) && nextToken->raw_value != "END"){
-        Variable* variable = new Variable;
+    } 
+    // bool 
+    else if (nextToken->raw_value == "true" || nextToken->raw_value == "false") {
+        Bool* bool_ = new Bool;
+        bool_->raw_value = nextToken->raw_value;
+        scanToken();
+        return bool_;
+    }
+    else if (isalpha(nextToken->raw_value[0]) && nextToken->raw_value != "END"){
+        Variable* variable = new Variable; // need to implement union for this one and in the case that has error
         for(size_t i = 0; i < variables.size(); i++){
             if(nextToken->raw_value == variables.at(i)->raw_value){
                 variable->raw_value = variables.at(i)->raw_value;

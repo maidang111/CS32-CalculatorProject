@@ -16,6 +16,7 @@ class Lexer{
     vector <string> whole_input;
     set <char> possible_values;
     set <char> inequalities;
+    set <char> logicals;
     vector <Token*> tokens;
     vector <Token*> multi_end_tokens;
 

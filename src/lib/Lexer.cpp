@@ -13,6 +13,7 @@ Lexer::Lexer(){
     // change here
     this->possible_values = {'=', '(', ')', '+', '-', '*', '/', '%', '{', '}', '|', '&', '^'};
     inequalities = {'<', '>', '!'};
+    logicals = {'|', '&', '^'};
     string line = "";
     num_line = 0;
     while (!cin.eof()){
@@ -209,69 +210,96 @@ void Lexer::create_endtokens(){
     bool variable = false;
     bool last_digit = false;
     bool last_inequalities = false;
-    Token* add_token = nullptr;
+    double double_equal = false;
 
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
-
-            if (inequalities.count(whole_input.at(i).at(j)) || last_inequalities) {
-                if (last_inequalities) {
+            cout << "value: " << whole_input.at(i).at(j) << endl;
+            if (inequalities.count(whole_input.at(i).at(j)) || last_inequalities || double_equal) { // inequality
+                if (last_inequalities || double_equal) { // before last_inequality
+                    Token* new_token = new Token();
+                    raw_value += whole_input.at(i).at(j - 1);
                     raw_value += whole_input.at(i).at(j);
-                    add_token = new Token();
-                    add_token->raw_value = raw_value;
-                    add_token->column = prev_index;
-                    add_token->row = row;
-                    multi_end_tokens.push_back(add_token);
-                    raw_value.clear();
+                    new_token->raw_value = raw_value;
+                    new_token->column = prev_index;
+                    new_token->row = row;
+                    new_token->set_token_type("bool");
+                    tokens.push_back(new_token);
+                    raw_value = "";
                     prev_index = column + 1;
-                    last_digit = false;
-                    variable = false;
                     last_inequalities = false;
+                    double_equal = false;
                     column++;
+                    //
+                    cout << "return type: " << new_token->return_type() << endl;
                     continue;
                 }
-                raw_value += whole_input.at(i).at(j);
-                if (j + 1 < whole_input.at(i).size()) {
-                    if (whole_input.at(i).at(j + 1) == '=') {
-                        last_inequalities = true;
-                        column++;
-                        continue;
-                    }
-                }
-                // < > case
-                add_token = new Token();
-                add_token->raw_value = raw_value;
-                add_token->column = prev_index;
-                add_token->row = row;
-                multi_end_tokens.push_back(add_token);
-                raw_value.clear();
-                prev_index = column + 1;
-                last_digit = false;
-                variable = false;
-            }
-            else if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if(raw_value.length() > 0){
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
                     new_token->row = row;
-                    multi_end_tokens.push_back(new_token);
+                    new_token->set_token_type(raw_value);
+                    //
+                    cout << "return type: " << new_token->return_type() << endl;
+                    tokens.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
                 }
-                // == case
+                if (j + 1 < whole_input.at(i).size()) { // check for <=, >=, !=
+                    if (whole_input.at(i).at(j + 1) == '=') {
+                        last_inequalities = true;
+                        prev_index = column;
+                        column++;
+                        continue;
+                    }
+                }
+                if (!last_inequalities) { // not equal to included
+                    Token* new_token = new Token();
+                    new_token->raw_value = whole_input.at(i).at(j);
+                    new_token->column = prev_index;
+                    new_token->row = row;
+                    new_token->set_token_type("bool");
+                    //
+                    cout << "return type: " << new_token->return_type() << endl;
+                    raw_value = "";
+                    tokens.push_back(new_token);
+                    prev_index = column + 1;
+                }
+                last_digit = false;
+                variable = false;
+            }
+            else if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
                     if (whole_input.at(i).at(j + 1) == '=') {
-                        raw_value += whole_input.at(i).at(j);
-                        last_inequalities = true;
+                        double_equal = true;
                         ++column;
                         continue;
                     }
+                }
+                if(raw_value.length() > 0){
+                    Token* new_token = new Token();
+                    new_token->raw_value = raw_value;
+                    new_token->column = prev_index;
+                    new_token->row = row;
+                    new_token->set_token_type(raw_value);
+                    //
+                    cout << "return type: " << new_token->return_type() << endl;
+                    multi_end_tokens.push_back(new_token);
+                    raw_value = "";
+                    prev_index = column;
                 }
                 Token* new_token = new Token();
                 new_token->raw_value = whole_input.at(i).at(j);
                 new_token->column = prev_index;
                 new_token->row = row;
+                if (logicals.count(whole_input.at(i).at(j))) {
+                    new_token->set_token_type("bool");
+                }
+                else {
+                    new_token->set_token_type(raw_value);
+                }
+                cout << "return type: " << new_token->return_type() << endl;
                 multi_end_tokens.push_back(new_token);
                 prev_index = column + 1;
                 last_digit = false;
@@ -317,6 +345,8 @@ void Lexer::create_endtokens(){
                     new_token->raw_value = raw_value;
                     new_token->row = row;
                     new_token->column = column - 1;
+                    new_token->set_token_type(raw_value);
+                    cout << "return type: " << new_token->return_type() << endl;
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
                     prev_index = column + 1;
@@ -327,6 +357,8 @@ void Lexer::create_endtokens(){
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
                     new_token->row = row;
+                    new_token->set_token_type(raw_value);
+                    cout << "return type: " << new_token->return_type() << endl;
                     multi_end_tokens.push_back(new_token);
                     raw_value = "";
                     prev_index = column + 1;
@@ -348,6 +380,9 @@ void Lexer::create_endtokens(){
             new_token->raw_value = raw_value;
             new_token->column = prev_index;
             new_token->row = row;
+            // place holder
+            new_token->set_token_type(raw_value);
+            cout << "return type: " << new_token->return_type() << endl;
             multi_end_tokens.push_back(new_token);
         }
         
@@ -355,6 +390,8 @@ void Lexer::create_endtokens(){
         new_token->raw_value = "END";
         new_token->column = column;
         new_token->row = row;
+        new_token->set_token_type("end");
+        cout << "return type: " << new_token->return_type() << endl;
         multi_end_tokens.push_back(new_token);
         
         last_digit = false;

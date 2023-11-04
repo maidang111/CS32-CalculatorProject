@@ -1,6 +1,6 @@
 CC=g++ -std=c++17
 CFLAGS= -Wall -Wextra -Werror
-OBJS = src/lib/AST.o src/lib/Lexer.o src/lex.o src/lib/InfixParser.o 
+OBJS = src/lib/AST.o src/lib/Lexer.o src/calc.o src/lib/InfixParser.o 
 MAIN= calc
 
 all: $(MAIN)
