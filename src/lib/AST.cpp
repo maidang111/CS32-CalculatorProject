@@ -69,7 +69,7 @@ void Token::print(){
 variant<bool, double> Add::get_value(){
     // always number 
     if (this->left != nullptr && this->right != nullptr){
-        if ((this->left->data_type != DOUBLE) && (this->right->data_type != DOUBLE)) {
+        if ((this->left->data_type != DOUBLE) || (this->right->data_type != DOUBLE)) {
             print_invalid_type();
             // reupdate variable if needed
             return 0.0;
@@ -95,7 +95,7 @@ void Add::print(){
 
 variant<bool, double> Subtract::get_value(){
     if (this->left != nullptr && this->right != nullptr){
-        if ((this->left->data_type != DOUBLE) && (this->right->data_type != DOUBLE)) {
+        if ((this->left->data_type != DOUBLE) || (this->right->data_type != DOUBLE)) {
             print_invalid_type();
             // reupdate variable if needed
             return 0.0;
@@ -120,7 +120,7 @@ void Subtract::print(){
 
 variant<bool, double> Divide::get_value(){
     if (this->left != nullptr && this->right != nullptr){
-        if ((this->left->data_type != DOUBLE) && (this->right->data_type != DOUBLE)) {
+        if ((this->left->data_type != DOUBLE) || (this->right->data_type != DOUBLE)) {
             print_invalid_type();
             // reupdate variable if needed
             return 0.0;
@@ -153,7 +153,7 @@ variant<bool, double> Divide::get_value(){
 
 variant<bool, double> Mode::get_value(){
     if (this->left != nullptr && this->right != nullptr){
-        if ((this->left->data_type != DOUBLE) && (this->right->data_type != DOUBLE)) {
+        if ((this->left->data_type != DOUBLE) || (this->right->data_type != DOUBLE)) {
             print_invalid_type();
             // reupdate variable if needed
             return 0.0;
@@ -196,7 +196,7 @@ void Divide::print(){
 
 variant<bool, double> Multiply::get_value(){
     if (this->left != nullptr && this->right != nullptr){
-        if ((this->left->data_type != DOUBLE) && (this->right->data_type != DOUBLE)) {
+        if ((this->left->data_type != DOUBLE) || (this->right->data_type != DOUBLE)) {
             print_invalid_type();
             // reupdate variable if needed
             return 0.0;
