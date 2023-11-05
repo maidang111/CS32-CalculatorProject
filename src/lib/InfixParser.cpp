@@ -136,11 +136,11 @@ bool InfixParser::error_assignment(size_t index) {
 
 void InfixParser::build_AST(){
     // checking problem in lexer
-    cout << "start checking lexer: " << endl;
-    for (size_t a = 0; a < tokens.size(); ++a) {
-        cout << tokens.at(a)->raw_value << endl;
-    }
-    cout << "finished checking" << endl;
+    // cout << "start checking lexer: " << endl;
+    // for (size_t a = 0; a < tokens.size(); ++a) {
+    //     cout << tokens.at(a)->raw_value << endl;
+    // }
+    // cout << "finished checking" << endl;
     while(count != tokens.size()){
         scanToken();
         is_vaild = true;
@@ -165,24 +165,24 @@ void InfixParser::build_AST(){
                     scanToken();
                 }
             } else {
-                cout << "check AST" << endl;
+                // cout << "check AST" << endl;
                 AST->print();
                 cout << endl;
-                cout << "finish checking" << endl;
+                // cout << "finish checking" << endl;
                 bool a;
                 variant<bool, double> result = AST->get_value();
                 if (!Token::error_) {
                     if (holds_alternative<bool>(result)) {
                         a = get<bool>(result);
                         if (a) {
-                            cout << "result bool: " << "true" << endl;
+                            cout << "true" << endl;
                         }
                         else {
-                            cout << "result bool: " << "false" << endl;
+                            cout << "false" << endl;
                         }
                     }
                     else if (holds_alternative<double>(result)) {
-                        cout << "result double: " << get<double>(result) << endl;
+                        cout << get<double>(result) << endl;
                     }
                     // cout << result << endl;
                     if (!Token::variable_bool.empty() || !Token::variable_value.empty()) {
@@ -258,7 +258,7 @@ void InfixParser::build_AST(){
 
 void InfixParser::scanToken(){
     if (count != tokens.size()){
-        cout << "ScanToken(): Token moved from " << tokens.at(count)->raw_value;
+        // cout << "ScanToken(): Token moved from " << tokens.at(count)->raw_value;
         this->nextToken = tokens.at(count);
         count++;
         // cout << " to " << tokens.at(count)->raw_value;
@@ -267,7 +267,7 @@ void InfixParser::scanToken(){
 
 // Evauluates last and reverses order of operation
 Token* InfixParser::parseEqual(){
-    cout << "parseEqual()" << endl;
+    // cout << "parseEqual()" << endl;
     Token* equal = parseLogicalOrInclusive();
     if(is_vaild == false){
         equal->delete_token(equal);
@@ -311,7 +311,7 @@ Token* InfixParser::parseEqual(){
                 return nullptr;
             }
         } else {
-            cout << "equal==:  " << equal->raw_value << endl;
+            // cout << "equal==:  " << equal->raw_value << endl;
             return equal;
         }
     }
@@ -319,7 +319,7 @@ Token* InfixParser::parseEqual(){
 // completed parse functions for bool 
 // need to implement evaluation for bool
 Token* InfixParser::parseLogicalOrInclusive() {
-    cout << "parseLogicalOrInclusive" << endl;
+    // cout << "parseLogicalOrInclusive" << endl;
     Token* bool_expression1 = parseLogicalOrExclusive();
     if (is_vaild == false) {
         bool_expression1->delete_token(bool_expression1);
@@ -347,13 +347,13 @@ Token* InfixParser::parseLogicalOrInclusive() {
         }
         else {
             return bool_expression1;
-            cout << "bool | :  " << bool_expression1->raw_value << endl;
+            // cout << "bool | :  " << bool_expression1->raw_value << endl;
         }
     }  
 }
 
 Token* InfixParser::parseLogicalOrExclusive() {
-    cout << "parseLogicalOrExclusive" << endl;
+    // cout << "parseLogicalOrExclusive" << endl;
     Token* bool_expression1 = parseLogicalAnd();
     if (is_vaild == false) {
         bool_expression1->delete_token(bool_expression1);
@@ -380,14 +380,14 @@ Token* InfixParser::parseLogicalOrExclusive() {
             bool_expression1->raw_value = "^";
         }
         else {
-            cout << "bool ^ :  " << bool_expression1->raw_value << endl;
+            // cout << "bool ^ :  " << bool_expression1->raw_value << endl;
             return bool_expression1;
         }
     }  
 }
 
 Token* InfixParser::parseLogicalAnd() {
-    cout << "parseLogicalAnd" << endl;
+    // cout << "parseLogicalAnd" << endl;
     Token* bool_expression1 = parseEquality();
     if (is_vaild == false) {
         bool_expression1->delete_token(bool_expression1);
@@ -414,14 +414,14 @@ Token* InfixParser::parseLogicalAnd() {
             bool_expression1->raw_value = "&";
         }
         else {
-            cout << "bool & :  " << bool_expression1->raw_value << endl;
+            // cout << "bool & :  " << bool_expression1->raw_value << endl;
             return bool_expression1;
         }
     }  
 }
 
 Token* InfixParser::parseEquality() {
-    cout << "parseEquality" << endl;
+    // cout << "parseEquality" << endl;
     Token* equality1 = parseComparison();
     if (is_vaild == false) {
         equality1->delete_token(equality1);
@@ -463,14 +463,14 @@ Token* InfixParser::parseEquality() {
             equality1->raw_value = "!=";
         }
         else {
-            cout << "equality1 :  " << equality1->raw_value << endl;
+            // cout << "equality1 :  " << equality1->raw_value << endl;
             return equality1;
         }
     }  
 }
 
 Token* InfixParser::parseComparison() {
-    cout << "parseComparison" << endl;
+    // cout << "parseComparison" << endl;
     Token* comparison1 = parseExpression();
     if (is_vaild == false) {
         comparison1->delete_token(comparison1);
@@ -482,7 +482,7 @@ Token* InfixParser::parseComparison() {
             exit(1);
         }
         else if (nextToken->raw_value == "<") {
-            cout << nextToken->raw_value << " ";
+            // cout << nextToken->raw_value << " ";
             scanToken();
             Token* comparison2 = parseExpression();
             if (!comparison1 || !comparison2) {
@@ -547,7 +547,7 @@ Token* InfixParser::parseComparison() {
             comparison1->raw_value = ">=";       
         }
         else {
-            cout << "bool comparison :  " << comparison1->raw_value << endl;
+            // cout << "bool comparison :  " << comparison1->raw_value << endl;
             return comparison1;
         }
     }
@@ -555,7 +555,7 @@ Token* InfixParser::parseComparison() {
 
 // Evaluaties add subtraction after parsing terms for multiplication
 Token* InfixParser::parseExpression(){
-    cout << "parseExpression" << endl;
+    // cout << "parseExpression" << endl;
     Token* term = parseTerm();
     if(is_vaild == false){
         term->delete_token(term);
@@ -593,7 +593,7 @@ Token* InfixParser::parseExpression(){
             temp->right = term1;
             term = temp;
         } else {
-            cout << "double + - :  " << term->raw_value << endl;
+            // cout << "double + - :  " << term->raw_value << endl;
             return term;
         }
     } 
@@ -602,7 +602,7 @@ Token* InfixParser::parseExpression(){
 
 // Calls parseFactor and create multiplication and division nodes with the results
 Token* InfixParser::parseTerm(){
-    cout << "parseTerm" << endl;
+    // cout << "parseTerm" << endl;
     Token* factor = parseFactor();
     if(is_vaild == false){
         factor->delete_token(factor);
@@ -655,7 +655,7 @@ Token* InfixParser::parseTerm(){
             factor = temp;
         }
         else {
-            cout << "double * / :  " << factor->raw_value << endl;
+            // cout << "double * / :  " << factor->raw_value << endl;
             return factor;
         }
     }
@@ -663,13 +663,13 @@ Token* InfixParser::parseTerm(){
 
 // Create tokens for variables, numbers and prioritizes parenthese when evaluating the oppertation
 Token* InfixParser::parseFactor(){
-    cout << "parseFactor" << endl;
+    // cout << "parseFactor" << endl;
     if(is_vaild == false){
         return nullptr;
     }
     if(isdigit(nextToken->raw_value[0])){
         //
-        cout << "number: " << nextToken->raw_value << " ";
+        // cout << "number: " << nextToken->raw_value << " ";
         Num* num = new Num;
         num->raw_value = nextToken->raw_value;
         num->value = stod(nextToken->raw_value);
@@ -727,7 +727,7 @@ Token* InfixParser::parseFactor(){
             return nullptr;
         }
     } else {
-        cout << "n" << endl;
+        // cout << "n" << endl;
         is_vaild = false;
         return nullptr;
     }
