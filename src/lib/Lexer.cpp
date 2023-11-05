@@ -330,7 +330,7 @@ void Lexer::create_endtokens(){
                     cout << "exit here 3";
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         error = true;
-                    } else if((j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1))) && !prev_error){
+                    } else if((j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1)))){
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
                         prev_error = true;
                         error = true;
