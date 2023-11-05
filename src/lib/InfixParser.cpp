@@ -185,34 +185,64 @@ void InfixParser::build_AST(){
                         cout << "result double: " << get<double>(result) << endl;
                     }
                     // cout << result << endl;
-                    if (Token::variable_value.empty()) {
+                    if (!Token::variable_bool.empty() || !Token::variable_value.empty()) {
+                        auto k = Token::variable_value.begin();
+                        auto l = Token::variable_bool.begin();
                         for (auto a: Token::variable_update) {
-                            Token::variable_value.emplace(a.first, a.second->value);
-                        }
-                    }
-                    else {
-                        for (auto a: Token::variable_update) {
-                            if (Token::variable_value.find(a.first) == Token::variable_value.end()) {
-                                Token::variable_value.emplace(a.first, a.second->value);
+                            k = Token::variable_value.find(a.first);
+                            l = Token::variable_bool.find(a.first);
+                            if ((k == Token::variable_value.end()) && (l == Token::variable_bool.end())) {
+                                Token::variable_update.erase(a.first);
+                            }
+                            else if (k != Token::variable_value.end()){
+                                a.second->set_type("double");
+                                a.second->value = k->second;
                             }
                             else {
-                                Token::variable_value.at(a.first) = a.second->value;
+                                a.second->set_type("true");
+                                a.second->bool_val = l->second;
                             }
                         }
                     }
                 }
                 else {
+                    auto k = Token::variable_value.begin();
+                    auto l = Token::variable_bool.begin();
                     for (auto a: Token::variable_update) {
-                        if (Token::variable_value.find(a.first) != Token::variable_value.end()) {
-                            a.second->value = Token::variable_value.at(a.first);
-                            for (size_t j = 0; j < variables.size(); ++j) {
-                                if (variables.at(j)->raw_value == a.second->raw_value) {
-                                    variables.at(j)->value = a.second->value;
-                                }
+                        k = Token::variable_value.find(a.first);
+                        l = Token::variable_bool.find(a.first);
+                        if (k == Token::variable_value.end() && l == Token::variable_bool.end()) {
+                            if (a.second->get_data_type() == "BOOL") {
+                                Token::variable_bool.emplace(a.first, a.second->bool_val);
+                            }
+                            else  {
+                                Token::variable_bool.emplace(a.first, a.second->value);
                             }
                         }
                         else {
-                            Token::variable_list.erase(a.first);
+                            if (a.second->get_data_type() == "BOOL") {
+                                if (l != Token::variable_bool.end()) {
+                                    l->second = a.second->bool_val;
+                                }
+                                else {
+                                    k->second = a.second->value;
+                                    a.second->set_type("true");
+                                    Token::variable_bool.emplace(k->first, k->second);
+                                    Token::variable_value.erase(k->first);
+                                }
+                            }
+                            else {
+                                if (l != Token::variable_bool.end()) {
+                                    l->second = a.second->bool_val;
+                                    a.second->set_type("double");
+                                    Token::variable_value.emplace(l->first, l->second);
+                                    Token::variable_bool.erase(l->first);
+                                }
+                                else {
+                                    k->second = a.second->bool_val;
+                                }
+                            }
+
                         }
                     }
                 }
@@ -610,7 +640,21 @@ Token* InfixParser::parseTerm(){
             temp->left = factor;
             temp->right = factor1;
             factor = temp;
-        } else {
+        } else if (nextToken->raw_value == "%") {
+            scanToken();
+            Token* factor1 = parseFactor();
+            if (!factor || !factor1) {
+                Token a;
+                a.delete_token(factor);
+                a.delete_token(factor1);
+                return nullptr;
+            }
+            Mode* temp = new Mode;
+            temp->left = factor;
+            temp->right = factor1;
+            factor = temp;
+        }
+        else {
             cout << "double * / :  " << factor->raw_value << endl;
             return factor;
         }

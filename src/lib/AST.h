@@ -77,6 +77,16 @@ class Subtract: public Token{
     // ~Subtract() = default;
 };
 
+class Mode: public Token {
+    public:
+    bool is_operator = true;
+    variant<bool, double> get_value();
+    void print();
+    Mode() {
+        data_type = DOUBLE;
+    }
+};
+
 class Multiply: public Token{
     public:
     bool is_operator = true;

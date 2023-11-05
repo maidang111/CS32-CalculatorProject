@@ -1,6 +1,7 @@
 #include <iostream>
 #include "AST.h"
 #include <set>
+#include <cmath>
 
 using namespace std; 
 
@@ -150,6 +151,39 @@ variant<bool, double> Divide::get_value(){
     // }
 }
 
+variant<bool, double> Mode::get_value(){
+    if (this->left != nullptr && this->right != nullptr){
+        if ((this->left->data_type != DOUBLE) && (this->right->data_type != DOUBLE)) {
+            print_invalid_type();
+            // reupdate variable if needed
+            return 0.0;
+        }
+        if (holds_alternative<double>(left->get_value()) && holds_alternative<double>(right->get_value())) {
+            double lf = get<double>(left->get_value());
+            double r = get<double>(right->get_value());
+            if (r != 0.0) {
+                return fmod(lf, r);
+            }
+            else {
+                cout << "Runtime error: mode by zero." << endl;
+                error_ = true;
+                return 0.0;
+            }
+        }    
+    }
+    return 0.0;
+}
+
+void Mode::print(){
+    if (this->left != nullptr && this->right != nullptr){
+        cout << "(";
+        this->left->print();
+        cout << " % ";
+        this->right->print();
+        cout << ")";
+    }
+} 
+
 void Divide::print(){
     if (this->left != nullptr && this->right != nullptr){
         cout << "(";
@@ -229,16 +263,7 @@ variant<bool, double> Variable::get_value(){
     if (variable_list.find(raw_value) == variable_list.end() && !outside_) {
         cout << "Runtime error: unknown identifier " << raw_value << endl;
         error_ = true;
-    }
-    if (error_) {
-        // cout << " error " << endl;
-        if (!variable_value.empty()) {
-            // cout << 1 << endl;
-            // need to edit here
-            for (auto& var: variable_update) {
-                var.second->value = variable_value.at(var.first);
-            }
-        }
+        return false;
     }
     if (data_type == BOOL) {
         return bool_val;
