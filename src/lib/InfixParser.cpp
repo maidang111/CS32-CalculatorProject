@@ -257,9 +257,11 @@ Token* InfixParser::parseEqual(){
             if (temp->left && equal1) {
                 if (holds_alternative<double>(equal1->get_value())) {
                     temp->left->value = get<double>(equal1->get_value());
+                    temp->left->set_type("true");
                 }
                 else if (holds_alternative<bool>(equal1->get_value())) {
                     temp->left->bool_val = get<bool>(equal1->get_value());
+                    temp->left->set_type("double");
                 }
                 // temp->left->value = equal1->get_value();
                 for(size_t i = 0; i < variables.size(); i++){
@@ -646,7 +648,15 @@ Token* InfixParser::parseFactor(){
         for(size_t i = 0; i < variables.size(); i++){
             if(nextToken->raw_value == variables.at(i)->raw_value){
                 variable->raw_value = variables.at(i)->raw_value;
-                variable->value = variables.at(i)->value;
+                //
+                if (variables.at(i)->get_data_type() == "BOOL") {
+                    variable->bool_val = variables.at(i)->bool_val;
+                    variable->set_type("true");
+                }
+                else if (variables.at(i)->get_data_type() == "DOUBLE") {
+                    variable->value = variables.at(i)->value;
+                    variable->set_type("double");   
+                }
                 scanToken();
                 return variable;
             }

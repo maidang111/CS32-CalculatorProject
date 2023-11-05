@@ -29,7 +29,9 @@ class Token{
     static bool outside_;
     static map<string,Token*> variable_update;
     static map<string, double> variable_value;
+    static map<string, bool> variable_bool;
     type data_type;
+    string get_data_type() const;
 
 
     virtual void print();

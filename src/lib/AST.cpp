@@ -17,7 +17,18 @@ bool Token::error_ = false;
 bool Token::outside_ = false;
 map<string,Token*> Token::variable_update;
 map<string, double> Token::variable_value;
+map<string, bool> Token::variable_bool;
 set<string> Token::variable_list;
+
+string Token::get_data_type() const {
+    if (data_type == BOOL) {
+        return "BOOL";
+    }
+    else if (data_type == DOUBLE) {
+        return "DOUBLE";
+    }
+    return "END";
+}
 
 void Token::print_invalid_type() const {
     cout << "Runtime error: invalid operand type." << endl;
@@ -181,9 +192,11 @@ variant<bool, double> Equal::get_value(){
         left->data_type = right->data_type;
         if (holds_alternative<double>(right->get_value())) {
             this->left->value = get<double>(right->get_value());
+            left->data_type = DOUBLE;
         }
         else if (holds_alternative<double>(right->get_value())) {
             this->right->bool_val = get<bool>(right->get_value());
+            left->data_type = BOOL;
         }
         // this->left->value = this->right->get_value();
         variable_list.insert(left->raw_value);
