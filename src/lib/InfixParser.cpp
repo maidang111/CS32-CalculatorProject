@@ -676,6 +676,11 @@ Token* InfixParser::parseFactor(){
         scanToken();
         return num;
     }
+    else if (nextToken->raw_value == "print" || nextToken->raw_value == "if") {
+        Token::error_ = true;
+        is_vaild = false;
+        return nullptr;
+    }
     else if (nextToken->raw_value == "true" || nextToken->raw_value == "false") {
         Bool* val = new Bool();
         val->raw_value = nextToken->raw_value;
