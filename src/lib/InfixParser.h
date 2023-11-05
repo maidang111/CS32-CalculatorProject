@@ -26,6 +26,11 @@ class InfixParser{
     Token* parseFactor();
     Token* parseTerm();
     Token* parseEqual();
+    Token* parseComparison();
+    Token* parseEquality();
+    Token* parseLogicalAnd();
+    Token* parseLogicalOrExclusive();
+    Token* parseLogicalOrInclusive();
     vector <Token*> tokens;
     vector <Token*> variables;
     vector <Token*> tempVariables;

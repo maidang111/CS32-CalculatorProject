@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <set>
+#include <variant>
 #include <map>
 #include <vector>
 
@@ -10,10 +11,15 @@ using namespace std;
 
 class Token{
     public:
+    enum type {
+        BOOL,
+        DOUBLE
+    };
     string raw_value;
     size_t column;
     size_t row;
     double value;
+    bool bool_val;
     Token* left;
     Token* right;
     Token* parent;
@@ -23,20 +29,39 @@ class Token{
     static bool outside_;
     static map<string,Token*> variable_update;
     static map<string, double> variable_value;
+    static map<string, bool> variable_bool;
+    type data_type;
+    string get_data_type() const;
+
 
     virtual void print();
-    virtual double get_value();
+    virtual variant<bool,double> get_value();
     void delete_token(Token* node);
+    void set_type(string val);
+    void print_invalid_type() const;
 
     Token();
     virtual ~Token();
 };
 
+class Bool: public Token {
+    public:
+    bool is_operator = false;
+    variant<bool, double> get_value();
+    void print();
+    Bool() {
+        data_type = BOOL;
+    }
+};
+
 class Add: public Token{
     public:
     bool is_operator = true;
-    double get_value();
+    variant<bool,double> get_value();
     void print();
+    Add() {
+        data_type = DOUBLE;
+    }
     
     // ~Add() = default;
 };
@@ -44,40 +69,65 @@ class Add: public Token{
 class Subtract: public Token{
     public:
     bool is_operator = true;
-    double get_value();
+    variant<bool, double> get_value();
     void print();
+    Subtract() {
+        data_type = DOUBLE;
+    }
     // ~Subtract() = default;
+};
+
+class Mode: public Token {
+    public:
+    bool is_operator = true;
+    variant<bool, double> get_value();
+    void print();
+    Mode() {
+        data_type = DOUBLE;
+    }
 };
 
 class Multiply: public Token{
     public:
     bool is_operator = true;
-    double get_value();
+    variant<bool, double> get_value();
     void print();
+    Multiply() {
+        data_type = DOUBLE;
+    }
     // ~Multiply() = default;
 };
 
 class Divide: public Token{
     public:
     bool is_operator = true;
-    double get_value();
+    variant<bool,double> get_value();
     void print();
+    Divide() {
+        data_type = DOUBLE;
+    }
     // ~Divide() = default;
 };
 
 class Equal: public Token{
     public:
     bool is_operator = true;
-    double get_value();
+    variant<bool, double> get_value();
     void print();
+    Equal() {
+        data_type = DOUBLE;
+    }
     // ~Equal() = default;
 };
 
 class Num: public Token{
     public:
     bool is_operator = false;
-    double get_value();
+    variant<bool, double> get_value();
     void print();
+    Num() {
+        data_type = DOUBLE;
+    }
     // ~Num() = default;
 
 };
@@ -85,11 +135,43 @@ class Num: public Token{
 class Variable: public Token{
     public:
     bool is_operator = false;
-    double get_value();
+    variant<bool, double> get_value();
     void print();
+    Variable() {
+        data_type = DOUBLE;
+    }
     // ~Variable() = default;
 };
 
+class Logical: public Token {
+    public:
+    bool is_operator = false;
+    variant<bool, double> get_value();
+    void print();
+    Logical() {
+        data_type = BOOL;
+    }
+};
+
+class Equality: public Token {
+    public:
+    bool is_operator = false;
+    variant<bool, double> get_value();
+    void print();
+    Equality() {
+        data_type = BOOL;
+    }
+};
+
+class Comparison: public Token {
+    public:
+    bool is_operator = false;
+    variant<bool,double> get_value();
+    void print();
+    Comparison() {
+        data_type = BOOL;
+    }
+};
 // class LeftP: public Token{
 
 //     void get_value();
