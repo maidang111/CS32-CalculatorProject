@@ -320,10 +320,10 @@ variant<bool, double> Equality::get_value() {
             return 0.0;
         }
         if (raw_value == "==") {
-            return left->raw_value == right->raw_value;
+            return left->get_value() == right->get_value();
         }
         else if (raw_value == "!=") {
-            return left->raw_value != right->raw_value;
+            return left->get_value() != right->get_value();
         }
     }
     return 0.0;
