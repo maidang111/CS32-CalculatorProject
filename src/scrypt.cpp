@@ -1,6 +1,6 @@
 #include <iostream>
 #include "lib/Lexer.h"
-#include "lib/InfixParser.h"
+#include "lib/Scrypter.h"
 #include <string>
 
 using namespace std; 
