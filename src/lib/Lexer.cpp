@@ -241,7 +241,6 @@ void Lexer::create_endtokens(){
                     variable = false;
                     last_inequalities = false;
                     column++;
-                    prev_error = false;
                     continue;
                 }
                 raw_value += whole_input.at(i).at(j);
@@ -249,7 +248,6 @@ void Lexer::create_endtokens(){
                     if (whole_input.at(i).at(j + 1) == '=') {
                         last_inequalities = true;
                         column++;
-                        prev_error = false;
                         continue;
                     }
                 }
@@ -263,7 +261,6 @@ void Lexer::create_endtokens(){
                 prev_index = column + 1;
                 last_digit = false;
                 variable = false;
-                prev_error = false;
             }
             else if(possible_values.count(whole_input.at(i).at(j))){ //operators
                 if(raw_value.length() > 0){
@@ -274,7 +271,6 @@ void Lexer::create_endtokens(){
                     mini.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
-                    prev_error = false;
                 }
                 // == case
                 if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
@@ -282,7 +278,6 @@ void Lexer::create_endtokens(){
                         raw_value += whole_input.at(i).at(j);
                         last_inequalities = true;
                         ++column;
-                        prev_error = false;
                         continue;
                     }
                 }
@@ -294,7 +289,6 @@ void Lexer::create_endtokens(){
                 prev_index = column + 1;
                 last_digit = false;
                 variable = false;
-                prev_error = false;
                 // change here for variable 
             } else if (isalpha(whole_input.at(i).at(j)) || whole_input.at(i).at(j) == '_' || variable) {
                 if (last_digit && !variable) { // variable that starts with number
@@ -313,11 +307,9 @@ void Lexer::create_endtokens(){
                 else if (j + 1 == whole_input.at(i).size()) {
                     variable = false;
                 }
-                prev_error = false;
             } else if(isdigit(whole_input.at(i).at(j))){
                 raw_value += whole_input.at(i).at(j);
                 last_digit = true;
-                prev_error = false;
             } else if(raw_value.length() > 0){
                 if(whole_input.at(i).at(j) == '.'){
                     if (variable) {
@@ -345,7 +337,6 @@ void Lexer::create_endtokens(){
                     prev_index = column + 1;
                     variable = false;
                     last_digit = false;
-                    prev_error = false;
                 } else{    // ending variable with more than length 1?
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
@@ -356,7 +347,6 @@ void Lexer::create_endtokens(){
                     prev_index = column + 1;
                     variable = false;
                     last_digit = false;
-                    prev_error = false;
                 }
             } else if((!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))) && !prev_error){ // not a possible token
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
@@ -371,6 +361,7 @@ void Lexer::create_endtokens(){
             }
             column++;
         }
+        prev_error = false;
         if (raw_value.length() > 0){
             Token* new_token = new Token();
             new_token->raw_value = raw_value;
