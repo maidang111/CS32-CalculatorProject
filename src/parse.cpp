@@ -17,6 +17,6 @@ int main() {
     // cout << "Done reading" << endl;
     parser.print();
 
-    lexer.delete_tokens();
+    // lexer.delete_tokens();
     return 0;
 }

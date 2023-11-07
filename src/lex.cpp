@@ -11,7 +11,7 @@ int main(){
     lexer.create_tokens();
     lexer.print_tokens();
 
-    lexer.delete_tokens();
+    // lexer.delete_tokens();
 
     return 0;
 }

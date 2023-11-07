@@ -736,14 +736,14 @@ Token* InfixParser::parseFactor(){
     }
 }
 
-void InfixParser::delete_tokens(){
-    for(size_t i = 0; i < tokens.size(); i++){
-        delete tokens.at(i);
-    }
-}
+// void InfixParser::delete_tokens(){
+//     for(size_t i = 0; i < tokens.size(); i++){
+//         delete tokens.at(i);
+//     }
+// }
 
-void InfixParser::delete_variables(){
-    for(size_t i = 0; i < variables.size(); i++){
-        delete variables.at(i);
-    }
-}
+// void InfixParser::delete_variables(){
+//     for(size_t i = 0; i < variables.size(); i++){
+//         delete variables.at(i);
+//     }
+// }
