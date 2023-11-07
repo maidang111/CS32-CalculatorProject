@@ -9,9 +9,23 @@ Statement::Statement(){}
 Statement::~Statement(){
     for(size_t i = 0; i < condition.size(); i++){
         delete condition.at(i);
-        condition.clear();
     }
+    // deleteFuc(this);
 }
+
+// void deleteFuc(Statement* head){
+//     if(head == nullptr){
+//         return;
+//     }
+
+//     for(size_t i = 0; i < head->condition.size(); i++){
+//         delete head->condition.at(i);
+//     }
+//     for (size_t i = 0; i< head->body.size(); i++){
+//         deleteFuc(head->body.at(i));
+//     }
+//     delete head;
+// }
 
 void Statement::print(){
     cout << "not a vaild function for type" << endl;

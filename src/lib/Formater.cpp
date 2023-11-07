@@ -9,6 +9,12 @@ Formater::Formater(vector<Token*> tokens){
     this->index = 0;
 }
 
+Formater::~Formater(){
+    // cout << "destructor" << endl;
+    // cout << ASTHeads.size();
+    deleteFunc();
+}
+
 void Formater::buildASTs(){
     while(index != tokens.size()){
         if(tokens.at(index)->raw_value == "END"){
@@ -95,14 +101,28 @@ void Formater::printFormated(){
         ASTHeads.at(i)->print();
     }
 }
+void Formater::deleteFunc(){
+    for(size_t i = 0 ; i < ASTHeads.size(); i++){
+        // cout << "deleteFuc" << i << endl;
+        delete_help(ASTHeads.at(i));
+    }
+}
 
+void Formater::check() {
+    cout << ASTHeads.size() << endl;
+}
 void Formater::delete_help(Statement* node) {
+    // cout << "1" << endl;
     if (!node) {
         return;
     }
+    // cout << "2" << endl;
     for (size_t i = 0; i < node->body.size(); ++i) {
+        node->body.at(i)->print();
+        cout << endl;
         delete_help(node->body.at(i));
     }
+    // cout << "3" << endl;
     delete node; 
 }
 
