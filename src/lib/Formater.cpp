@@ -15,6 +15,7 @@ Formater::~Formater(){
         // cout << i;
         // cout << ASTHeads.at(i)->body.size();
         ASTHeads.at(i)->deleteStatement();
+        delete_tokens();
     }
 }
 
@@ -131,4 +132,10 @@ void Formater::delete_help(Statement* node) {
     }
     // cout << "3" << endl;
     delete node; 
+}
+
+void Formater::delete_tokens(){
+    for(size_t i = 0; i < tokens.size(); i++){
+        delete tokens.at(i);
+    }   
 }

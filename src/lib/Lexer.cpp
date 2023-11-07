@@ -338,6 +338,7 @@ void Lexer::create_endtokens(){
                     variable = false;
                     last_digit = false;
                 } else{    // ending variable with more than length 1?
+                    // cout << raw_value << endl;
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
