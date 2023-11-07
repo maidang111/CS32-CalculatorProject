@@ -24,14 +24,12 @@ Statement* Formater::buildAST(){
     if(tokens.at(index)->raw_value == "while"){
         index++;
         While* whileBlock = new While();
-        Expression* expressionBlock = new Expression();
         while(tokens.at(index)->raw_value != "{"){
-            expressionBlock->body.push_back(tokens.at(index));
+            whileBlock->condition.push_back(tokens.at(index));
             index++;
         }
         index++;
-        expressionBlock->body.push_back(tokens.at(index));
-        whileBlock->condition.push_back(expressionBlock);
+        whileBlock->condition.push_back(tokens.at(index));
         index++;
         
         while(tokens.at(index)->raw_value != "}"){
@@ -43,14 +41,12 @@ Statement* Formater::buildAST(){
     } else if (tokens.at(index)->raw_value == "if"){
         index++;
         If* ifBlock = new If();
-        Expression* expressionBlock = new Expression();
         while(tokens.at(index)->raw_value != "{"){
-            expressionBlock->body.push_back(tokens.at(index));
+            ifBlock->condition.push_back(tokens.at(index));
             index++;
         }
         index++;
-        expressionBlock->body.push_back(tokens.at(index));
-        ifBlock->condition.push_back(expressionBlock);
+        ifBlock->condition.push_back(tokens.at(index));
         index++;
         
         while(tokens.at(index)->raw_value != "}"){
@@ -62,14 +58,12 @@ Statement* Formater::buildAST(){
     } else if (tokens.at(index)->raw_value == "else"){
         index++;
         Else* elseBlock = new Else();
-        Expression* expressionBlock = new Expression();
         while(tokens.at(index)->raw_value != "{"){
-            expressionBlock->body.push_back(tokens.at(index));
+            elseBlock->condition.push_back(tokens.at(index));
             index++;
         }
         index++;
-        expressionBlock->body.push_back(tokens.at(index));
-        elseBlock->condition.push_back(expressionBlock);
+        elseBlock->condition.push_back(tokens.at(index));
         index++;
         
         while(tokens.at(index)->raw_value != "}"){

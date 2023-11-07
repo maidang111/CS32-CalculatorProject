@@ -8,7 +8,7 @@ using namespace std;
 class Statement{
     public:
     Statement();
-    vector <Statement*> condition;
+    vector <Token*> condition;
     vector <Statement*> body;
     virtual void print();
     // virtual vector <Token*> getValue();
@@ -16,7 +16,7 @@ class Statement{
 
 class While: public Statement{
     public:
-    vector <Statement*> condition;
+    vector <Token*> condition;
     vector <Statement*> body;
     void print();
     // vector <Token*> getValue();
@@ -24,7 +24,7 @@ class While: public Statement{
 
 class If: public Statement{
     public:
-    vector <Statement*> condition;
+    vector <Token*> condition;
     vector <Statement*> body;
     void print();
     // vector <Token*> getValue();
@@ -32,7 +32,7 @@ class If: public Statement{
 
 class Else: public Statement{
     public:
-    vector <Statement*> condition;
+    vector <Token*> condition;
     vector <Statement*> body;
     void print();
     // vector <Token*> getValue();

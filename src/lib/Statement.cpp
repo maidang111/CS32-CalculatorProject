@@ -11,8 +11,13 @@ void Statement::print(){
 }
 void If::print(){
     cout << "if "; 
-    condition.at(0)->print();
-    cout << "{" << endl;
+
+    InfixParser infixParser(condition);
+    infixParser.print_val = false;
+    infixParser.print_endl = false;
+    infixParser.build_AST();
+
+    cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
         cout << "    ";
         body.at(i)->print();
@@ -22,8 +27,13 @@ void If::print(){
 }
 void Else::print(){
     cout << "else "; 
-    condition.at(0)->print();
-    cout << "{" << endl;
+    
+    InfixParser infixParser(condition);
+    infixParser.print_val = false;
+    infixParser.print_endl = false;
+    infixParser.build_AST();    
+    
+    cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
         cout << "    ";
         body.at(i)->print();
@@ -34,8 +44,12 @@ void Else::print(){
 void While::print(){
     cout << "while "; 
     // cout << condition.size();
-    condition.at(0)->print();
-    cout << "{" << endl;
+    InfixParser infixParser(condition);
+    infixParser.print_val = false;
+    infixParser.print_endl = false;
+    infixParser.build_AST();
+    
+    cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
         cout << "    ";
         body.at(i)->print();
@@ -50,5 +64,7 @@ void Print::print(){
 }
 void Expression::print(){
     InfixParser infixParser(body);
+    infixParser.print_val = false;
+    infixParser.print_endl = true;
     infixParser.build_AST();
 }

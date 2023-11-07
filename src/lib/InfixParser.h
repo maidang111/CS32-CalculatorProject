@@ -13,6 +13,8 @@ class InfixParser{
     void delete_variables();
     bool error_parenthesis(size_t index);
     bool error_assignment(size_t index);
+    bool print_val;
+    bool print_endl;
     set<string> operators;
     vector <Token*> tokens;
 

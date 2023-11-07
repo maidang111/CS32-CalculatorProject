@@ -16,6 +16,8 @@ InfixParser::InfixParser(vector <Token*> tokens){
     }
     this->tokens = tokens;
     this->count = 0;
+    this->print_endl = true;
+    this->print_val = true;
     operators = {"+", "-", "*", "/"};
 }
 
@@ -168,22 +170,28 @@ void InfixParser::build_AST(){
             } else {
                 // cout << "check AST" << endl;
                 AST->print();
-                cout << endl;
+                if (print_endl){
+                    cout << endl;
+                }
                 // cout << "finish checking" << endl;
                 bool a;
                 variant<bool, double> result = AST->get_value();
                 if (!Token::error_) {
                     if (holds_alternative<bool>(result)) {
                         a = get<bool>(result);
-                        if (a) {
-                            cout << "true" << endl;
-                        }
-                        else {
-                            cout << "false" << endl;
+                        if(print_val){
+                            if (a) {
+                                cout << "true" << endl;
+                            }
+                            else {
+                                cout << "false" << endl;
+                            }
                         }
                     }
                     else if (holds_alternative<double>(result)) {
-                        cout << get<double>(result) << endl;
+                        if(print_val){
+                            cout << get<double>(result) << endl;
+                        }
                     }
                     // cout << result << endl;
                     if (!Token::variable_bool.empty() || !Token::variable_value.empty()) {
