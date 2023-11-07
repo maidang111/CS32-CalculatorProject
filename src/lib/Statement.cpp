@@ -39,7 +39,6 @@ void While::print(){
     for(size_t i = 0; i < body.size(); i++){
         cout << "    ";
         body.at(i)->print();
-        cout << endl;
     }
     cout << "}" << endl;
 }

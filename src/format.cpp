@@ -9,7 +9,7 @@ int main(){
     Lexer lexer; 
     lexer.create_endtokens();
 
-    lexer.print_endtokens();
+    // lexer.print_endtokens();
 
     Formater formater(lexer.multi_end_tokens);
 

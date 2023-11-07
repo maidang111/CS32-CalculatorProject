@@ -79,6 +79,7 @@ Statement* Formater::buildAST(){
         index++;
         return elseBlock;
     } else if (tokens.at(index)->raw_value == "print"){
+        index++;
         Print* printBlock = new Print();
         printBlock->body.push_back(buildAST());
         return printBlock;
