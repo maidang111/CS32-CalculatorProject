@@ -91,14 +91,7 @@ Statement* Formater::buildAST(){
 
 void Formater::printFormated(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
-        // cout << i;
         ASTHeads.at(i)->print();
-        delete ASTHeads.at(i);
+        ASTHeads.at(i)->~Statement();
     }
 }
-
-// void Formater::deleteStatements(){
-//     for(size_t i = 0; i < ASTHeads.size(); i++){
-//         delete ASTHeads.at(i);
-//     }
-// }
