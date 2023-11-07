@@ -106,6 +106,10 @@ Statement* Formater::buildAST(){
         }
         expressionBlock->body.push_back(tokens.at(index));
         index++;
+        cout << expressionBlock->body.size();
+        for(size_t i = 0 ; i < expressionBlock->body.size(); i++){
+            cout <<  expressionBlock->body.at(i)->raw_value;
+        }
         return expressionBlock;
     }
 }
@@ -118,7 +122,7 @@ void Formater::printFormated(){
 }
 void Formater::deleteFunc(){
     for(size_t i = 0 ; i < ASTHeads.size(); i++){
-        // cout << "deleteFuc" << i << endl;
+        // cout << ASTHeads.at(i)->body.at(0) << i << endl;
         delete_help(ASTHeads.at(i));
     }
 }
