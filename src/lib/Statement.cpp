@@ -7,19 +7,23 @@ using namespace std;
 Statement::Statement(){}
 
 Statement::~Statement(){
-    for(size_t i = 0; i < condition.size(); i++){
-        delete condition.at(i);
-    }
-    // cout << body.size() << endl;
-    for(size_t i = 0; i < body.size(); i++){
-        // cout << body.at(i)->print();
-        delete body.at(i);
-    }
+    // for(size_t i = 0; i < condition.size(); i++){
+    //     delete condition.at(i);
+    // }
+    // // cout << body.size() << endl;
+    // for(size_t i = 0; i < body.size(); i++){
+    //     // cout << body.at(i)->print();
+    //     delete body.at(i);
+    // }
     // cout << "delete this";
     // delete this;
     // deleteFuc(this);
 }
 void Statement::deleteStatement(){
+    for(size_t i = 0; i < body.size(); i++){
+        body.at(i)->deleteStatement();
+    }
+    delete this;
 }
 
 // void deleteFuc(Statement* head){
@@ -88,18 +92,20 @@ void While::print(){
     }
     cout << "}" << endl;
 }
+
 void Print::print(){
     cout << "print ";
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
     }
 }
-void Print::deleteStatement(){
-    for(size_t i = 0; i < body.size(); i++){
-        body.at(i)->deleteStatement();
-    }
-    delete this;
-}
+
+// void Print::deleteStatement(){
+//     for(size_t i = 0; i < body.size(); i++){
+//         body.at(i)->deleteStatement();
+//     }
+//     delete this;
+// }
 
 void Expression::print(){
     InfixParser infixParser(body);

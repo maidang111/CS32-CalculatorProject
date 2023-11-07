@@ -13,6 +13,7 @@ class Formater{
     vector <Statement*> ASTHeads;
     size_t index = 0;
     void delete_tokens();
+    void deleteStatements();
     void delete_help(Statement* node);
     void check();
     void deleteFunc();

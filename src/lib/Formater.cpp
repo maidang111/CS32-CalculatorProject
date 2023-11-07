@@ -11,14 +11,16 @@ Formater::Formater(vector<Token*> tokens){
 }
 
 Formater::~Formater(){
-    for(size_t i = 0; i < ASTHeads.size(); i++){
-        // cout << i;
-        // cout << ASTHeads.at(i)->body.size();
-        ASTHeads.at(i)->deleteStatement();
-        delete_tokens();
-    }
 }
 
+void Formater::deleteStatements(){
+    for(size_t i = 0; i < ASTHeads.size(); i++){
+            // cout << i;
+            // cout << ASTHeads.at(i)->body.size();
+            ASTHeads.at(i)->deleteStatement();
+        }
+    delete_tokens();
+}
 void Formater::buildASTs(){
     while(index != tokens.size()){
         if(tokens.at(index)->raw_value == "END"){
@@ -121,6 +123,7 @@ void Formater::deleteFunc(){
 void Formater::check() {
     cout << ASTHeads.size() << endl;
 }
+
 void Formater::delete_help(Statement* node) {
     // cout << "1" << endl;
     if (!node) {

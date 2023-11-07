@@ -44,7 +44,7 @@ class Print: public Statement{
     public:
     vector <Statement*> body;
     void print();
-    void deleteStatement();
+    // void deleteStatement();
     // vector <Token*> getValue();
 };
 
