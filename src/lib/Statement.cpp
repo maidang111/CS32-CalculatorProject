@@ -5,10 +5,21 @@ using namespace std;
 
 //Creating a statment block that takes a vector and sperates it into a condidtion and body vector for easily evaluation
 Statement::Statement(){}
+
+Statement::~Statement(){
+    for(size_t i = 0; i < condition.size(); i++){
+        delete condition.at(i);
+    }
+    for(size_t i = 0; i < body.size(); i++){
+        delete body.at(i);
+    }
+}
+
 void Statement::print(){
     cout << "not a vaild function for type" << endl;
     return;
 }
+
 void If::print(){
     cout << "if "; 
 

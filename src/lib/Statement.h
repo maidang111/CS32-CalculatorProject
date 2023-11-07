@@ -8,6 +8,7 @@ using namespace std;
 class Statement{
     public:
     Statement();
+    virtual ~Statement();
     vector <Token*> condition;
     vector <Statement*> body;
     virtual void print();

@@ -95,3 +95,9 @@ void Formater::printFormated(){
         ASTHeads.at(i)->print();
     }
 }
+
+void Formater::deleteStatements(){
+    for(size_t i = 0; i < ASTHeads.size(); i++){
+        delete ASTHeads.at(i);
+    }
+}

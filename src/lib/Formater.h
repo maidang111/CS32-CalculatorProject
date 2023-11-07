@@ -11,10 +11,10 @@ class Formater{
     vector <Token*> tokens;
     vector <Statement*> ASTHeads;
     size_t index = 0;
+    void deleteStatements();
 
     void buildASTs();
     void printFormated();
     private:
     Statement* buildAST();
-    
 };
