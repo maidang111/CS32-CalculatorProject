@@ -7,7 +7,7 @@ using namespace std;
 
 class InfixParser{
     public:
-    InfixParser();
+    InfixParser(vector <Token*> tokens);
     ~InfixParser();
     void delete_tokens();
     void delete_variables();

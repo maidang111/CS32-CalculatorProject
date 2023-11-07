@@ -10,10 +10,8 @@
 using namespace std; 
 
 // Parsing tokens using lexer and store them in parser
-InfixParser::InfixParser(){
-    Lexer lexer; 
-    lexer.create_endtokens();
-    this->tokens = lexer.multi_end_tokens;
+InfixParser::InfixParser(vector <Token*> tokens){
+    this->tokens = tokens;
     this->count = 0;
     operators = {"+", "-", "*", "/"};
 }
@@ -167,7 +165,6 @@ void InfixParser::build_AST(){
             } else {
                 // cout << "check AST" << endl;
                 AST->print();
-                cout << endl;
                 // cout << "finish checking" << endl;
                 bool a;
                 variant<bool, double> result = AST->get_value();
@@ -182,7 +179,7 @@ void InfixParser::build_AST(){
                         }
                     }
                     else if (holds_alternative<double>(result)) {
-                        cout << get<double>(result) << endl;
+                        // cout << get<double>(result) << endl;
                     }
                     // cout << result << endl;
                     if (!Token::variable_bool.empty() || !Token::variable_value.empty()) {

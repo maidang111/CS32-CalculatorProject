@@ -6,8 +6,11 @@
 using namespace std; 
 
 int main(){
-    InfixParser infixParser;
+    Lexer lexer;
+    lexer.create_endtokens();
+    InfixParser infixParser(lexer.multi_end_tokens);
     infixParser.build_AST();
+    lexer.delete_endtokens();
     infixParser.delete_tokens();
     return 0;
 }
