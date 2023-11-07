@@ -44,7 +44,7 @@ bool InfixParser::error_parenthesis(size_t index) {
             error_parenthesis = true;
             print_error = true;
             cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
-            exit(1);
+            exit(2);
         }
         if (tokens.at(i)->raw_value == "END") {
             if (num_parenthesis > 0 && !print_error) {
