@@ -17,7 +17,7 @@ int main(){
     formater.printFormated();
     lexer.delete_endtokens();
     // cout << formater.ASTHeads.size();
-    formater.deleteStatements();
+    // formater.deleteStatements();
     formater.ASTHeads.clear();
 
 
