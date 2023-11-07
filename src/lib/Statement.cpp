@@ -7,19 +7,19 @@ using namespace std;
 Statement::Statement(){}
 
 Statement::~Statement(){
-    // for(size_t i = 0; i < condition.size(); i++){
-    //     delete condition.at(i);
-    // }
-    // // cout << body.size() << endl;
-    // for(size_t i = 0; i < body.size(); i++){
-    //     // cout << body.at(i)->print();
-    //     delete body.at(i);
-    // }
+    for(size_t i = 0; i < condition.size(); i++){
+        delete condition.at(i);
+    }
+    // cout << body.size() << endl;
+    for(size_t i = 0; i < body.size(); i++){
+        // cout << body.at(i)->print();
+        delete body.at(i);
+    }
     // cout << "delete this";
     // delete this;
-    // deleteFuc(this);
 }
 void Statement::deleteStatement(){
+    // cout << "here" << endl;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->deleteStatement();
     }
