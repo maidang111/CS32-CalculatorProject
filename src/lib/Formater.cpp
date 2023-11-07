@@ -91,7 +91,18 @@ Statement* Formater::buildAST(){
 
 void Formater::printFormated(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
+        // cout << i;
         ASTHeads.at(i)->print();
-        ASTHeads.at(i)->~Statement();
     }
 }
+
+void Formater::delete_help(Statement* node) {
+    if (!node) {
+        return;
+    }
+    for (size_t i = 0; i < node->body.size(); ++i) {
+        delete_help(node->body.at(i));
+    }
+    delete node; 
+}
+

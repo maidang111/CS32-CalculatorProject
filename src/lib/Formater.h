@@ -12,7 +12,7 @@ class Formater{
     vector <Statement*> ASTHeads;
     size_t index = 0;
     // void deleteStatements();
-
+    void delete_help(Statement* node);
     void buildASTs();
     void printFormated();
     private:
