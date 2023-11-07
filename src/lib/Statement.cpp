@@ -100,12 +100,12 @@ void Print::print(){
     }
 }
 
-// void Print::deleteStatement(){
-//     for(size_t i = 0; i < body.size(); i++){
-//         body.at(i)->deleteStatement();
-//     }
-//     delete this;
-// }
+void Print::deleteStatement(){
+    for(size_t i = 0; i < body.size(); i++){
+        body.at(i)->deleteStatement();
+    }
+    delete this;
+}
 
 void Expression::print(){
     InfixParser infixParser(body);
