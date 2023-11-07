@@ -8,6 +8,7 @@ using namespace std;
 class Statement{
     public:
     Statement();
+    size_t level;
     virtual ~Statement();
     vector <Token*> condition;
     vector <Statement*> body;
@@ -18,6 +19,7 @@ class Statement{
 
 class While: public Statement{
     public:
+    size_t level;
     vector <Token*> condition;
     vector <Statement*> body;
     void deleteStatement();
@@ -27,6 +29,7 @@ class While: public Statement{
 
 class If: public Statement{
     public:
+    size_t level;
     vector <Token*> condition;
     vector <Statement*> body;
     void deleteStatement();
@@ -36,6 +39,7 @@ class If: public Statement{
 
 class Else: public Statement{
     public:
+    size_t level;
     vector <Token*> condition;
     vector <Statement*> body;
     void deleteStatement();
@@ -45,6 +49,7 @@ class Else: public Statement{
 
 class Print: public Statement{
     public:
+    size_t level;
     vector <Statement*> body;
     void print();
     void deleteStatement();
@@ -53,6 +58,7 @@ class Print: public Statement{
 
 class Expression: public Statement{
     public:
+    size_t level;
     vector <Token*> body;
     void print();
     void deleteStatement();

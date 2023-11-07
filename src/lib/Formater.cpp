@@ -20,12 +20,14 @@ void Formater::deleteStatements(){
             ASTHeads.at(i)->deleteStatement();
         }
     delete_tokens();
+
 }
 void Formater::buildASTs(){
     while(index != tokens.size()){
         if(tokens.at(index)->raw_value == "END"){
             index++;
         } else {
+            level = -1;
             Statement* root = buildAST();
             // root->print();
             ASTHeads.push_back(root);
@@ -35,9 +37,11 @@ void Formater::buildASTs(){
 }
 
 Statement* Formater::buildAST(){
+    level++;
     if(tokens.at(index)->raw_value == "while"){
         index++;
         While* whileBlock = new While();
+        whileBlock->level = level;
         while(tokens.at(index)->raw_value != "{"){
             whileBlock->condition.push_back(tokens.at(index));
             index++;
@@ -48,6 +52,7 @@ Statement* Formater::buildAST(){
         
         while(tokens.at(index)->raw_value != "}"){
             // cout << tokens.at(index)->raw_value;
+            level--;
             whileBlock->body.push_back(buildAST());
         }
         index++;
@@ -55,6 +60,7 @@ Statement* Formater::buildAST(){
     } else if (tokens.at(index)->raw_value == "if"){
         index++;
         If* ifBlock = new If();
+        ifBlock->level = level;
         while(tokens.at(index)->raw_value != "{"){
             ifBlock->condition.push_back(tokens.at(index));
             index++;
@@ -64,6 +70,7 @@ Statement* Formater::buildAST(){
         index++;
         while(tokens.at(index)->raw_value != "}"){
             // cout << tokens.at(index)->raw_value;
+            level--;
             ifBlock->body.push_back(buildAST());
         }
         index++;
@@ -71,6 +78,7 @@ Statement* Formater::buildAST(){
     } else if (tokens.at(index)->raw_value == "else"){
         index++;
         Else* elseBlock = new Else();
+        elseBlock->level = level;
         while(tokens.at(index)->raw_value != "{"){
             elseBlock->condition.push_back(tokens.at(index));
             index++;
@@ -81,6 +89,7 @@ Statement* Formater::buildAST(){
         
         while(tokens.at(index)->raw_value != "}"){
             // cout << tokens.at(index)->raw_value;
+            level--;
             elseBlock->body.push_back(buildAST());
         }
         index++;
@@ -88,11 +97,16 @@ Statement* Formater::buildAST(){
     } else if (tokens.at(index)->raw_value == "print"){
         index++;
         Print* printBlock = new Print();
+        printBlock->level = level;
+        size_t tempLevel = level;
+        level = -1;
         printBlock->body.push_back(buildAST());
+        level = tempLevel;
         // cout << printBlock->body.size();
         return printBlock;
     } else {
         Expression* expressionBlock = new Expression();
+        expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){
             expressionBlock->body.push_back(tokens.at(index));
             index++;

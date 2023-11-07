@@ -46,6 +46,9 @@ void Statement::print(){
 }
 
 void If::print(){
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
+    }
     cout << "if "; 
 
     InfixParser infixParser(condition);
@@ -68,6 +71,9 @@ void If::deleteStatement(){
 }
 
 void Else::print(){
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
+    }
     cout << "else "; 
     
     InfixParser infixParser(condition);
@@ -90,6 +96,9 @@ void Else::deleteStatement(){
 }
 
 void While::print(){
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
+    }
     cout << "while "; 
     // cout << condition.size();
     InfixParser infixParser(condition);
@@ -112,7 +121,11 @@ void While::deleteStatement(){
 }
 
 void Print::print(){
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
+    }
     cout << "print ";
+    // level--;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
     }
@@ -126,6 +139,9 @@ void Print::deleteStatement(){
 }
 
 void Expression::print(){
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
+    }
     InfixParser infixParser(body);
     infixParser.print_val = false;
     infixParser.print_endl = true;

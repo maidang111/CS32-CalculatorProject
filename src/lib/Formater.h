@@ -11,7 +11,8 @@ class Formater{
     
     vector <Token*> tokens;
     vector <Statement*> ASTHeads;
-    size_t index = 0;
+    size_t index;
+    int level;
     void delete_tokens();
     void deleteStatements();
     void delete_help(Statement* node);
