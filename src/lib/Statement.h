@@ -12,6 +12,7 @@ class Statement{
     vector <Token*> condition;
     vector <Statement*> body;
     virtual void print();
+    virtual void deleteStatement();
     // virtual vector <Token*> getValue();
 };
 
@@ -43,6 +44,7 @@ class Print: public Statement{
     public:
     vector <Statement*> body;
     void print();
+    void deleteStatement();
     // vector <Token*> getValue();
 };
 
@@ -50,5 +52,6 @@ class Expression: public Statement{
     public:
     vector <Token*> body;
     void print();
+    void deleteStatement();
     // vector <Token*> getValue();
 };

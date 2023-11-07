@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -42,16 +43,12 @@ bool InfixParser::error_parenthesis(size_t index) {
         if (num_parenthesis < 0 && !print_error) {
             error_parenthesis = true;
             print_error = true;
-            if(print_val){
-                cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
-            }
+            cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
         }
         if (tokens.at(i)->raw_value == "END") {
             if (num_parenthesis > 0 && !print_error) {
                 print_error = true;
-                if(print_val){
-                    cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
-                }
+                cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
                 error_parenthesis = true;
             }
             if (error_parenthesis) {
@@ -167,9 +164,7 @@ void InfixParser::build_AST(){
         if (nextToken->raw_value != "END"){
             AST = parseEqual();
             if (nextToken->raw_value != "END" || is_vaild == false){
-                if(print_val){
-                    cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-                }
+                cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
                 while(nextToken->raw_value != "END"){
                     scanToken();
                 }
@@ -178,90 +173,90 @@ void InfixParser::build_AST(){
                 AST->print();
                 if (print_endl){
                     cout << endl;
-                    // cout << "finish checking" << endl;
-                    bool a;
-                    variant<bool, double> result = AST->get_value();
-                    if (!Token::error_) {
-                        if (holds_alternative<bool>(result)) {
-                            a = get<bool>(result);
-                            if(print_val){
-                                if (a) {
-                                    cout << "true" << endl;
-                                }
-                                else {
-                                    cout << "false" << endl;
-                                }
+                }
+                // cout << "finish checking" << endl;
+                bool a;
+                variant<bool, double> result = AST->get_value();
+                if (!Token::error_) {
+                    if (holds_alternative<bool>(result)) {
+                        a = get<bool>(result);
+                        if(print_val){
+                            if (a) {
+                                cout << "true" << endl;
                             }
-                        }
-                        else if (holds_alternative<double>(result)) {
-                            if(print_val){
-                                cout << get<double>(result) << endl;
-                            }
-                        }
-                        // cout << result << endl;
-                        if (!Token::variable_bool.empty() || !Token::variable_value.empty()) {
-                            auto k = Token::variable_value.begin();
-                            auto l = Token::variable_bool.begin();
-                            for (auto a: Token::variable_update) {
-                                k = Token::variable_value.find(a.first);
-                                l = Token::variable_bool.find(a.first);
-                                if ((k == Token::variable_value.end()) && (l == Token::variable_bool.end())) {
-                                    Token::variable_update.erase(a.first);
-                                }
-                                else if (k != Token::variable_value.end()){
-                                    a.second->set_type("double");
-                                    a.second->value = k->second;
-                                }
-                                else {
-                                    a.second->set_type("true");
-                                    a.second->bool_val = l->second;
-                                }
+                            else {
+                                cout << "false" << endl;
                             }
                         }
                     }
-                    else {
+                    else if (holds_alternative<double>(result)) {
+                        if(print_val){
+                            cout << get<double>(result) << endl;
+                        }
+                    }
+                    // cout << result << endl;
+                    if (!Token::variable_bool.empty() || !Token::variable_value.empty()) {
                         auto k = Token::variable_value.begin();
                         auto l = Token::variable_bool.begin();
                         for (auto a: Token::variable_update) {
                             k = Token::variable_value.find(a.first);
                             l = Token::variable_bool.find(a.first);
-                            if (k == Token::variable_value.end() && l == Token::variable_bool.end()) {
-                                if (a.second->get_data_type() == "BOOL") {
-                                    Token::variable_bool.emplace(a.first, a.second->bool_val);
-                                }
-                                else  {
-                                    Token::variable_bool.emplace(a.first, a.second->value);
-                                }
+                            if ((k == Token::variable_value.end()) && (l == Token::variable_bool.end())) {
+                                Token::variable_update.erase(a.first);
+                            }
+                            else if (k != Token::variable_value.end()){
+                                a.second->set_type("double");
+                                a.second->value = k->second;
                             }
                             else {
-                                if (a.second->get_data_type() == "BOOL") {
-                                    if (l != Token::variable_bool.end()) {
-                                        l->second = a.second->bool_val;
-                                    }
-                                    else {
-                                        k->second = a.second->value;
-                                        a.second->set_type("true");
-                                        Token::variable_bool.emplace(k->first, k->second);
-                                        Token::variable_value.erase(k->first);
-                                    }
-                                }
-                                else {
-                                    if (l != Token::variable_bool.end()) {
-                                        l->second = a.second->bool_val;
-                                        a.second->set_type("double");
-                                        Token::variable_value.emplace(l->first, l->second);
-                                        Token::variable_bool.erase(l->first);
-                                    }
-                                    else {
-                                        k->second = a.second->bool_val;
-                                    }
-                                }
-
+                                a.second->set_type("true");
+                                a.second->bool_val = l->second;
                             }
                         }
                     }
-                    Token::error_ = false;
                 }
+                else {
+                    auto k = Token::variable_value.begin();
+                    auto l = Token::variable_bool.begin();
+                    for (auto a: Token::variable_update) {
+                        k = Token::variable_value.find(a.first);
+                        l = Token::variable_bool.find(a.first);
+                        if (k == Token::variable_value.end() && l == Token::variable_bool.end()) {
+                            if (a.second->get_data_type() == "BOOL") {
+                                Token::variable_bool.emplace(a.first, a.second->bool_val);
+                            }
+                            else  {
+                                Token::variable_bool.emplace(a.first, a.second->value);
+                            }
+                        }
+                        else {
+                            if (a.second->get_data_type() == "BOOL") {
+                                if (l != Token::variable_bool.end()) {
+                                    l->second = a.second->bool_val;
+                                }
+                                else {
+                                    k->second = a.second->value;
+                                    a.second->set_type("true");
+                                    Token::variable_bool.emplace(k->first, k->second);
+                                    Token::variable_value.erase(k->first);
+                                }
+                            }
+                            else {
+                                if (l != Token::variable_bool.end()) {
+                                    l->second = a.second->bool_val;
+                                    a.second->set_type("double");
+                                    Token::variable_value.emplace(l->first, l->second);
+                                    Token::variable_bool.erase(l->first);
+                                }
+                                else {
+                                    k->second = a.second->bool_val;
+                                }
+                            }
+
+                        }
+                    }
+                }
+                Token::error_ = false;
                 ASTheads.push_back(AST);
             }
         } 

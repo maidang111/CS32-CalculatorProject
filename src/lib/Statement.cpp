@@ -10,7 +10,16 @@ Statement::~Statement(){
     for(size_t i = 0; i < condition.size(); i++){
         delete condition.at(i);
     }
+    // cout << body.size() << endl;
+    for(size_t i = 0; i < body.size(); i++){
+        // cout << body.at(i)->print();
+        delete body.at(i);
+    }
+    // cout << "delete this";
+    // delete this;
     // deleteFuc(this);
+}
+void Statement::deleteStatement(){
 }
 
 // void deleteFuc(Statement* head){
@@ -85,10 +94,23 @@ void Print::print(){
         body.at(i)->print();
     }
 }
+void Print::deleteStatement(){
+    for(size_t i = 0; i < body.size(); i++){
+        delete body.at(i);
+    }
+    delete this;
+}
 
 void Expression::print(){
     InfixParser infixParser(body);
     infixParser.print_val = false;
     infixParser.print_endl = true;
     infixParser.build_AST();
+}
+
+void Expression::deleteStatement(){
+    for(size_t i = 0; i < body.size(); i++){
+        delete body.at(i);
+    }
+    delete this;
 }

@@ -12,8 +12,8 @@ int main(){
     Formater formater(lexer.multi_end_tokens);
 
     formater.buildASTs();
-    formater.printFormated();
-    lexer.delete_endtokens();
+    // formater.printFormated();
+    // lexer.delete_endtokens();
     // cout << formater.ASTHeads.size();
     // formater.deleteStatements();
 
