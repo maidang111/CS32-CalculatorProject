@@ -84,6 +84,9 @@ Statement* Formater::buildAST(){
         printBlock->body.push_back(buildAST());
         return printBlock;
     } else {
+        if(tokens.at(index)->raw_value == "END"){
+            return nullptr;
+        }
         Expression* expressionBlock = new Expression();
         while (tokens.at(index)->raw_value != "END"){
             expressionBlock->body.push_back(tokens.at(index));

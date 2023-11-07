@@ -13,6 +13,6 @@ int main(){
     infixParser.build_AST();
     // cout << lexer.multi_end_tokens.size() << endl;
     infixParser.delete_tokens();
-    infixParser.tokens.clear();
+    // infixParser.tokens.clear();
     return 0;
 }
