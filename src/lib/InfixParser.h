@@ -14,6 +14,8 @@ class InfixParser{
     bool error_parenthesis(size_t index);
     bool error_assignment(size_t index);
     set<string> operators;
+    vector <Token*> tokens;
+
 
     void build_AST();
     private:
@@ -31,7 +33,6 @@ class InfixParser{
     Token* parseLogicalAnd();
     Token* parseLogicalOrExclusive();
     Token* parseLogicalOrInclusive();
-    vector <Token*> tokens;
     vector <Token*> variables;
     vector <Token*> tempVariables;
     vector <Token*> ASTheads;

@@ -9,8 +9,10 @@ int main(){
     Lexer lexer;
     lexer.create_endtokens();
     InfixParser infixParser(lexer.multi_end_tokens);
+    // cout << infixParser.tokens.size();
     infixParser.build_AST();
-    lexer.delete_endtokens();
+    // cout << lexer.multi_end_tokens.size() << endl;
     infixParser.delete_tokens();
+    infixParser.tokens.clear();
     return 0;
 }

@@ -11,6 +11,9 @@ using namespace std;
 
 // Parsing tokens using lexer and store them in parser
 InfixParser::InfixParser(vector <Token*> tokens){
+    for(size_t i = 0; i << tokens.size(); i ++){
+        this->tokens.push_back(tokens.at(i));
+    }
     this->tokens = tokens;
     this->count = 0;
     operators = {"+", "-", "*", "/"};
