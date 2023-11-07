@@ -14,8 +14,8 @@ Statement::~Statement(){
 
     for(size_t i = 0; i < body.size(); i++){
         delete body.at(i);
-        body.clear();
     }
+    body.clear();
 }
 
 void Statement::print(){
@@ -76,6 +76,7 @@ void Print::print(){
         body.at(i)->print();
     }
 }
+
 void Expression::print(){
     InfixParser infixParser(body);
     infixParser.print_val = false;
