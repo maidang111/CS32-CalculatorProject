@@ -44,10 +44,13 @@ bool InfixParser::error_parenthesis(size_t index) {
             error_parenthesis = true;
             print_error = true;
             cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
+            exit(1);
         }
         if (tokens.at(i)->raw_value == "END") {
             if (num_parenthesis > 0 && !print_error) {
                 print_error = true;
+                            cout << 3 << endl;
+
                 cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
                 error_parenthesis = true;
             }
@@ -128,6 +131,8 @@ bool InfixParser::error_assignment(size_t index) {
         if (tokens.at(i)->raw_value == "END") {
             if (last_error) {
                 count = i;
+                            cout << 4 << endl;
+
                 cout << "Unexpected token at line 1 column " << last_error->column << ": " << last_error->raw_value << endl;
                 return true;
             }
@@ -164,6 +169,8 @@ void InfixParser::build_AST(){
         if (nextToken->raw_value != "END"){
             AST = parseEqual();
             if (nextToken->raw_value != "END" || is_vaild == false){
+                            cout << 1 << endl;
+
                 cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
                 while(nextToken->raw_value != "END"){
                     scanToken();

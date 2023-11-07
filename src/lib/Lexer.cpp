@@ -293,6 +293,7 @@ void Lexer::create_endtokens(){
             } else if (isalpha(whole_input.at(i).at(j)) || whole_input.at(i).at(j) == '_' || variable) {
                 if (last_digit && !variable) { // variable that starts with number
                     cout << "exit here 5";
+                    cout << 3 << endl;
                     cout << "Syntax error on line " << row << " column " << column << "." << endl;
                     error = true;
                 }
@@ -323,6 +324,7 @@ void Lexer::create_endtokens(){
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         error = true;
                     } else if((j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1)))){
+                        cout << 2 << endl;
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
                         prev_error = true;
                         error = true;
@@ -350,6 +352,7 @@ void Lexer::create_endtokens(){
                     last_digit = false;
                 }
             } else if((!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))) && !prev_error){ // not a possible token
+                cout << 1 << endl;
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
                 error = true;
                 prev_error = true;
