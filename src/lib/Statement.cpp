@@ -109,7 +109,7 @@ void Expression::print(){
 }
 
 void Expression::deleteStatement(){
-    cout << body.size();
+    // cout << body.size();
     for(size_t i = 0; i < body.size(); i++){
         delete body.at(i);
     }
