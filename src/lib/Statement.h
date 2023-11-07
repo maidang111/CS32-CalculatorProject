@@ -20,6 +20,7 @@ class While: public Statement{
     public:
     vector <Token*> condition;
     vector <Statement*> body;
+    void deleteStatement();
     void print();
     // vector <Token*> getValue();
 };
@@ -28,6 +29,7 @@ class If: public Statement{
     public:
     vector <Token*> condition;
     vector <Statement*> body;
+    void deleteStatement();
     void print();
     // vector <Token*> getValue();
 };
@@ -36,6 +38,7 @@ class Else: public Statement{
     public:
     vector <Token*> condition;
     vector <Statement*> body;
+    void deleteStatement();
     void print();
     // vector <Token*> getValue();
 };

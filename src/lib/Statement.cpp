@@ -61,6 +61,13 @@ void If::print(){
     }
     cout << "}" << endl;
 }
+void If::deleteStatement(){
+    for(size_t i = 0; i < body.size(); i++){
+        body.at(i)->deleteStatement();
+    }
+    delete this;
+}
+
 void Else::print(){
     cout << "else "; 
     
@@ -77,6 +84,13 @@ void Else::print(){
     }
     cout << "}" << endl;
 }
+void Else::deleteStatement(){
+    for(size_t i = 0; i < body.size(); i++){
+        body.at(i)->deleteStatement();
+    }
+    delete this;
+}
+
 void While::print(){
     cout << "while "; 
     // cout << condition.size();
@@ -91,6 +105,12 @@ void While::print(){
         body.at(i)->print();
     }
     cout << "}" << endl;
+}
+void While::deleteStatement(){
+    for(size_t i = 0; i < body.size(); i++){
+        body.at(i)->deleteStatement();
+    }
+    delete this;
 }
 
 void Print::print(){
