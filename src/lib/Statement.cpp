@@ -95,6 +95,9 @@ void Print::print(){
     }
 }
 void Print::deleteStatement(){
+    for(size_t i = 0; i < condition.size(); i++){
+        delete condition.at(i);
+    }
     for(size_t i = 0; i < body.size(); i++){
         delete body.at(i);
     }
