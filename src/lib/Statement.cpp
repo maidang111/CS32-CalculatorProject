@@ -9,9 +9,12 @@ Statement::Statement(){}
 Statement::~Statement(){
     for(size_t i = 0; i < condition.size(); i++){
         delete condition.at(i);
+        condition.clear();
     }
+
     for(size_t i = 0; i < body.size(); i++){
         delete body.at(i);
+        body.clear();
     }
 }
 

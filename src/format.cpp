@@ -14,11 +14,12 @@ int main(){
     Formater formater(lexer.multi_end_tokens);
 
     formater.buildASTs();
-
     formater.printFormated();
     lexer.delete_endtokens();
     // cout << formater.ASTHeads.size();
     formater.deleteStatements();
     formater.ASTHeads.clear();
+
+
     return 0;
 }
