@@ -8,11 +8,11 @@ using namespace std;
 int main(){
     Lexer lexer; 
     lexer.create_endtokens();
-    lexer.print_endtokens();
+    // lexer.print_endtokens();
     Formater formater(lexer.multi_end_tokens);
 
     formater.buildASTs();
-    // formater.printFormated();
+    formater.printFormated();
     // lexer.delete_endtokens();
     // cout << formater.ASTHeads.size();
     // formater.deleteStatements();
