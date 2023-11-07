@@ -29,6 +29,9 @@ void Formater::buildASTs(){
 Statement* Formater::buildAST(){
     if(tokens.at(index)->raw_value == "while"){
         index++;
+        if(tokens.at(index)->raw_value == "END"){
+            return nullptr;
+        }
         While* whileBlock = new While();
         while(tokens.at(index)->raw_value != "{"){
             whileBlock->condition.push_back(tokens.at(index));
@@ -46,6 +49,9 @@ Statement* Formater::buildAST(){
         return whileBlock;
     } else if (tokens.at(index)->raw_value == "if"){
         index++;
+        if(tokens.at(index)->raw_value == "END"){
+            return nullptr;
+        }
         If* ifBlock = new If();
         while(tokens.at(index)->raw_value != "{"){
             ifBlock->condition.push_back(tokens.at(index));
@@ -63,6 +69,9 @@ Statement* Formater::buildAST(){
         return ifBlock;
     } else if (tokens.at(index)->raw_value == "else"){
         index++;
+        if(tokens.at(index)->raw_value == "END"){
+            return nullptr;
+        }
         Else* elseBlock = new Else();
         while(tokens.at(index)->raw_value != "{"){
             elseBlock->condition.push_back(tokens.at(index));
@@ -80,6 +89,9 @@ Statement* Formater::buildAST(){
         return elseBlock;
     } else if (tokens.at(index)->raw_value == "print"){
         index++;
+        if(tokens.at(index)->raw_value == "END"){
+            return nullptr;
+        }
         Print* printBlock = new Print();
         printBlock->body.push_back(buildAST());
         return printBlock;
