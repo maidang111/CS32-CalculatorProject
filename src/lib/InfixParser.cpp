@@ -169,8 +169,6 @@ void InfixParser::build_AST(){
         if (nextToken->raw_value != "END"){
             AST = parseEqual();
             if (nextToken->raw_value != "END" || is_vaild == false){
-                            cout << 1 << endl;
-
                 cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
                 while(nextToken->raw_value != "END"){
                     scanToken();
