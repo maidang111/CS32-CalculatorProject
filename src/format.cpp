@@ -16,7 +16,7 @@ int main(){
     formater.buildASTs();
 
     formater.printFormated();
-
+    lexer.delete_tokens();
 
     return 0;
 }

@@ -11,6 +11,6 @@ int main(){
     InfixParser infixParser(lexer.multi_end_tokens);
     infixParser.build_AST();
     lexer.delete_endtokens();
-    // infixParser.delete_tokens();
+    infixParser.delete_tokens();
     return 0;
 }
