@@ -55,7 +55,6 @@ void If::print(){
     infixParser.print_val = false;
     infixParser.print_endl = false;
     infixParser.build_AST();
-
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
