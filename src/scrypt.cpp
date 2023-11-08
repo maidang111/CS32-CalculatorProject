@@ -9,10 +9,10 @@ int main(){
     Lexer lexer; 
     lexer.create_endtokens();
     // lexer.print_endtokens();
-    // Scrypter formater(lexer.multi_end_tokens);
+    Scrypter scrypt(lexer.multi_end_tokens);
 
-    // formater.buildASTs();
-    // formater.printFormated();
+    scrypt.buildASTs();
+    // scrypt.printFormated();
     // // lexer.delete_endtokens();
     // // cout << formater.ASTHeads.size();
     // formater.deleteStatements();
