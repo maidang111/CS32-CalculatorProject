@@ -1,6 +1,6 @@
 CC=g++ -std=c++17
 CFLAGS= -Wall -Wextra -Werror
-OBJS = src/lib/AST.o src/lib/Lexer.o src/lib/InfixParser.o src/lib/Formater.o src/lib/Statement.o src/format.o
+OBJS = src/lib/AST.o src/lib/Lexer.o src/lib/InfixParser.o src/lib/Scrypter.o src/lib/Statement.o src/scrypt.o
 MAIN= format
 
 all: $(MAIN)
