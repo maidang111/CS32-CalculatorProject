@@ -161,6 +161,7 @@ variant<bool, double> Mode::get_value(){
         if (holds_alternative<double>(left->get_value()) && holds_alternative<double>(right->get_value())) {
             double lf = get<double>(left->get_value());
             double r = get<double>(right->get_value());
+
             if (r != 0.0) {
                 return fmod(lf, r);
             }

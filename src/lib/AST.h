@@ -19,7 +19,7 @@ class Token{
     size_t column;
     size_t row;
     double value;
-    bool bool_val;
+    bool bool_val = true;
     Token* left;
     Token* right;
     Token* parent;
