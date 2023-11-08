@@ -6,7 +6,9 @@
 using namespace std; 
 
 int main(){
-    InfixParser infixParser;
+    Lexer a;
+    a.create_endtokens();
+    InfixParser infixParser(a.multi_end_tokens);
     infixParser.read_all_token();
     infixParser.print_all();
     return 0;

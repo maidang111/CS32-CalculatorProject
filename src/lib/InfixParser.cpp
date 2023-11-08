@@ -5,11 +5,9 @@
 #include <vector>
 using namespace std;
 
-InfixParser::InfixParser() {
-    Lexer a;
-    a.create_endtokens();
+InfixParser::InfixParser(vector<Token*>& tokens) {
     index = 0;
-    tokens = a.multi_end_tokens;
+    tokens = tokens;
     operators = {"+", "-", "*", "/", "%", "&", "|", "^", "<", "<=", ">", ">=", "!=", "==", "="};
     // check tokens
     // cout << "check lexer" << endl;
