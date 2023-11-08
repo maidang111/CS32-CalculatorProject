@@ -30,12 +30,12 @@ InfixParser::~InfixParser() {
 
 void InfixParser::read_all_token() {
     while (tokens.at(index)->raw_value != "END") {
-        cout << index << endl;
+        // cout << index << endl;
         read_token();
         error_index.clear();
-        cout << index << endl;
+        // cout << index << endl;
     }
-    cout << "read_all_no_error" << endl;
+    // cout << "read_all_no_error" << endl;
 }
 
 void InfixParser::read_token() {
@@ -43,12 +43,12 @@ void InfixParser::read_token() {
         return;
     }
     size_t curr_index = index;
-    cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
+    // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
     AST_Node* root = nullptr;
     while (tokens.at(curr_index)->raw_value != "END") {
         ++curr_index;
     }
-    cout << "2 Index here: " << index<< "  currIndex: " << curr_index << endl;
+    // cout << "2 Index here: " << index<< "  currIndex: " << curr_index << endl;
     curr_index -= 1;
     // cout << "index: " << index << endl;
     // cout << "curr_index: " << curr_index << endl;
