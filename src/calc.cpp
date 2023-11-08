@@ -7,7 +7,7 @@ using namespace std;
 
 int main(){
     InfixParser infixParser;
-    infixParser.build_AST();
-    infixParser.delete_tokens();
+    infixParser.read_all_token();
+    infixParser.print_all();
     return 0;
 }

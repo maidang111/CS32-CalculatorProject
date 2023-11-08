@@ -1,751 +1,553 @@
-#include <iostream>
+#include "InfixParser.h"
+#include "AST_Node.h"
+#include "Lexer.h"
 #include <string>
 #include <vector>
-#include <cctype>
-#include <variant>
-#include "InfixParser.h"
-#include "Node.h"
-#include "Lexer.h"
-#include "AST.h"
-using namespace std; 
+using namespace std;
 
-// Parsing tokens using lexer and store them in parser
-InfixParser::InfixParser(){
-    Lexer lexer; 
-    lexer.create_endtokens();
-    this->tokens = lexer.multi_end_tokens;
-    this->count = 0;
-    operators = {"+", "-", "*", "/"};
+InfixParser::InfixParser() {
+    Lexer a;
+    a.create_endtokens();
+    index = 0;
+    tokens = a.multi_end_tokens;
+    operators = {"+", "-", "*", "/", "%", "&", "|", "^", "<", "<=", ">", ">=", "!=", "==", "="};
+    // check tokens
+    // cout << "check lexer" << endl;
+    // for (auto a: tokens) {
+    //     cout << a->raw_value << endl;
+    // }
+    // cout << "finish checking" << endl;
+    error = false;
+    result_double = 0;
+    result_bool = false;
 }
 
-InfixParser::~InfixParser(){}
+InfixParser::~InfixParser() {
+    for (const auto& a: ASTs) {
+        delete_help(a);
+    }
+}
 
-// Checks for number of parenthesis and checks if it's a vaild input
-bool InfixParser::error_parenthesis(size_t index) {
-    bool error_parenthesis = false;
-    int num_parenthesis = 0;
-    bool print_error = false;
-    if (index != 0) {
-        index -= 1;
+void InfixParser::read_all_token() {
+    while (tokens.at(index)->raw_value != "END") {
+        cout << index << endl;
+        read_token();
+        error_index.clear();
+        cout << index << endl;
+    }
+    cout << "read_all_no_error" << endl;
+}
+
+void InfixParser::read_token() {
+    if (index >= tokens.size()) {
+        return;
+    }
+    size_t curr_index = index;
+    cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
+    AST_Node* root = nullptr;
+    while (tokens.at(curr_index)->raw_value != "END") {
+        ++curr_index;
+    }
+    cout << "2 Index here: " << index<< "  currIndex: " << curr_index << endl;
+    curr_index -= 1;
+    // cout << "index: " << index << endl;
+    // cout << "curr_index: " << curr_index << endl;
+    cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
+    if (index == curr_index) {
+        return;
+    }
+    cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
+    check_parenthesis(index, curr_index);
+    check_operator(index, curr_index);
+    if (!error_index.empty()) {
+        size_t min = error_index.at(0);
+        for (size_t j = 0; j < error_index.size(); ++j) {
+            if (min > error_index.at(j)) {
+                min = error_index.at(j);
+            }
+        }
+        cout << "unexpected token at line 1 column " << tokens.at(min) << ": " << tokens.at(min)->raw_value << endl;
+        index = curr_index + 2;
+        return;
     }
 
-    for (size_t i = index; i < tokens.size(); ++i) {
+    root = read_one_line(index, curr_index, nullptr);
+    if (!error) {
+        ASTs.push_back(root);
+    }
+    else {
+        delete_help(root);
+    }
+    index = curr_index + 2;
+    error = false;
+    // cout << "ended" << endl;
+    // one line 
+    // cout << "checking index: " << index << endl;
+}
+
+void InfixParser::check_parenthesis(size_t first_element, size_t last_element) {
+    cout << "check_parenthesis: " << endl;
+    cout << first_element << " " << last_element << endl;
+    // if (first_element >= last_element -1) {
+    //     return;
+    // }
+    size_t first_error = 0;
+    int count = 0;
+    size_t last_left = 0;
+    bool is_error = false;
+    
+    for (size_t i = first_element; i < last_element + 2; ++i) {
+        cout << "index: " << i << endl;
         if (tokens.at(i)->raw_value == "(") {
-            num_parenthesis += 1;
+            count++;
+            last_left = i;
+            cout << 10 << endl;
         }
         else if (tokens.at(i)->raw_value == ")") {
-            num_parenthesis -= 1;
-        }
-        if (num_parenthesis < 0 && !print_error) {
-            error_parenthesis = true;
-            print_error = true;
-            cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
-        }
-        if (tokens.at(i)->raw_value == "END") {
-            if (num_parenthesis > 0 && !print_error) {
-                print_error = true;
-                cout << "Unexpected token at line 1 column " << tokens.at(i)->column << ": " << tokens.at(i)->raw_value << endl;
-                error_parenthesis = true;
-            }
-            if (error_parenthesis) {
-                count = i;
-            }
-            break;
-        }
-    }
-    return error_parenthesis;
-}
-
-bool InfixParser::error_assignment(size_t index) {
-    bool is_error = false;
-    bool not_variable = false;
-    int num_parenthesis = 0;
-    Token* last_error = nullptr;
-    vector<int> assign_parenthesis;
-    if (index != 0) {
-        index -= 1;
-    }
-
-    for (size_t i = index; i < tokens.size(); ++i) {
-        if (tokens.at(i)->raw_value == "=") {
-            if (i > 0) {
-                if (!isalpha(tokens.at(i - 1)->raw_value.at(0)) && tokens.at(i - 1)->raw_value.at(0) != '_') {
-                    is_error = true;
-                    last_error = tokens.at(i);
-                }
-            }
-            assign_parenthesis.push_back(num_parenthesis);
-        }
-        // (a =) case, no right value
-        if (tokens.at(i)->raw_value == ")") {
-            --num_parenthesis;
-            if (!assign_parenthesis.empty()) {
-                if (num_parenthesis < assign_parenthesis.at(assign_parenthesis.size() - 1)) {
-                    assign_parenthesis.pop_back();
-                    //
-                }
-            }
-            if (i > 0) {
-                if (tokens.at(i - 1)->raw_value == "=" || tokens.at(i - 1)->raw_value == "(") {
-                    is_error = true;
-                    // cout << 1 << endl;
-                    last_error = tokens.at(i);
-                }
+            count--;
+            if (last_left + 1 == i) {
+                first_error = i;
+                is_error = true;
+                break;
+                cout << 11 << endl;
             }
         }
-        // number case
-        if (not_variable && tokens.at(i)->raw_value == "=") {
+        if (count < 0) {
+            first_error = i;
             is_error = true;
-            // cout << 2 << endl;
-            last_error = tokens.at(i);
-        }
-        // (= a) case, no left value
-        if (tokens.at(i)->raw_value == "(") {
-            num_parenthesis++;
-            not_variable = false;
-            if (i + 1 < tokens.size()) {
-                if (tokens.at(i)->raw_value == "=") {
-                    is_error = true;
-                    // cout << 3 << endl;
-                    last_error = tokens.at(i);
-                }
-            }
-        }
-        // (1 = a) case, left side number
-        if (isdigit(tokens.at(i)->raw_value.at(0)) || operators.count(tokens.at(i)->raw_value)) {
-            if (assign_parenthesis.empty()) {
-                not_variable = true;
-            }
-            else if (num_parenthesis <= assign_parenthesis.at(assign_parenthesis.size() - 1)) {
-                not_variable = true;
-            }
-
-        }
-        if (tokens.at(i)->raw_value == "END") {
-            if (last_error) {
-                count = i;
-                cout << "Unexpected token at line 1 column " << last_error->column << ": " << last_error->raw_value << endl;
-                return true;
-            }
+            cout << 12 << endl;
             break;
         }
     }
-    return is_error;
+    if ((count != 0) && !is_error) {
+        is_error = true;
+        first_error = last_element + 1;
+        cout << 13 << endl;
+    }
+    cout << "is_error: " << is_error << " first_error: " << first_error << endl;
+    if (is_error) {
+        error_index.push_back(first_error);
+    }
 }
 
-
-void InfixParser::build_AST(){
-    // checking problem in lexer
-    // cout << "start checking lexer: " << endl;
-    // for (size_t a = 0; a < tokens.size(); ++a) {
-    //     cout << tokens.at(a)->raw_value << endl;
+void InfixParser::check_operator(size_t first_element, size_t last_element) {
+    // if (first_element + 1 >= last_element) {
+    //     return;
     // }
-    // cout << "finished checking" << endl;
-    while(count != tokens.size()){
-        scanToken();
-        is_vaild = true;
-        bool check_parenthesis = error_parenthesis(count);
-        if (check_parenthesis) {
-            Token::outside_ = true;
-            continue;
-        }
-        else {
-            Token::outside_ = false;
-            bool check_assignment = error_assignment(count);
-            if (check_assignment) {
-                Token::outside_ = true;
-                continue;
-            }
-        }
-        if (nextToken->raw_value != "END"){
-            AST = parseEqual();
-            if (nextToken->raw_value != "END" || is_vaild == false){
-                cout << "Unexpected token at line 1" << " column " << nextToken->column << ": " << nextToken->raw_value << endl;
-                while(nextToken->raw_value != "END"){
-                    scanToken();
-                }
-            } else {
-                // cout << "check AST" << endl;
-                AST->print();
-                cout << endl;
-                // cout << "finish checking" << endl;
-                bool a;
-                variant<bool, double> result = AST->get_value();
-                if (!Token::error_) {
-                    if (holds_alternative<bool>(result)) {
-                        a = get<bool>(result);
-                        if (a) {
-                            cout << "true" << endl;
-                        }
-                        else {
-                            cout << "false" << endl;
-                        }
-                    }
-                    else if (holds_alternative<double>(result)) {
-                        cout << get<double>(result) << endl;
-                    }
-                    // cout << result << endl;
-                    if (!Token::variable_bool.empty() || !Token::variable_value.empty()) {
-                        auto k = Token::variable_value.begin();
-                        auto l = Token::variable_bool.begin();
-                        for (auto a: Token::variable_update) {
-                            k = Token::variable_value.find(a.first);
-                            l = Token::variable_bool.find(a.first);
-                            if ((k == Token::variable_value.end()) && (l == Token::variable_bool.end())) {
-                                Token::variable_update.erase(a.first);
-                            }
-                            else if (k != Token::variable_value.end()){
-                                a.second->set_type("double");
-                                a.second->value = k->second;
-                            }
-                            else {
-                                a.second->set_type("true");
-                                a.second->bool_val = l->second;
-                            }
-                        }
-                    }
-                }
-                else {
-                    auto k = Token::variable_value.begin();
-                    auto l = Token::variable_bool.begin();
-                    for (auto a: Token::variable_update) {
-                        k = Token::variable_value.find(a.first);
-                        l = Token::variable_bool.find(a.first);
-                        if (k == Token::variable_value.end() && l == Token::variable_bool.end()) {
-                            if (a.second->get_data_type() == "BOOL") {
-                                Token::variable_bool.emplace(a.first, a.second->bool_val);
-                            }
-                            else  {
-                                Token::variable_bool.emplace(a.first, a.second->value);
-                            }
-                        }
-                        else {
-                            if (a.second->get_data_type() == "BOOL") {
-                                if (l != Token::variable_bool.end()) {
-                                    l->second = a.second->bool_val;
-                                }
-                                else {
-                                    k->second = a.second->value;
-                                    a.second->set_type("true");
-                                    Token::variable_bool.emplace(k->first, k->second);
-                                    Token::variable_value.erase(k->first);
-                                }
-                            }
-                            else {
-                                if (l != Token::variable_bool.end()) {
-                                    l->second = a.second->bool_val;
-                                    a.second->set_type("double");
-                                    Token::variable_value.emplace(l->first, l->second);
-                                    Token::variable_bool.erase(l->first);
-                                }
-                                else {
-                                    k->second = a.second->bool_val;
-                                }
-                            }
+    bool is_error = false;
+    size_t first_error = 0;
 
-                        }
-                    }
-                }
-                Token::error_ = false;
-                ASTheads.push_back(AST);
+    for (size_t i = first_element; i < last_element + 2; ++i) {
+        if (operators.count(tokens.at(i)->raw_value)) {
+            if ((i == first_element) || (i == last_element)) {
+                is_error = true;
+                first_error = i;
+                break;
             }
+            if (operators.count(tokens.at(i - 1)->raw_value) || (tokens.at(i - 1)->raw_value == "(")) {
+                is_error = true;
+                first_error = i;
+                break;
+            }
+            if (tokens.at(i + 1)->raw_value == ")") {
+                is_error = true;
+                first_error = i;
+                break;
+            }
+        }
+    }
+    if (is_error) {
+        error_index.push_back(first_error);
+    }
+
+}
+
+
+
+
+AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Node* in_parent) {
+    // cout << "enter" << endl;
+    if (begin_line > end_line) {
+        cout << "here" << endl;
+        // error here for parenthesis () 
+        return nullptr;
+    }
+    if (begin_line == end_line) {
+        // direct values such as numbers, true/false, variables
+        if (isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line)->raw_value != "true") && (tokens.at(begin_line)->raw_value != "false")) {
+            //variable
+            Variable_Val* add_variable = new Variable_Val(tokens.at(begin_line));
+            add_variable->single_val = true;
+            return add_variable;
+        }
+        else if (isdigit((tokens.at(begin_line)->raw_value).at(0)) || (tokens.at(begin_line)->raw_value == "true") || (tokens.at(begin_line)->raw_value == "false")) {
+            Direct_Val* direct_val = new Direct_Val(tokens.at(begin_line));
+            direct_val->single_val = true;
+            return direct_val;
+        }
+        // error not numbers, true/false, or variables
+        return nullptr;
+    }
+    int count = 0;
+    for (size_t i = begin_line; i <= end_line; ++i) {
+        cout << "first: " << i << endl;
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && (tokens.at(i)->raw_value == "=")) {
+            Assign* add = new Assign(tokens.at(i));
+            add->parent = in_parent;
+            add->left = read_one_line(begin_line, i - 1, add);
+            add->right = read_one_line(i + 1, end_line, add);
+            // only one side has 
+            if (!add->left || !add->right) {
+                delete_help(add);
+            }
+            return add;
+        }
+    }
+    cout << "poitnt 1" << endl;
+
+    count = 0;
+    cout << "end_line: " << end_line << endl;
+    cout << "begin_line: " << begin_line << endl;
+    Boolean_Operation* add_bool = nullptr;
+    for (size_t i = end_line; i >= begin_line; --i) {
+        cout << "loop top: " << i << endl;
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && (tokens.at(i)->raw_value == "|")) {
+            add_bool = new Boolean_Operation(tokens.at(i));
+            add_bool->parent = in_parent;
+            add_bool->left = read_one_line(begin_line, i - 1, add_bool);
+            add_bool->right = read_one_line(i + 1, end_line, add_bool);
+            if (!add_bool->left || !add_bool->right) {
+                delete_help(add_bool);
+            }
+            return add_bool;
+        }
+        if (i == 0) {
+            break;
+        }
+        cout << "loop bottom: " << i << endl;
+    }
+    cout << "point2" << endl;
+    count = 0;
+    for (size_t i = end_line; i >= begin_line; --i) {
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && (tokens.at(i)->raw_value == "^")) {
+            add_bool = new Boolean_Operation(tokens.at(i));
+            add_bool->parent = in_parent;
+            add_bool->left = read_one_line(begin_line, i - 1, add_bool);
+            add_bool->right = read_one_line(i + 1, end_line, add_bool);
+            if (!add_bool->left || !add_bool->right) {
+                delete_help(add_bool);
+            }
+            return add_bool;
+        }
+        if (i == 0) {
+            break;
+        }
+    }
+
+    count = 0;
+    for (size_t i = end_line; i >= begin_line; --i) {
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && (tokens.at(i)->raw_value == "&")) {
+            add_bool = new Boolean_Operation(tokens.at(i));
+            add_bool->parent = in_parent;
+            add_bool->left = read_one_line(begin_line, i - 1, add_bool);
+            add_bool->right = read_one_line(i + 1, end_line, add_bool);
+            if (!add_bool->left || !add_bool->right) {
+                delete_help(add_bool);
+            }
+            return add_bool;
+        }
+        if (i == 0) {
+            break;
+        }
+    }
+
+    count = 0;
+    Equality_Val* new_equal = nullptr;
+    for (size_t i = end_line; i >= begin_line; --i) {
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && (tokens.at(i)->raw_value == "!=")) {
+            new_equal = new Equality_Val(tokens.at(i));
+            new_equal->parent = in_parent;
+            new_equal->left = read_one_line(begin_line, i - 1, new_equal);
+            new_equal->right = read_one_line(i + 1, end_line, new_equal);
+            if (!new_equal->left || !new_equal->right) {
+                delete_help(new_equal);
+            }
+            return new_equal;
+        }
+        else if ((count == 0) && (tokens.at(i)->raw_value == "==")) {
+            new_equal = new Equality_Val(tokens.at(i));
+            new_equal->parent = in_parent;
+            new_equal->left = read_one_line(begin_line, i - 1, new_equal);
+            new_equal->right = read_one_line(i + 1, end_line, new_equal);
+            if (!new_equal->left || !new_equal->right) {
+                delete_help(new_equal);
+            }        
+            return new_equal;
+        }
+        if (i == 0) {
+            break;
+        }
+    }
+
+    count = 0;
+    Comparison_Val* new_compare = nullptr;
+    for (size_t i = end_line; i >= begin_line; --i) {
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && (tokens.at(i)->raw_value == ">=")) {
+            new_compare = new Comparison_Val(tokens.at(i));
+            new_compare->parent = in_parent;
+            new_compare->left = read_one_line(begin_line, i - 1, new_compare);
+            new_compare->right = read_one_line(i + 1, end_line, new_compare);
+            if (!new_compare->left || !new_compare->right) {
+                delete_help(new_compare);
+            }
+            return new_compare;
+        }
+        else if ((count == 0) && (tokens.at(i)->raw_value == ">")) {
+            new_compare = new Comparison_Val(tokens.at(i));
+            new_compare->parent = in_parent;
+            new_compare->left = read_one_line(begin_line, i - 1, new_compare);
+            new_compare->right = read_one_line(i + 1, end_line, new_compare);
+            if (!new_compare->left || !new_compare->right) {
+                delete_help(new_compare);
+            }
+            return new_compare;
+        }
+        else if ((count == 0) && (tokens.at(i)->raw_value == "<=")) {
+            new_compare = new Comparison_Val(tokens.at(i));
+            new_compare->parent = in_parent;
+            new_compare->left = read_one_line(begin_line, i - 1, new_compare);
+            new_compare->right = read_one_line(i + 1, end_line, new_compare);
+            if (!new_compare->left || !new_compare->right) {
+                delete_help(new_compare);
+            }
+            return new_compare;
         } 
+        else if ((count == 0) && (tokens.at(i)->raw_value == "<")) {
+            new_compare = new Comparison_Val(tokens.at(i));
+            new_compare->parent = in_parent;
+            new_compare->left = read_one_line(begin_line, i - 1, new_compare);
+            new_compare->right = read_one_line(i + 1, end_line, new_compare);
+            if (!new_compare->left || !new_compare->right) {
+                delete_help(new_compare);
+            }    
+            return new_compare;
+        }
+        if (i == 0) {
+            break;
+        }
     }
-    for(size_t i = 0; i < ASTheads.size(); i++){
-        ASTheads.at(i)->delete_token(ASTheads.at(i));
+
+    count = 0;
+    Double_Operation* double_add = nullptr;
+    for (size_t i = end_line; i >= begin_line; --i) {
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && (tokens.at(i)->raw_value == "-")) {
+            double_add = new Double_Operation(tokens.at(i));
+            double_add->parent = in_parent;
+            double_add->left = read_one_line(begin_line, i - 1, double_add);
+            double_add->right = read_one_line(i + 1, end_line, double_add);
+            if (!double_add->left || !double_add->right) {
+                delete_help(double_add);
+            }
+            return double_add;
+        }
+        else if ((count == 0) && (tokens.at(i)->raw_value == "+")) {
+            cout << "+" << endl;
+            double_add = new Double_Operation(tokens.at(i));
+            double_add->parent = in_parent;
+            double_add->left = read_one_line(begin_line, i - 1, double_add);
+            double_add->right = read_one_line(i + 1, end_line, double_add);
+            if (!double_add->left || !double_add->right) {
+                delete_help(double_add);
+            }
+            return double_add;
+        }
+        if (i == 0) {
+            break;
+        }
     }
+
+    count = 0;
+    for (size_t i = end_line; i >= begin_line; --i) {
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && (tokens.at(i)->raw_value == "%")) {
+            double_add = new Double_Operation(tokens.at(i));
+            double_add->parent = in_parent;
+            double_add->left = read_one_line(begin_line, i - 1, double_add);
+            double_add->right = read_one_line(i + 1, end_line, double_add);
+            if (!double_add->left || !double_add->right) {
+                delete_help(double_add);
+            }
+            return double_add;
+        }
+        else if ((count == 0) && (tokens.at(i)->raw_value == "/")) {
+            double_add = new Double_Operation(tokens.at(i));
+            double_add->parent = in_parent;
+            double_add->left = read_one_line(begin_line, i - 1, double_add);
+            double_add->right = read_one_line(i + 1, end_line, double_add);
+            if (!double_add->left || !double_add->right) {
+                delete_help(double_add);
+            }
+            return double_add;
+        }
+        else if ((count == 0) && (tokens.at(i)->raw_value == "*")) {
+            double_add = new Double_Operation(tokens.at(i));
+            double_add->parent = in_parent;
+            double_add->left = read_one_line(begin_line, i - 1, double_add);
+            double_add->right = read_one_line(i + 1, end_line, double_add);
+            if (!double_add->left || !double_add->right) {
+                delete_help(double_add);
+            }
+            return double_add;
+        }
+        if (i == 0) {
+            break;
+        }
+    }
+    return read_one_line(begin_line + 1, end_line - 1, in_parent);
 }
 
-void InfixParser::scanToken(){
-    if (count != tokens.size()){
-        // cout << "ScanToken(): Token moved from " << tokens.at(count)->raw_value;
-        this->nextToken = tokens.at(count);
-        count++;
-        // cout << " to " << tokens.at(count)->raw_value;
+void InfixParser::delete_help(AST_Node* in_node) {
+    if (!in_node) {
+        return;
     }
+    delete_help(in_node->left);
+    delete_help(in_node->right);
+    delete in_node;
 }
 
-// Evauluates last and reverses order of operation
-Token* InfixParser::parseEqual(){
-    // cout << "parseEqual()" << endl;
-    Token* equal = parseLogicalOrInclusive();
-    if(is_vaild == false){
-        equal->delete_token(equal);
-        return nullptr;
+void InfixParser::print_all() {
+    // cout << "print all: enter" << endl;
+    for (size_t i = 0; i < ASTs.size(); ++i) {
+        // cout << "print all: loop top\tindex: " << i << endl;
+        print_AST(ASTs.at(i));
+        cout << endl;
+        // cout << "print all:loop middle\tindex: " << i << endl;
+        evaluate_print(ASTs.at(i));
+        // cout << "print all:loop bottom\tindex: " << i << endl;
     }
-    while (true){
-        if (nextToken == nullptr){
-            cout << "null expression" << endl;
-            is_vaild = false;
-            exit(1);
-        } else if(nextToken->raw_value == "="){
-            scanToken();
-            Token* equal1 = parseLogicalOrInclusive();
-            Equal* temp = new Equal;
-            temp->left = equal;
-            temp->right = equal1;
-            if (temp->left && equal1) {
-                if (holds_alternative<double>(equal1->get_value())) {
-                    temp->left->value = get<double>(equal1->get_value());
-                    temp->left->set_type("true");
-                }
-                else if (holds_alternative<bool>(equal1->get_value())) {
-                    temp->left->bool_val = get<bool>(equal1->get_value());
-                    temp->left->set_type("double");
-                }
-                // temp->left->value = equal1->get_value();
-                for(size_t i = 0; i < variables.size(); i++){
-                    if(variables.at(i)->raw_value == temp->left->raw_value){
-                        variables.erase(variables.begin()+i);
-                    }
-                }
-                variables.push_back(temp->left);      
-                equal = temp;
-            }
-            else {
-                Token::outside_ = true;
-                Token a;
-                is_vaild = false;
-                a.delete_token(equal1);
-                a.delete_token(temp);
-                return nullptr;
-            }
-        } else {
-            // cout << "equal==:  " << equal->raw_value << endl;
-            return equal;
-        }
-    }
+    // cout << "print all: end" << endl;
 }
-// completed parse functions for bool 
-// need to implement evaluation for bool
-Token* InfixParser::parseLogicalOrInclusive() {
-    // cout << "parseLogicalOrInclusive" << endl;
-    Token* bool_expression1 = parseLogicalOrExclusive();
-    if (is_vaild == false) {
-        bool_expression1->delete_token(bool_expression1);
+void InfixParser::print_AST(AST_Node* node) const {
+    if (!node) {
+        return;
     }
-    while (true) {
-        if (nextToken == nullptr) {
-            cout << "null expression" << endl;
-            is_vaild = false;
-            exit(1);
-        }
-        else if (nextToken->raw_value == "|") {
-            scanToken();
-            Token* bool_expression2 = parseLogicalOrExclusive();
-            if (!bool_expression1 || !bool_expression2) {
-                Token a;
-                a.delete_token(bool_expression1);
-                a.delete_token(bool_expression2);
-                return nullptr;
-            }
-            Logical* temp = new Logical();
-            temp->left = bool_expression1;
-            temp->right = bool_expression2;
-            bool_expression1 = temp;
-            bool_expression1->raw_value = "|";
-        }
-        else {
-            return bool_expression1;
-            // cout << "bool | :  " << bool_expression1->raw_value << endl;
-        }
-    }  
+    if (!node->single_val) {
+        cout << "(";
+    }
+    print_AST(node->left);
+    if (!node->single_val) {
+        cout << " ";
+    }
+    cout << "(" << node->data->raw_value << ": " << node->val.double_val << ")";
+    if (!node->single_val) {
+        cout << " ";
+    }
+    print_AST(node->right);
+    if (!node->single_val) {
+        cout << ")";
+    }
+    return;
 }
 
-Token* InfixParser::parseLogicalOrExclusive() {
-    // cout << "parseLogicalOrExclusive" << endl;
-    Token* bool_expression1 = parseLogicalAnd();
-    if (is_vaild == false) {
-        bool_expression1->delete_token(bool_expression1);
+Data InfixParser::evaluate(AST_Node* in_node) {
+    if (!in_node) {
+        Data a;
+        return a;
     }
-    while (true) {
-        if (nextToken == nullptr) {
-            cout << "null expression" << endl;
-            is_vaild = false;
-            exit(1);
-        }
-        else if (nextToken->raw_value == "^") {
-            scanToken();
-            Token* bool_expression2 = parseLogicalAnd();
-            if (!bool_expression1 || !bool_expression2) {
-                Token a;
-                a.delete_token(bool_expression1);
-                a.delete_token(bool_expression2);
-                return nullptr;
-            }
-            Logical* temp = new Logical();
-            temp->left = bool_expression1;
-            temp->right = bool_expression2;
-            bool_expression1 = temp;
-            bool_expression1->raw_value = "^";
-        }
-        else {
-            // cout << "bool ^ :  " << bool_expression1->raw_value << endl;
-            return bool_expression1;
-        }
-    }  
+    Data left_val = evaluate(in_node->left);
+    // cout << "left: " << left_val.double_val << endl;
+    Data right_val = evaluate(in_node->right);
+    // cout << "right: " << right_val.double_val << endl;
+    return in_node->get_value(left_val, right_val);
 }
 
-Token* InfixParser::parseLogicalAnd() {
-    // cout << "parseLogicalAnd" << endl;
-    Token* bool_expression1 = parseEquality();
-    if (is_vaild == false) {
-        bool_expression1->delete_token(bool_expression1);
+void InfixParser::evaluate_print(AST_Node* head) {
+    Data calculate = evaluate(head);
+    // cout << "calculation ended ++++++++++++++++" << endl;
+    // for (auto b: Data::curr_variables) {
+    //     cout << b.first << " " << endl;
+    // }
+    // cout << "+++++++++++++=" << endl;
+    if (calculate.data_type == "DOUBLE") {
+        cout << calculate.double_val << endl;
+        update_variables();
     }
-    while (true) {
-        if (nextToken == nullptr) {
-            cout << "null expression" << endl;
-            is_vaild = false;
-            exit(1);
+    else if (calculate.data_type == "BOOL") {
+        if (calculate.bool_val) {
+            cout << "true" << endl;
         }
-        else if (nextToken->raw_value == "&") {
-            scanToken();
-            Token* bool_expression2 = parseEquality();
-            if (!bool_expression1 || !bool_expression2) {
-                Token a;
-                a.delete_token(bool_expression1);
-                a.delete_token(bool_expression2);
-                return nullptr;
-            }
-            Logical* temp = new Logical();
-            temp->left = bool_expression1;
-            temp->right = bool_expression2;
-            bool_expression1 = temp;
-            bool_expression1->raw_value = "&";
+        else if (!calculate.bool_val) {
+            cout << "false" << endl;
         }
-        else {
-            // cout << "bool & :  " << bool_expression1->raw_value << endl;
-            return bool_expression1;
-        }
-    }  
+        update_variables();
+    }
+    AST_Node::runtime_error = false;
 }
 
-Token* InfixParser::parseEquality() {
-    // cout << "parseEquality" << endl;
-    Token* equality1 = parseComparison();
-    if (is_vaild == false) {
-        equality1->delete_token(equality1);
-    }
-    while (true) {
-        if (nextToken == nullptr) {
-            cout << "null expression" << endl;
-            is_vaild = false;
-            exit(1);
+void InfixParser::update_variables() {
+    // cout << "before update: " << endl;
+    // for (auto b: Data::curr_variables) {
+    //     cout << b.first << endl;
+    // }
+    // cout << "complete before update " << endl;
+    for (auto a: Data::curr_variables) {
+        if (AST_Node::prev_variables.find(a.first) != AST_Node::prev_variables.end()) {
+            AST_Node::prev_variables.at(a.first) = a.second;
         }
-        else if (nextToken->raw_value == "==") {
-            scanToken();
-            Token* equality2 = parseComparison();
-            if (!equality1 || !equality2) {
-                Token a;
-                a.delete_token(equality1);
-                a.delete_token(equality2);
-                return nullptr;
-            }
-            Equality* temp = new Equality();
-            temp->left = equality1;
-            temp->right = equality2;
-            equality1 = temp;
-            equality1->raw_value = "==";
-        }
-        else if (nextToken->raw_value == "!=") {
-            scanToken();
-            Token* equality2 = parseComparison();
-            if (!equality1 || !equality2) {
-                Token a;
-                a.delete_token(equality1);
-                a.delete_token(equality2);
-                return nullptr;
-            }
-            Equality* temp = new Equality();
-            temp->left = equality1;
-            temp->right = equality2;
-            equality1 = temp;
-            equality1->raw_value = "!=";
-        }
-        else {
-            // cout << "equality1 :  " << equality1->raw_value << endl;
-            return equality1;
-        }
-    }  
-}
-
-Token* InfixParser::parseComparison() {
-    // cout << "parseComparison" << endl;
-    Token* comparison1 = parseExpression();
-    if (is_vaild == false) {
-        comparison1->delete_token(comparison1);
-    }
-    while (true) {
-        if (nextToken == nullptr) {
-            cout << "null expression" << endl;
-            is_vaild = false;
-            exit(1);
-        }
-        else if (nextToken->raw_value == "<") {
-            // cout << nextToken->raw_value << " ";
-            scanToken();
-            Token* comparison2 = parseExpression();
-            if (!comparison1 || !comparison2) {
-                Token a;
-                a.delete_token(comparison1);
-                a.delete_token(comparison2);
-                return nullptr;
-            }
-            Comparison* temp = new Comparison();
-            temp->left = comparison1;
-            // cout << "temp->left: " << comparison1->raw_value << endl;
-            temp->right = comparison2;
-            // cout << "temp->right: " << comparison2->raw_value << endl;
-            comparison1 = temp;
-            comparison1->raw_value = "<";
-            // cout << "check c1: " << comparison1->raw_value << endl;
-            // cout << "added" << endl;
-        }
-        else if (nextToken->raw_value == "<=") {
-            scanToken();
-            Token* comparison2 = parseExpression();
-            if (!comparison1 || !comparison2) {
-                Token a;
-                a.delete_token(comparison1);
-                a.delete_token(comparison2);
-                return nullptr;
-            }
-            Comparison* temp = new Comparison();
-            temp->left = comparison1;
-            temp->right = comparison2;
-            comparison1 = temp;
-            comparison1->raw_value = "<=";
-        }
-        else if (nextToken->raw_value == ">") {
-            scanToken();
-            Token* comparison2 = parseExpression();
-            if (!comparison1 || !comparison2) {
-                Token a;
-                a.delete_token(comparison1);
-                a.delete_token(comparison2);
-                return nullptr;
-            }
-            Comparison* temp = new Comparison();
-            temp->left = comparison1;
-            temp->right = comparison2;
-            comparison1 = temp;
-            comparison1->raw_value = ">";
-        }
-        else if (nextToken->raw_value == ">=") {
-            scanToken();
-            Token* comparison2 = parseExpression();
-            if (!comparison1 || !comparison2) {
-                Token a;
-                a.delete_token(comparison1);
-                a.delete_token(comparison2);
-                return nullptr;
-            }
-            Comparison* temp = new Comparison();
-            temp->left = comparison1;
-            temp->right = comparison2;
-            comparison1 = temp;     
-            comparison1->raw_value = ">=";       
-        }
-        else {
-            // cout << "bool comparison :  " << comparison1->raw_value << endl;
-            return comparison1;
+        else  {
+            AST_Node::prev_variables.emplace(a.first, a.second);
         }
     }
-}
-
-// Evaluaties add subtraction after parsing terms for multiplication
-Token* InfixParser::parseExpression(){
-    // cout << "parseExpression" << endl;
-    Token* term = parseTerm();
-    if(is_vaild == false){
-        term->delete_token(term);
-        return nullptr;
-    }
-    while (true){
-        if (nextToken == nullptr){
-            cout << "null expression" << endl;
-            is_vaild = false;
-            exit(1);
-        } else if(nextToken->raw_value == "+"){
-            scanToken();
-            Token* term1 = parseTerm();
-            if (!term || !term1) {
-                Token a;
-                a.delete_token(term);
-                a.delete_token(term1);
-                return nullptr;
-            }
-            Add* temp = new Add;
-            temp->left = term;
-            temp->right = term1;
-            term = temp;
-        } else if(nextToken->raw_value == "-"){
-            scanToken();
-            Token* term1 = parseTerm();
-            if (!term || !term1) {
-                Token a;
-                a.delete_token(term);
-                a.delete_token(term1);
-                return nullptr;
-            }
-            Subtract* temp = new Subtract;
-            temp->left = term;
-            temp->right = term1;
-            term = temp;
-        } else {
-            // cout << "double + - :  " << term->raw_value << endl;
-            return term;
-        }
-    } 
-}
-
-
-// Calls parseFactor and create multiplication and division nodes with the results
-Token* InfixParser::parseTerm(){
-    // cout << "parseTerm" << endl;
-    Token* factor = parseFactor();
-    if(is_vaild == false){
-        factor->delete_token(factor);
-        return nullptr;
-    }
-    while (true){
-        if (nextToken == nullptr){
-            cout << "null expression" << endl;
-            is_vaild = false;
-            exit(1);
-        } else if(nextToken->raw_value == "*"){
-            scanToken();
-            Token* factor1 = parseFactor();
-            if (!factor || !factor1) {
-                Token a;
-                a.delete_token(factor);
-                a.delete_token(factor1);
-                return nullptr;
-                return nullptr;
-            }
-            Multiply* temp = new Multiply;
-            temp->left = factor;
-            temp->right = factor1;
-            factor = temp;
-        } else if(nextToken->raw_value == "/"){
-            scanToken();
-            Token* factor1 = parseFactor();
-            if (!factor || !factor1) {
-                Token a;
-                a.delete_token(factor);
-                a.delete_token(factor1);
-                return nullptr;
-            }
-            Divide* temp = new Divide;
-            temp->left = factor;
-            temp->right = factor1;
-            factor = temp;
-        } else if (nextToken->raw_value == "%") {
-            scanToken();
-            Token* factor1 = parseFactor();
-            if (!factor || !factor1) {
-                Token a;
-                a.delete_token(factor);
-                a.delete_token(factor1);
-                return nullptr;
-            }
-            Mode* temp = new Mode;
-            temp->left = factor;
-            temp->right = factor1;
-            factor = temp;
-        }
-        else {
-            // cout << "double * / :  " << factor->raw_value << endl;
-            return factor;
-        }
-    }
-}
-
-// Create tokens for variables, numbers and prioritizes parenthese when evaluating the oppertation
-Token* InfixParser::parseFactor(){
-    // cout << "parseFactor" << endl;
-    if(is_vaild == false){
-        return nullptr;
-    }
-    if(isdigit(nextToken->raw_value[0])){
-        //
-        // cout << "number: " << nextToken->raw_value << " ";
-        Num* num = new Num;
-        num->raw_value = nextToken->raw_value;
-        num->value = stod(nextToken->raw_value);
-        scanToken();
-        return num;
-    }
-    else if (nextToken->raw_value == "print" || nextToken->raw_value == "if") {
-        Token::error_ = true;
-        is_vaild = false;
-        return nullptr;
-    }
-    else if (nextToken->raw_value == "true" || nextToken->raw_value == "false") {
-        Bool* val = new Bool();
-        val->raw_value = nextToken->raw_value;
-        if (nextToken->raw_value == "true") {
-            val->bool_val = true;
-        }
-        else {
-            val->bool_val = false;
-        }
-        scanToken();
-        return val;
-    } else if (isalpha(nextToken->raw_value[0]) && nextToken->raw_value != "END"){
-        Variable* variable = new Variable;
-        for(size_t i = 0; i < variables.size(); i++){
-            if(nextToken->raw_value == variables.at(i)->raw_value){
-                variable->raw_value = variables.at(i)->raw_value;
-                //
-                if (variables.at(i)->get_data_type() == "BOOL") {
-                    variable->bool_val = variables.at(i)->bool_val;
-                    variable->set_type("true");
-                }
-                else if (variables.at(i)->get_data_type() == "DOUBLE") {
-                    variable->value = variables.at(i)->value;
-                    variable->set_type("double");   
-                }
-                scanToken();
-                return variable;
-            }
-        }
-        variable->raw_value = nextToken->raw_value;
-        scanToken();
-        return variable;
-    } else if (nextToken->raw_value == "("){
-        scanToken();
-        if(!isdigit(nextToken->raw_value[0]) && !isalpha(nextToken->raw_value[0]) && (nextToken->raw_value != "(")){
-            return nullptr;
-        }
-        Token* expression = parseEqual();
-        if (expression == nullptr) {
-            is_vaild = false;
-            return nullptr;
-        }
-        if(nextToken->raw_value == ")"){
-            scanToken();
-            return expression;
-        } else {
-            
-            is_vaild = false;
-            return nullptr;
-        }
-    } else {
-        // cout << "n" << endl;
-        is_vaild = false;
-        return nullptr;
-    }
-}
-
-void InfixParser::delete_tokens(){
-    for(size_t i = 0; i < tokens.size(); i++){
-        delete tokens.at(i);
-    }
-}
-
-void InfixParser::delete_variables(){
-    for(size_t i = 0; i < variables.size(); i++){
-        delete variables.at(i);
-    }
+    // cout << "after update: " << endl;
+    // for (auto c: AST_Node::prev_variables) {
+    //     cout << c.first << endl;
+    // }
+    // cout << "complete after update:" << endl;
 }
