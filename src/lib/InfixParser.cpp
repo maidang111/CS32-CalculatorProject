@@ -188,7 +188,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
     int count = 0;
     for (size_t i = begin_line; i <= end_line; ++i) {
-        cout << "first: " << i << endl;
+        // cout << "first: " << i << endl;
         if (tokens.at(i)->raw_value == "(") {
             ++count;
         }
