@@ -181,8 +181,9 @@ void InfixParser::build_AST(){
                 }
                 // cout << "finish checking" << endl;
                 bool a;
-                variant<bool, double> result = AST->get_value();
                 if (!Token::error_) {
+                    if(print_val){
+                    variant<bool, double> result = AST->get_value();
                     if (holds_alternative<bool>(result)) {
                         a = get<bool>(result);
                         if(print_val){
@@ -198,6 +199,7 @@ void InfixParser::build_AST(){
                         if(print_val){
                             cout << get<double>(result) << endl;
                         }
+                    }
                     }
                     // cout << result << endl;
                     if (!Token::variable_bool.empty() || !Token::variable_value.empty()) {
