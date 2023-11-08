@@ -61,7 +61,7 @@ void InfixParser::read_token() {
                 min = error_index.at(j);
             }
         }
-        cout << "unexpected token at line 1 column " << tokens.at(min)->column << ": " << tokens.at(min)->raw_value << endl;
+        cout << "Unexpected token at line 1 column " << tokens.at(min)->column << ": " << tokens.at(min)->raw_value << endl;
         index = curr_index + 2;
         return;
     }
@@ -514,11 +514,16 @@ void InfixParser::evaluate_print(AST_Node* head) {
     //     cout << b.first << " " << endl;
     // }
     // cout << "+++++++++++++=" << endl;
-    if (calculate.data_type == "DOUBLE" && !AST_Node::runtime_error) {
+    if (AST_Node::runtime_error) {
+        AST_Node::runtime_error = false;
+        Data::curr_variables.clear();
+        return;
+    }
+    if (calculate.data_type == "DOUBLE") {
         cout << calculate.double_val << endl;
         update_variables();
     }
-    else if (calculate.data_type == "BOOL" && !AST_Node::runtime_error) {
+    else if (calculate.data_type == "BOOL") {
         if (calculate.bool_val) {
             cout << "true" << endl;
         }
@@ -527,7 +532,6 @@ void InfixParser::evaluate_print(AST_Node* head) {
         }
         update_variables();
     }
-    AST_Node::runtime_error = false;
 }
 
 void InfixParser::update_variables() {
