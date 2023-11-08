@@ -8,7 +8,6 @@ using namespace std;
 class Scrypter{
    public:
     Scrypter(vector <Token*>);
-    ~Scrypter();
     
     vector <Token*> tokens;
     vector <Statement*> ASTHeads;

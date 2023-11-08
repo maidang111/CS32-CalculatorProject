@@ -2,6 +2,10 @@
 #include "Scrypter.h"
 using namespace std;
 
+Scrypter::Scrypter(vector<Token*> tokens){
+    this->tokens = tokens;
+    this->index = 0;
+}
 void Scrypter::buildASTs(){
     while(index != tokens.size()){
         if(tokens.at(index)->raw_value == "END"){
