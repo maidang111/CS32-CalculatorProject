@@ -27,14 +27,11 @@ InfixParser::~InfixParser() {
 }
 
 void InfixParser::read_all_token() {
-    while (tokens.at(index)->raw_value != "END") {
+    while (index < tokens.size()) {
         // cout << index << endl;
         read_token();
         error_index.clear();
         // cout << index << endl;
-        if (index >= tokens.size()) {
-            break;
-        }
     }
     // cout << "read_all_no_error" << endl;
 }
@@ -64,7 +61,7 @@ void InfixParser::read_token() {
                 min = error_index.at(j);
             }
         }
-        // cout << "unexpected token at line 1 column " << tokens.at(min)->column << ": " << tokens.at(min)->raw_value << endl;
+        cout << "unexpected token at line 1 column " << tokens.at(min)->column << ": " << tokens.at(min)->raw_value << endl;
         index = curr_index + 2;
         return;
     }
