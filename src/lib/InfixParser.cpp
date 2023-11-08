@@ -7,7 +7,7 @@ using namespace std;
 
 InfixParser::InfixParser(vector<Token*>& tokens) {
     index = 0;
-    tokens = tokens;
+    this->tokens = tokens;
     operators = {"+", "-", "*", "/", "%", "&", "|", "^", "<", "<=", ">", ">=", "!=", "==", "="};
     // check tokens
     // cout << "check lexer" << endl;
@@ -32,6 +32,9 @@ void InfixParser::read_all_token() {
         read_token();
         error_index.clear();
         // cout << index << endl;
+        if (index >= tokens.size()) {
+            break;
+        }
     }
     // cout << "read_all_no_error" << endl;
 }
