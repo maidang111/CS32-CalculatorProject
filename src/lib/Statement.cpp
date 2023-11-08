@@ -58,8 +58,11 @@ void If::print(){
 
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
-        cout << "    ";
         body.at(i)->print();
+    }
+
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
     }
     cout << "}" << endl;
 }
@@ -74,6 +77,7 @@ void Else::print(){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
+    // cout << level << "else";
     cout << "else "; 
     
     InfixParser infixParser(condition);
@@ -83,8 +87,11 @@ void Else::print(){
     
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
-        cout << "    ";
         body.at(i)->print();
+    }
+
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
     }
     cout << "}" << endl;
 }
@@ -107,9 +114,13 @@ void While::print(){
     infixParser.build_AST();
     
     cout << " {" << endl;
+    // cout <<  body.size();
     for(size_t i = 0; i < body.size(); i++){
-        cout << "    ";
         body.at(i)->print();
+    }
+
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
     }
     cout << "}" << endl;
 }
