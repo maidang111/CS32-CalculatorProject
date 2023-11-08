@@ -163,7 +163,7 @@ Data Boolean_Operation::get_value(Data& left_val, Data& right_val) {
         return Data();
     }
     if (((left_val.data_type != "BOOL") || (right_val.data_type != "BOOL")) && !runtime_error) {
-        cout << "Runtime error: invalid operand type." << endl;
+        cout << "runtime error: invalid operand type." << endl;
         runtime_error = true;
         Data a;
         return a;
@@ -229,7 +229,7 @@ Data Equality_Val::get_value(Data& left_val, Data& right_val) {
         return Data();
     }
     if (((left_val.data_type != right_val.data_type) || (left_val.data_type == "NONE")) && !runtime_error) {
-        cout << "Runtime error: invalid operand type." << endl;
+        cout << "runtime error: invalid operand type." << endl;
         runtime_error = true;
         Data a;
         return a;
@@ -258,10 +258,10 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
     if (runtime_error) {
         return Data();
     }
-    cout << right_val.actual_val << endl;
-    cout << "type: " << right_val.data_type << endl;
+    // cout << right_val.actual_val << endl;
+    // cout << "type: " << right_val.data_type << endl;
     if (invalid_variable(right_val) && !runtime_error) {
-        cout << "q" << endl;
+        // cout << "q" << endl;
         cout << "error: unknown identifier " << right_val.actual_val << endl;
         runtime_error = true;
         Data a;
