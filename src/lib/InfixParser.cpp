@@ -53,9 +53,6 @@ void InfixParser::read_token() {
     // cout << "index: " << index << endl;
     // cout << "curr_index: " << curr_index << endl;
     cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
-    if (index == curr_index) {
-        return;
-    }
     cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
     check_parenthesis(index, curr_index);
     check_operator(index, curr_index);
@@ -66,10 +63,11 @@ void InfixParser::read_token() {
                 min = error_index.at(j);
             }
         }
-        cout << "unexpected token at line 1 column " << tokens.at(min) << ": " << tokens.at(min)->raw_value << endl;
+        cout << "unexpected token at line 1 column " << tokens.at(min)->column << ": " << tokens.at(min)->raw_value << endl;
         index = curr_index + 2;
         return;
     }
+    cout << "Here++++++++++++++++++++++++" << endl;
 
     root = read_one_line(index, curr_index, nullptr);
     if (!error) {
