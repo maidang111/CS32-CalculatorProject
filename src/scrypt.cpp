@@ -6,12 +6,15 @@
 using namespace std; 
 
 int main(){
-    string line = "";
-    while (!cin.eof()){
-        getline(cin, line);
-        cout << line << endl;
-        // for testing
-        // cout << line << endl;
-    }
+    Lexer lexer; 
+    lexer.create_endtokens();
+    // lexer.print_endtokens();
+    Formater formater(lexer.multi_end_tokens);
+
+    formater.buildASTs();
+    formater.printFormated();
+    // lexer.delete_endtokens();
+    // cout << formater.ASTHeads.size();
+    formater.deleteStatements();
     return 0;
 }

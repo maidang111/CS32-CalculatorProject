@@ -78,7 +78,7 @@ void Else::print(){
         cout << "    ";
     }
     // cout << level << "else";
-    cout << "else "; 
+    cout << "else"; 
     
     InfixParser infixParser(condition);
     infixParser.print_val = false;
