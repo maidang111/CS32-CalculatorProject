@@ -118,7 +118,7 @@ Statement* Formater::buildAST(){
         Print* printBlock = new Print();
         printBlock->level = level;
         size_t tempLevel = level;
-        level = -1;
+        level = 0;
         printBlock->body.push_back(buildAST());
         level = tempLevel;
         // cout << printBlock->body.size();
