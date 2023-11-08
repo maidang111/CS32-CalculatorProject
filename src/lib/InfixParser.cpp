@@ -163,6 +163,9 @@ void InfixParser::check_operator(size_t first_element, size_t last_element) {
 
 AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Node* in_parent) {
     // cout << "enter" << endl;
+    if (index + 1 == tokens.size()) {
+        return nullptr;
+    }
     if (begin_line > end_line) {
         // cout << "here" << endl;
         // error here for parenthesis () 
@@ -511,11 +514,11 @@ void InfixParser::evaluate_print(AST_Node* head) {
     //     cout << b.first << " " << endl;
     // }
     // cout << "+++++++++++++=" << endl;
-    if (calculate.data_type == "DOUBLE") {
+    if (calculate.data_type == "DOUBLE" && !AST_Node::runtime_error) {
         cout << calculate.double_val << endl;
         update_variables();
     }
-    else if (calculate.data_type == "BOOL") {
+    else if (calculate.data_type == "BOOL" && !AST_Node::runtime_error) {
         if (calculate.bool_val) {
             cout << "true" << endl;
         }

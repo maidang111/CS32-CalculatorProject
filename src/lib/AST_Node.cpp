@@ -132,7 +132,8 @@ Data Double_Operation::get_value(Data& left_val, Data& right_val) {
     }    
     else if (this->data->raw_value == "/") {
         if (right_val.double_val == 0) {
-            //error
+            cout << "Runtime error: divison by zero." << endl;
+            runtime_error = true;
             Data err;
             return err;
         }
@@ -158,7 +159,7 @@ Data Boolean_Operation::get_value(Data& left_val, Data& right_val) {
         return Data();
     }
     else if (invalid_variable(right_val) && !runtime_error) {
-        cout << "error: unknown identifier " << left_val.actual_val << endl;
+        cout << "error: unknown identifier " << right_val.actual_val << endl;
         runtime_error = true;
         return Data();
     }
