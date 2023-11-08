@@ -20,6 +20,7 @@ InfixParser::InfixParser() {
     error = false;
     result_double = 0;
     result_bool = false;
+    a.delete_endtokens();
 }
 
 InfixParser::~InfixParser() {
