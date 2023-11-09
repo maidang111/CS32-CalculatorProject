@@ -93,15 +93,22 @@ Statement* Formater::buildAST(){
         Else* elseBlock = new Else();
         elseBlock->level = level;
         level++;
-        // cout << level << "elseBlock" << endl;
-        while(tokens.at(index)->raw_value != "{"){
-            elseBlock->condition.push_back(tokens.at(index));
+        if (tokens.at(index)->raw_value == "if"){
+            size_t tempLevel = level;
+            elseBlock->body.push_back(buildAST());
+            level = tempLevel;
             index++;
+            elseBlock->body.push_back(buildAST());
+            return elseBlock;
         }
+        // cout << level << "elseBlock" << endl;
+        // while(tokens.at(index)->raw_value != "{"){
+        //     elseBlock->condition.push_back(tokens.at(index));
+        //     index++;
+        // }
+        // index++;
+        // elseBlock->condition.push_back(tokens.at(index));
         index++;
-        elseBlock->condition.push_back(tokens.at(index));
-        index++;
-        
         while(tokens.at(index)->raw_value != "}"){
             if(tokens.at(index)->raw_value != "END"){
                 size_t tempLevel = level;

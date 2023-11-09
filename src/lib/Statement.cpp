@@ -78,10 +78,10 @@ void Else::print(){
     }
     // cout << level << "else";
     cout << "else"; 
-    InfixParser infixParser(condition);
-    AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
-    infixParser.print_AST(a);
-    infixParser.delete_help(a);
+    // InfixParser infixParser(condition);
+    // AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
+    // infixParser.print_AST(a);
+    // infixParser.delete_help(a);
     // infixParser.print_val = false;
     // infixParser.print_endl = false;
     // infixParser.build_AST();    
