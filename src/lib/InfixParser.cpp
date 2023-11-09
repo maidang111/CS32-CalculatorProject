@@ -1,6 +1,7 @@
 #include "InfixParser.h"
 #include "AST_Node.h"
 #include "Lexer.h"
+#include <cctype>
 #include <string>
 #include <vector>
 using namespace std;
@@ -54,6 +55,9 @@ void InfixParser::read_token() {
     // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
     size_t error_ = 0;
     bool a = check_error(index, curr_index, error_);
+    if (!a) {
+        a = check_assignment(index, curr_index, error_);
+    }
     if (a) {
         cout << "Unexpected token at line 1 column " << tokens.at(error_)->column << ": " << tokens.at(error_)->raw_value << endl;
         index = curr_index + 2; 
@@ -95,7 +99,7 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             }
             last_left = false;
         }
-        if (tokens.at(i)->raw_value == "(") {
+        else if (tokens.at(i)->raw_value == "(") {
             last_left = true;
             operator_last = false;
             ++count;
@@ -120,6 +124,41 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
     }
     if (count != 0) {
         error_index = end_line + 1;
+        return true;
+    }
+    return false;
+}
+
+bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& error_index) {
+    // cout << "begin_line " << begin_line << " end_line: " << end_line << endl;
+    if (begin_line == end_line && tokens.at(begin_line)->raw_value == "=") {
+        error_index = begin_line;
+        return true;
+    }
+    if (tokens.at(end_line)->raw_value == "=") {
+        error_index = end_line + 1;
+        return true;
+    }
+    // cout << "here" << endl;
+    for (size_t i = end_line; i > begin_line; --i) {
+        // cout << "a" << endl;
+        if (tokens.at(i)->raw_value == "=") {
+            if ((tokens.at(i + 1)->raw_value == ")") || (operators.count(tokens.at(i + 1)->raw_value))) {
+                
+                error_index = i + 1;
+                // cout << "here 1 " << endl;
+                return true;
+            }
+            else if (!isalpha(tokens.at(i - 1)->raw_value.at(0)) || (tokens.at(i - 1)->raw_value.at(0) != '_')){
+                error_index = i;
+                // cout << "return here" << endl;
+                return true;
+            }
+        }
+        // cout << "b" << endl;
+    }
+    if (tokens.at(begin_line)->raw_value == "=") {
+        error_index = begin_line;
         return true;
     }
     return false;
@@ -433,6 +472,9 @@ void InfixParser::print_all() {
         cout << endl;
         // cout << "print all:loop middle\tindex: " << i << endl;
         evaluate_print(ASTs.at(i));
+        if (i + 1 != ASTs.size()) {
+            cout << endl;
+        }
         // cout << "print all:loop bottom\tindex: " << i << endl;
     }
     // cout << "print all: end" << endl;
@@ -484,15 +526,15 @@ void InfixParser::evaluate_print(AST_Node* head) {
         return;
     }
     if (calculate.data_type == "DOUBLE") {
-        cout << calculate.double_val << endl;
+        cout << calculate.double_val;
         update_variables();
     }
     else if (calculate.data_type == "BOOL") {
         if (calculate.bool_val) {
-            cout << "true" << endl;
+            cout << "true";
         }
         else if (!calculate.bool_val) {
-            cout << "false" << endl;
+            cout << "false";
         }
         update_variables();
     }

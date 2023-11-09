@@ -33,7 +33,7 @@ class InfixParser{
     void update_variables();
     vector<size_t> error_index;
     bool check_error(size_t begin_line, size_t end_line, size_t& error_index);
-    bool check_assignment(size_t begin_line, size_t end_line);
+    bool check_assignment(size_t begin_line, size_t end_line, size_t& error_index);
     set<string> operators;
     // build tree
     // A print function
