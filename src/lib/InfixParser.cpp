@@ -41,6 +41,33 @@ void InfixParser::read_all_token() {
     // cout << "read_all_no_error" << endl;
 }
 
+AST_Node* InfixParser::single_value_token(size_t begin_a) {
+    if (tokens.at(begin_a)->raw_value == ")") {
+        return nullptr;
+    }
+    else if (tokens.at(begin_a)->raw_value == "(") {
+        return nullptr;
+    }
+    else if (operators.count(tokens.at(begin_a)->raw_value)) {
+        return nullptr;
+    }
+    else if (((isalpha(tokens.at(begin_a)->raw_value.at(0)) || (tokens.at(begin_a)->raw_value.at(0) == '_'))
+                && ((tokens.at(begin_a)->raw_value != "true") && (tokens.at(begin_a)->raw_value) != "false"))) {
+        if (AST_Node::prev_variables.count(tokens.at(begin_a)->raw_value)) {
+            Data a = AST_Node::prev_variables.at(tokens.at(begin_a)->raw_value);
+            Variable_Val* new_val = new Variable_Val(tokens.at(begin_a));
+            return new_val;
+        }
+        else {
+            return nullptr;
+        }
+    }
+    else {
+        Direct_Val* new_val = new Direct_Val(tokens.at(begin_a));
+        return new_val;
+    }
+}
+
 void InfixParser::read_token() {
     if (index >= tokens.size()) {
         return;
@@ -53,6 +80,12 @@ void InfixParser::read_token() {
     }
     // cout << "2 Index here: " << index<< "  currIndex: " << curr_index << endl;
     curr_index -= 1;
+    if (index == curr_index) {
+        AST_Node* v = single_value_token(index);
+        ASTs.push_back(v);
+        index = curr_index + 2;
+        return; 
+    }
     // cout << "index: " << index << endl;
     // cout << "curr_index: " << curr_index << endl;
     // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
