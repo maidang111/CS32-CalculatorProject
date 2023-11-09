@@ -40,7 +40,7 @@ InfixParser::~InfixParser() {
 //     cout << "testing finished" << endl;
 // }
 
-void InfixParser::read_all_token() {
+void InfixParser::read_all_token(bool calc) {
     if (tokens.size() <= 1) {
         return;
     }
@@ -48,7 +48,7 @@ void InfixParser::read_all_token() {
     while (index < tokens.size()) {
         // cout << index << endl;
         // cout << "index: " << index << endl;
-        read_token();
+        read_token(calc);
         error_index.clear();
         // cout << "ast size(): " << ASTs.size() << endl;
         // cout << index << endl;
@@ -89,7 +89,21 @@ AST_Node* InfixParser::single_value_token(size_t begin_a) {
     }
 }
 
-void InfixParser::read_token() {
+bool InfixParser::check_for_statement(size_t begin_line, size_t end_line) const {
+    for (size_t j = begin_line; j <= end_line; ++j) {
+        if (tokens.at(j)->raw_value == "print") {
+            cout << "Unexpected token at line 1 column " << tokens.at(j)->column << ": " << tokens.at(j)->raw_value << endl;
+            return true;
+        }
+        else if (tokens.at(j)->raw_value == "if") {
+            cout << "Unexpected token at line 1 column " << tokens.at(j)->column << ": " << tokens.at(j)->raw_value << endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+void InfixParser::read_token(bool calc) {
     // cout << "read_token() enter" << endl;
     if (index >= tokens.size()) {
         // cout << "return read_token" << endl;
@@ -105,6 +119,12 @@ void InfixParser::read_token() {
     // cout << "currIndex2: " << curr_index << endl;
     // cout << "2 Index here: " << index<< "  currIndex: " << curr_index << endl;
     curr_index -= 1;
+    if (calc) {
+        if (check_for_statement(index, curr_index)) {
+            index = curr_index + 2;
+            return;
+        }
+    }
     // cout << "currIndex3: " << curr_index << endl;
     if (index == curr_index) {
         AST_Node* v = single_value_token(index);

@@ -20,13 +20,14 @@ class InfixParser{
     
     InfixParser(vector<Token*>& tokens);
     ~InfixParser();
-    void read_all_token();
-    void read_token();
+    void read_all_token(bool calc);
+    void read_token(bool calc);
     AST_Node* read_one_line(size_t begin_line, size_t end_line, AST_Node* in_parent);
     void delete_help(AST_Node* in_node);
     void print_all();
     void print_AST(AST_Node* node) const;
     // void testing_AST();
+    bool check_for_statement(size_t begin_line, size_t end_line) const;
     double result_double;
     bool result_bool;
     Data evaluate(AST_Node* in_node);
