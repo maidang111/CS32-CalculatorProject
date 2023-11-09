@@ -173,12 +173,10 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
     for (size_t i = begin_line; i <= end_line + 1; ++i) {
         if (operators.count(tokens.at(i)->raw_value)) {
             if (last_left) {
-                cout << "h" << endl;
                 error_index = i;
                 return true;
             }
             if (operator_last) {
-                cout << "b" << endl;
                 error_index = i;
                 return true;
             }
@@ -186,13 +184,11 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
                 operator_last = true;
             }
             if (i == begin_line) {
-                cout << "k" << endl;
                 error_index = i;
                 return true;
             }
             else if (i == end_line) {
                 error_index = i + 1;
-                cout << "p" << endl;
                 return true;
             }
             last_left = false;
@@ -203,7 +199,6 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             operator_last = false;
             ++count;
             if (last_val) {
-                cout << "c" << endl;
                 error_index = i;
                 return true;
             }
@@ -211,7 +206,6 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
         }
         else if (tokens.at(i)->raw_value == ")") {
             if (operator_last || last_left) {
-                cout << "a" << endl;
                 error_index = i;
                 return true;
             }
@@ -224,7 +218,6 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             last_left = false;
             operator_last = false;
             if (last_val && (tokens.at(i)->raw_value != "END")) {
-                cout << 54 << endl;
                 error_index = i;
                 return true;
             }
@@ -232,7 +225,6 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
         }
         if (count < 0) {
             error_index = i;
-            cout << 100 << endl;
             return true;
         }
     }
