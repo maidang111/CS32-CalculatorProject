@@ -10,36 +10,16 @@ Statement::~Statement(){
     for(size_t i = 0; i < condition.size(); i++){
         delete condition.at(i);
     }
-    // cout << body.size() << endl;
     for(size_t i = 0; i < body.size(); i++){
-        // cout << body.at(i)->print();
         delete body.at(i);
     }
-    // cout << "delete this";
-    // delete this;
 }
 void Statement::deleteStatement(){
-    // cout << "here" << endl;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->deleteStatement();
     }
     delete this;
 }
-
-// void deleteFuc(Statement* head){
-//     if(head == nullptr){
-//         return;
-//     }
-
-//     for(size_t i = 0; i < head->condition.size(); i++){
-//         delete head->condition.at(i);
-//     }
-//     for (size_t i = 0; i< head->body.size(); i++){
-//         deleteFuc(head->body.at(i));
-//     }
-//     delete head;
-// }
-
 void Statement::print(){
     cout << "not a vaild function for type" << endl;
     return;
@@ -76,16 +56,7 @@ void Else::print(){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
-    // cout << level << "else";
     cout << "else"; 
-    // InfixParser infixParser(condition);
-    // AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
-    // infixParser.print_AST(a);
-    // infixParser.delete_help(a);
-    // infixParser.print_val = false;
-    // infixParser.print_endl = false;
-    // infixParser.build_AST();    
-    
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
@@ -112,12 +83,7 @@ void While::print(){
     AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
     infixParser.print_AST(a);
     infixParser.delete_help(a);
-    // infixParser.print_val = false;
-    // infixParser.print_endl = false;
-    // infixParser.build_AST();
-    
     cout << " {" << endl;
-    // cout <<  body.size();
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
     }
@@ -139,7 +105,6 @@ void Print::print(){
         cout << "    ";
     }
     cout << "print ";
-    // level--;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
     }
@@ -164,9 +129,5 @@ void Expression::print(){
 }
 
 void Expression::deleteStatement(){
-    // cout << body.size();
-    // for(size_t i = 0; i < body.size(); i++){
-    //     delete body.at(i);
-    // }
     delete this;
 }

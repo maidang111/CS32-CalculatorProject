@@ -15,8 +15,6 @@ Formater::~Formater(){
 
 void Formater::deleteStatements(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
-            // cout << i;
-            // cout << ASTHeads.at(i)->body.size();
             ASTHeads.at(i)->deleteStatement();
         }
     delete_tokens();
@@ -105,13 +103,6 @@ Statement* Formater::buildAST(){
             index -= 2;
             return elseBlock;
         }
-        // cout << level << "elseBlock" << endl;
-        // while(tokens.at(index)->raw_value != "{"){
-        //     elseBlock->condition.push_back(tokens.at(index));
-        //     index++;
-        // }
-        // index++;
-        // elseBlock->condition.push_back(tokens.at(index));
         index++;
         while(tokens.at(index)->raw_value != "}"){
             if(tokens.at(index)->raw_value != "END"){
@@ -132,12 +123,10 @@ Statement* Formater::buildAST(){
         level = 0;
         printBlock->body.push_back(buildAST());
         level = tempLevel;
-        // cout << printBlock->body.size();
         return printBlock;
     } else {
         Expression* expressionBlock = new Expression();
         expressionBlock->level = level;
-        // cout << "expressionblock" << level << endl;
         while (tokens.at(index)->raw_value != "END"){
             expressionBlock->body.push_back(tokens.at(index));
             index++;
@@ -149,19 +138,13 @@ Statement* Formater::buildAST(){
 }
 
 void Formater::printFormated(){
-    // cout << ASTHeads.size() << endl;
     for(size_t i = 0; i < ASTHeads.size(); i++){
-        // cout << i;
-        // cout << ASTHeads.at(i)->body.size();
         ASTHeads.at(i)->print();
     }
 }
 void Formater::deleteFunc(){
-    // cout << ASTHeads.size() << endl;
 
     for(size_t i = 0 ; i < ASTHeads.size(); i++){
-        // cout << "deleteFuc" << i << endl;
-        // cout << ASTHeads.at(i)->body.size() << endl;
         delete_help(ASTHeads.at(i));
     }
 }
@@ -171,15 +154,12 @@ void Formater::check() {
 }
 
 void Formater::delete_help(Statement* node) {
-    // cout << "1" << endl;
     if (!node) {
         return;
     }
-    // cout << "2" << endl;
     for (size_t i = 0; i < node->body.size(); ++i) {
         delete_help(node->body.at(i));
     }
-    // cout << "3" << endl;
     delete node; 
 }
 
