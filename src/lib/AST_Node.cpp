@@ -36,7 +36,6 @@ bool AST_Node::invalid_variable(Data& a) const {
     return false;
 }
 
-
 map<string, Data> AST_Node::prev_variables;
 
 bool AST_Node::runtime_error = false;

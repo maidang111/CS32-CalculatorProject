@@ -10,8 +10,7 @@ int main(){
     Lexer a;
     a.create_endtokens();
     InfixParser infixParser(a.multi_end_tokens);
-    infixParser.read_all_token();
-    infixParser.print_all();
+    infixParser.read_all_token(true);
     a.delete_endtokens();
     return 0;
 }

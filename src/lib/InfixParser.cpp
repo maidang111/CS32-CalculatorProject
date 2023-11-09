@@ -28,32 +28,121 @@ InfixParser::~InfixParser() {
     }
 }
 
-void InfixParser::read_all_token() {
+// void InfixParser::testing_AST() {
+//     cout << "testing ast" << endl;
+//     for (size_t i = 0; i < ASTs.size(); ++i) {
+//         if (ASTs.at(i) == nullptr) {
+//             cout << i << " is nullptr" << endl;
+//         }
+//         else {
+//             cout << "AST head val: " << ASTs.at(i)->data->raw_value << endl;
+//         }
+//     }
+//     cout << "testing finished" << endl;
+// }
+
+void InfixParser::read_all_token(bool calc) {
     if (tokens.size() <= 1) {
         return;
     }
+    // cout << "tokens size() " << tokens.size() << endl;
     while (index < tokens.size()) {
         // cout << index << endl;
-        read_token();
+        // cout << "index: " << index << endl;
+        read_token(calc);
         error_index.clear();
+        // cout << "ast size(): " << ASTs.size() << endl;
         // cout << index << endl;
     }
-    delete_help(ASTs.at(ASTs.size() - 1));
+    if (!ASTs.at(ASTs.size() - 1)) {
+        ASTs.pop_back();
+    }
+    // testing_AST();
     // cout << "read_all_no_error" << endl;
 }
 
-void InfixParser::read_token() {
+AST_Node* InfixParser::single_value_token(size_t begin_a) {
+    // cout << "enter sing_value_token" << endl;
+    if (tokens.at(begin_a)->raw_value == ")") {
+        cout << "Unexpected token at line 1 column " << tokens.at(begin_a)->column << ": " << tokens.at(begin_a)->raw_value << endl;
+        return nullptr;
+    }
+    else if (tokens.at(begin_a)->raw_value == "(") {
+        cout << "Unexpected token at line 1 column " << tokens.at(begin_a + 1)->column << ": " << tokens.at(begin_a + 1)->raw_value << endl;
+        return nullptr;
+    }
+    else if (operators.count(tokens.at(begin_a)->raw_value)) {
+        cout << "Unexpected token at line 1 column " << tokens.at(begin_a + 1)->column << ": " << tokens.at(begin_a)->raw_value << endl;
+        return nullptr;
+    }
+    else if (((isalpha(tokens.at(begin_a)->raw_value.at(0)) || (tokens.at(begin_a)->raw_value.at(0) == '_'))
+                && ((tokens.at(begin_a)->raw_value != "true") && (tokens.at(begin_a)->raw_value) != "false"))) {
+        // cout << "enter here variable" << endl;
+        Variable_Val* new_val = new Variable_Val(tokens.at(begin_a));
+        new_val->single_val = true;
+        return new_val;
+    }
+    else {
+        // cout << "enter here number" << endl;
+        Direct_Val* new_val = new Direct_Val(tokens.at(begin_a));
+        new_val->single_val = true;
+        return new_val;
+    }
+}
+
+bool InfixParser::check_for_statement(size_t begin_line, size_t end_line) const {
+    for (size_t j = begin_line; j <= end_line; ++j) {
+        if (tokens.at(j)->raw_value == "print") {
+            cout << "Unexpected token at line 1 column " << tokens.at(j)->column << ": " << tokens.at(j)->raw_value << endl;
+            return true;
+        }
+        else if (tokens.at(j)->raw_value == "if") {
+            cout << "Unexpected token at line 1 column " << tokens.at(j)->column << ": " << tokens.at(j)->raw_value << endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+void InfixParser::read_token(bool calc) {
+    // cout << "read_token() enter" << endl;
     if (index >= tokens.size()) {
+        // cout << "return read_token" << endl;
         return;
     }
     size_t curr_index = index;
+    // cout << "currIndex1: " << curr_index << endl;
     // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
     AST_Node* root = nullptr;
     while (tokens.at(curr_index)->raw_value != "END") {
         ++curr_index;
     }
+    // cout << "currIndex2: " << curr_index << endl;
     // cout << "2 Index here: " << index<< "  currIndex: " << curr_index << endl;
     curr_index -= 1;
+    if (calc) {
+        if (check_for_statement(index, curr_index)) {
+            index = curr_index + 2;
+            return;
+        }
+    }
+    // cout << "currIndex3: " << curr_index << endl;
+    if (index == curr_index) {
+        AST_Node* v = single_value_token(index);
+        if (v) {
+            ASTs.push_back(v);
+        }
+        if (v) {
+        print_AST(v);
+        cout << endl;
+        evaluate_print(v);
+        if (curr_index + 2 < tokens.size()) {
+            cout << endl;
+        }
+        }
+        index = curr_index + 2;
+        return; 
+    }
     // cout << "index: " << index << endl;
     // cout << "curr_index: " << curr_index << endl;
     // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
@@ -77,6 +166,14 @@ void InfixParser::read_token() {
     else {
         delete_help(root);
     }
+    if (root) {
+        print_AST(root);
+        cout << endl;
+        evaluate_print(root);
+        if (curr_index + 2 < tokens.size()) {
+            cout << endl;
+        }
+    }
     index = curr_index + 2;
     error = false;
     // cout << "ended" << endl;
@@ -88,6 +185,7 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
     int count = 0;
     bool operator_last = false;
     bool last_left = 0;
+    bool last_val = false;
     // one line included endtoken
     for (size_t i = begin_line; i <= end_line + 1; ++i) {
         if (operators.count(tokens.at(i)->raw_value)) {
@@ -102,12 +200,26 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             else {
                 operator_last = true;
             }
+            if (i == begin_line) {
+                error_index = i;
+                return true;
+            }
+            else if (i == end_line) {
+                error_index = i + 1;
+                return true;
+            }
             last_left = false;
+            last_val = false;
         }
         else if (tokens.at(i)->raw_value == "(") {
             last_left = true;
             operator_last = false;
             ++count;
+            if (last_val) {
+                error_index = i;
+                return true;
+            }
+            last_val = false;
         }
         else if (tokens.at(i)->raw_value == ")") {
             if (operator_last || last_left) {
@@ -117,10 +229,16 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             last_left = false;
             operator_last = false;
             --count;
+            last_val = true;
         }
         else {
             last_left = false;
             operator_last = false;
+            if (last_val && (tokens.at(i)->raw_value != "END")) {
+                error_index = i;
+                return true;
+            }
+            last_val = true;
         }
         if (count < 0) {
             error_index = i;
@@ -473,7 +591,7 @@ void InfixParser::delete_help(AST_Node* in_node) {
 
 void InfixParser::print_all() {
     // cout << "print all: enter" << endl;
-    for (size_t i = 0; i + 1 < ASTs.size(); ++i) {
+    for (size_t i = 0; i < ASTs.size(); ++i) {
         // cout << "print all: loop top\tindex: " << i << endl;
         print_AST(ASTs.at(i));
         cout << endl;
