@@ -24,7 +24,8 @@ Lexer::Lexer(){
     }
 }
 
-Lexer::~Lexer(){}
+Lexer::~Lexer(){
+}
 
 void Lexer::create_tokens(){
     string raw_value = "";

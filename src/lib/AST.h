@@ -19,11 +19,10 @@ class Token{
     size_t column;
     size_t row;
     double value;
-    bool bool_val = true;
+    bool bool_val;
+    bool is_operator;
     Token* left;
     Token* right;
-    Token* parent;
-    bool is_operator;
     static bool error_;
     static set<string> variable_list;
     static bool outside_;
