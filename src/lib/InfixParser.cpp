@@ -168,6 +168,7 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
     int count = 0;
     bool operator_last = false;
     bool last_left = 0;
+    bool last_val = false;
     // one line included endtoken
     for (size_t i = begin_line; i <= end_line + 1; ++i) {
         if (operators.count(tokens.at(i)->raw_value)) {
@@ -182,12 +183,26 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             else {
                 operator_last = true;
             }
+            if (i == begin_line) {
+                error_index = i;
+                return true;
+            }
+            else if (i == end_line) {
+                error_index = i + 1;
+                return true;
+            }
             last_left = false;
+            last_val = false;
         }
         else if (tokens.at(i)->raw_value == "(") {
             last_left = true;
             operator_last = false;
             ++count;
+            if (last_val) {
+                error_index = i;
+                return true;
+            }
+            last_val = false;
         }
         else if (tokens.at(i)->raw_value == ")") {
             if (operator_last || last_left) {
@@ -197,10 +212,16 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             last_left = false;
             operator_last = false;
             --count;
+            last_val = true;
         }
         else {
             last_left = false;
             operator_last = false;
+            if (last_val) {
+                error_index = i;
+                return true;
+            }
+            last_val = true;
         }
         if (count < 0) {
             error_index = i;
