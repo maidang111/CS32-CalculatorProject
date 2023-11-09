@@ -43,27 +43,26 @@ void InfixParser::read_all_token() {
 
 AST_Node* InfixParser::single_value_token(size_t begin_a) {
     if (tokens.at(begin_a)->raw_value == ")") {
+        cout << "Unexpected token at line 1 column " << tokens.at(begin_a)->column << ": " << tokens.at(begin_a)->raw_value << endl;
         return nullptr;
     }
     else if (tokens.at(begin_a)->raw_value == "(") {
+        cout << "Unexpected token at line 1 column " << tokens.at(begin_a + 1)->column << ": " << tokens.at(begin_a + 1)->raw_value << endl;
         return nullptr;
     }
     else if (operators.count(tokens.at(begin_a)->raw_value)) {
+        cout << "Unexpected token at line 1 column " << tokens.at(begin_a + 1)->column << ": " << tokens.at(begin_a)->raw_value << endl;
         return nullptr;
     }
     else if (((isalpha(tokens.at(begin_a)->raw_value.at(0)) || (tokens.at(begin_a)->raw_value.at(0) == '_'))
                 && ((tokens.at(begin_a)->raw_value != "true") && (tokens.at(begin_a)->raw_value) != "false"))) {
-        if (AST_Node::prev_variables.count(tokens.at(begin_a)->raw_value)) {
-            Data a = AST_Node::prev_variables.at(tokens.at(begin_a)->raw_value);
-            Variable_Val* new_val = new Variable_Val(tokens.at(begin_a));
-            return new_val;
-        }
-        else {
-            return nullptr;
-        }
+        Variable_Val* new_val = new Variable_Val(tokens.at(begin_a));
+        new_val->single_val = true;
+        return new_val;
     }
     else {
         Direct_Val* new_val = new Direct_Val(tokens.at(begin_a));
+        new_val->single_val = true;
         return new_val;
     }
 }
@@ -73,13 +72,16 @@ void InfixParser::read_token() {
         return;
     }
     size_t curr_index = index;
+    // cout << "currIndex1: " << curr_index << endl;
     // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
     AST_Node* root = nullptr;
     while (tokens.at(curr_index)->raw_value != "END") {
         ++curr_index;
     }
+    // cout << "currIndex2: " << curr_index << endl;
     // cout << "2 Index here: " << index<< "  currIndex: " << curr_index << endl;
     curr_index -= 1;
+    // cout << "currIndex3: " << curr_index << endl;
     if (index == curr_index) {
         AST_Node* v = single_value_token(index);
         ASTs.push_back(v);
