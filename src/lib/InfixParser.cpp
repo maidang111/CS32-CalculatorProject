@@ -27,18 +27,18 @@ InfixParser::~InfixParser() {
     }
 }
 
-void InfixParser::testing_AST() {
-    cout << "testing ast" << endl;
-    for (size_t i = 0; i < ASTs.size(); ++i) {
-        if (ASTs.at(i) == nullptr) {
-            cout << i << " is nullptr" << endl;
-        }
-        else {
-            cout << "AST head val: " << ASTs.at(i)->data->raw_value << endl;
-        }
-    }
-    cout << "testing finished" << endl;
-}
+// void InfixParser::testing_AST() {
+//     cout << "testing ast" << endl;
+//     for (size_t i = 0; i < ASTs.size(); ++i) {
+//         if (ASTs.at(i) == nullptr) {
+//             cout << i << " is nullptr" << endl;
+//         }
+//         else {
+//             cout << "AST head val: " << ASTs.at(i)->data->raw_value << endl;
+//         }
+//     }
+//     cout << "testing finished" << endl;
+// }
 
 void InfixParser::read_all_token() {
     if (tokens.size() <= 1) {
@@ -56,12 +56,12 @@ void InfixParser::read_all_token() {
     if (!ASTs.at(ASTs.size() - 1)) {
         ASTs.pop_back();
     }
-    testing_AST();
+    // testing_AST();
     // cout << "read_all_no_error" << endl;
 }
 
 AST_Node* InfixParser::single_value_token(size_t begin_a) {
-    cout << "enter sing_value_token" << endl;
+    // cout << "enter sing_value_token" << endl;
     if (tokens.at(begin_a)->raw_value == ")") {
         cout << "Unexpected token at line 1 column " << tokens.at(begin_a)->column << ": " << tokens.at(begin_a)->raw_value << endl;
         return nullptr;
@@ -76,13 +76,13 @@ AST_Node* InfixParser::single_value_token(size_t begin_a) {
     }
     else if (((isalpha(tokens.at(begin_a)->raw_value.at(0)) || (tokens.at(begin_a)->raw_value.at(0) == '_'))
                 && ((tokens.at(begin_a)->raw_value != "true") && (tokens.at(begin_a)->raw_value) != "false"))) {
-        cout << "enter here variable" << endl;
+        // cout << "enter here variable" << endl;
         Variable_Val* new_val = new Variable_Val(tokens.at(begin_a));
         new_val->single_val = true;
         return new_val;
     }
     else {
-        cout << "enter here number" << endl;
+        // cout << "enter here number" << endl;
         Direct_Val* new_val = new Direct_Val(tokens.at(begin_a));
         new_val->single_val = true;
         return new_val;
@@ -90,9 +90,9 @@ AST_Node* InfixParser::single_value_token(size_t begin_a) {
 }
 
 void InfixParser::read_token() {
-    cout << "read_token() enter" << endl;
+    // cout << "read_token() enter" << endl;
     if (index >= tokens.size()) {
-        cout << "return read_token" << endl;
+        // cout << "return read_token" << endl;
         return;
     }
     size_t curr_index = index;
