@@ -53,6 +53,8 @@ void If::print(){
     InfixParser infixParser(condition);
     AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
     infixParser.print_AST(a);
+    infixParser.delete_help(a);
+
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
@@ -79,6 +81,7 @@ void Else::print(){
     InfixParser infixParser(condition);
     AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
     infixParser.print_AST(a);
+    infixParser.delete_help(a);
     // infixParser.print_val = false;
     // infixParser.print_endl = false;
     // infixParser.build_AST();    
@@ -108,6 +111,7 @@ void While::print(){
     InfixParser infixParser(condition);
     AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
     infixParser.print_AST(a);
+    infixParser.delete_help(a);
     // infixParser.print_val = false;
     // infixParser.print_endl = false;
     // infixParser.build_AST();
@@ -155,6 +159,7 @@ void Expression::print(){
     InfixParser infixParser(body);
     AST_Node* a = infixParser.read_one_line(0, body.size() -2, nullptr);
     infixParser.print_AST(a);
+    infixParser.delete_help(a);
     cout << endl;
 }
 
