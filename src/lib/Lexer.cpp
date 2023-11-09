@@ -25,8 +25,6 @@ Lexer::Lexer(){
 }
 
 Lexer::~Lexer(){
-    delete_endtokens();
-    delete_tokens();
 }
 
 void Lexer::create_tokens(){

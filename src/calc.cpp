@@ -12,5 +12,6 @@ int main(){
     InfixParser infixParser(a.multi_end_tokens);
     infixParser.read_all_token();
     infixParser.print_all();
+    a.delete_endtokens();
     return 0;
 }
