@@ -466,15 +466,13 @@ void InfixParser::delete_help(AST_Node* in_node) {
 
 void InfixParser::print_all() {
     // cout << "print all: enter" << endl;
-    for (size_t i = 0; i < ASTs.size(); ++i) {
+    for (size_t i = 0; i + 1 < ASTs.size(); ++i) {
         // cout << "print all: loop top\tindex: " << i << endl;
         print_AST(ASTs.at(i));
         cout << endl;
         // cout << "print all:loop middle\tindex: " << i << endl;
         evaluate_print(ASTs.at(i));
-        if (i + 1 != ASTs.size()) {
-            cout << endl;
-        }
+        cout << endl;
         // cout << "print all:loop bottom\tindex: " << i << endl;
     }
     // cout << "print all: end" << endl;
