@@ -174,6 +174,7 @@ void Expression::calculate(InfixParser* infixParser){
     if (b.data_type == "DOUBLE") {
         infixParser->printValue = b.double_val;
     }
+    infixParser->delete_help(a);
 }
 void Expression::deleteStatement(){
     delete this;

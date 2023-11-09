@@ -15,6 +15,6 @@ int main(){
     scrypt.calculate();
     // // lexer.delete_endtokens();
     // // cout << formater.ASTHeads.size();
-    // formater.deleteStatements();
+    scrypt.deleteStatements();
     return 0;
 }
