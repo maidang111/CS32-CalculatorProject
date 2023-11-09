@@ -59,6 +59,7 @@ void InfixParser::read_all_token() {
 }
 
 AST_Node* InfixParser::single_value_token(size_t begin_a) {
+    cout << "enter sing_value_token" << endl;
     if (tokens.at(begin_a)->raw_value == ")") {
         cout << "Unexpected token at line 1 column " << tokens.at(begin_a)->column << ": " << tokens.at(begin_a)->raw_value << endl;
         return nullptr;
@@ -85,6 +86,7 @@ AST_Node* InfixParser::single_value_token(size_t begin_a) {
 }
 
 void InfixParser::read_token() {
+    cout << "read_token() enter" << endl;
     if (index >= tokens.size()) {
         cout << "return read_token" << endl;
         return;
