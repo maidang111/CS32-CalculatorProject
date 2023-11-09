@@ -31,13 +31,13 @@ void InfixParser::read_all_token() {
     if (tokens.size() <= 1) {
         return;
     }
-    cout << "tokens size() " << tokens.size() << endl;
+    // cout << "tokens size() " << tokens.size() << endl;
     while (index < tokens.size()) {
         // cout << index << endl;
-        cout << "index: " << index << endl;
+        // cout << "index: " << index << endl;
         read_token();
         error_index.clear();
-        cout << "ast size(): " << ASTs.size() << endl;
+        // cout << "ast size(): " << ASTs.size() << endl;
         // cout << index << endl;
     }
     ASTs.pop_back();
@@ -89,9 +89,7 @@ void InfixParser::read_token() {
     if (index == curr_index) {
         AST_Node* v = single_value_token(index);
         ASTs.push_back(v);
-        cout << index << "index" << endl;
         index = curr_index + 2;
-        cout << index << endl;
         return; 
     }
     // cout << "index: " << index << endl;
