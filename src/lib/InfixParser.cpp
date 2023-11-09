@@ -37,7 +37,7 @@ void InfixParser::read_all_token() {
         error_index.clear();
         // cout << index << endl;
     }
-    delete_help(ASTs.at(ASTs.size() - 1));
+    ASTs.pop_back();
     // cout << "read_all_no_error" << endl;
 }
 
