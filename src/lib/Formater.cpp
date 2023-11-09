@@ -134,7 +134,6 @@ Statement* Formater::buildAST(){
             // if(tokens.at(index)->raw_value == "END"){
             return nullptr;
         }
-        cout << tokens.at(index)->raw_value << endl;
         Expression* expressionBlock = new Expression();
         expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){
