@@ -98,7 +98,11 @@ Statement* Formater::buildAST(){
             elseBlock->body.push_back(buildAST());
             level = tempLevel;
             index++;
-            elseBlock->body.push_back(buildAST());
+            if (tokens.at(index)->raw_value == "else"){
+                Statement* elseBody = buildAST();
+                elseBlock->body.push_back(elseBody);
+            }
+            index -= 2;
             return elseBlock;
         }
         // cout << level << "elseBlock" << endl;
