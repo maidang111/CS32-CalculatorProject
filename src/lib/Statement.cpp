@@ -117,17 +117,20 @@ void While::calculate(InfixParser* infixParser){
     // for(size_t i = 0; i < condition.size(); i++){
     //     cout << condition.at(i)->raw_value << endl;
     // }
-    AST_Node* a = infixParser->read_one_line(0, body.size() -2, nullptr);
+    AST_Node* a = infixParser->read_one_line(0, condition.size() -2, nullptr);
     Data b = infixParser->evaluate(a);
-    cout << b.data_type << endl;
+    // cout << b.data_type << endl;
     infixParser->update_variables();
-
     if (b.data_type == "BOOL") {
-        infixParser->isTrue = b.double_val;
+        infixParser->isTrue = b.bool_val;
     }
-    if (infixParser->isTrue){
+    while (infixParser->isTrue){
+        // cout << "here" << endl;
         for(size_t i = 0; i < body.size(); i++){
-        body.at(i)->deleteStatement();
+        body.at(i)->calculate(infixParser);
+        b = infixParser->evaluate(a);
+        infixParser->update_variables();
+        infixParser->isTrue = b.bool_val;
         }
     }
     return;
