@@ -37,7 +37,9 @@ void InfixParser::read_all_token() {
         error_index.clear();
         // cout << index << endl;
     }
-    ASTs.pop_back();
+    if (ASTs.at(ASTs.size() - 1) == nullptr) {
+        ASTs.pop_back();
+    }
     // cout << "read_all_no_error" << endl;
 }
 
