@@ -27,8 +27,10 @@ void Formater::buildASTs(){
         } else {
             level = 0;
             Statement* root = buildAST();
-            // root->print();
-            ASTHeads.push_back(root);
+            if (root != nullptr){
+                ASTHeads.push_back(root);
+            }
+            // root->print()
             // ASTHeads.at(0)->print();
         }
     }
@@ -47,11 +49,8 @@ Statement* Formater::buildAST(){
         index++;
         whileBlock->condition.push_back(tokens.at(index));
         index++;
-        // while(tokens.at(index)->raw_value == "END"){
-        //     index++;
-        // }
+        
         while(tokens.at(index)->raw_value != "}"){
-            // cout << level << endl;
             if(tokens.at(index)->raw_value != "END"){
                 size_t tempLevel = level;
                 whileBlock->body.push_back(buildAST());
@@ -75,7 +74,6 @@ Statement* Formater::buildAST(){
         ifBlock->condition.push_back(tokens.at(index));
         index++;
         while(tokens.at(index)->raw_value != "}"){
-            // cout << tokens.at(index)->raw_value;
             if(tokens.at(index)->raw_value != "END"){
                 size_t tempLevel = level;
                 ifBlock->body.push_back(buildAST());
@@ -92,6 +90,12 @@ Statement* Formater::buildAST(){
         elseBlock->level = level;
         level++;
         if (tokens.at(index)->raw_value == "if"){
+            // size_t tempLevel = level;
+            // elseBlock->body.push_back(buildAST());
+            // level = tempLevel;
+            // index++;
+            // elseBlock->body.push_back(buildAST());
+            // return elseBlock;
             size_t tempLevel = level;
             elseBlock->body.push_back(buildAST());
             level = tempLevel;
@@ -125,6 +129,12 @@ Statement* Formater::buildAST(){
         level = tempLevel;
         return printBlock;
     } else {
+        if(tokens.at(index)->raw_value == "}"){
+            index += 2;
+            // if(tokens.at(index)->raw_value == "END"){
+            return nullptr;
+        }
+        cout << tokens.at(index)->raw_value << endl;
         Expression* expressionBlock = new Expression();
         expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){
