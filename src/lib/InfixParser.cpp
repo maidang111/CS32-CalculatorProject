@@ -23,11 +23,13 @@ InfixParser::InfixParser(vector<Token*>& tokens) {
 
 InfixParser::~InfixParser() {
     for (const auto& a: ASTs) {
+        // cout << "333" << endl;
         delete_help(a);
     }
 }
 
 void InfixParser::read_all_token() {
+    // cout << "in" << endl;
     if (tokens.size() <= 1) {
         return;
     }
@@ -37,10 +39,12 @@ void InfixParser::read_all_token() {
         error_index.clear();
         // cout << index << endl;
     }
+    delete_help(ASTs.at(ASTs.size() - 1));
     // cout << "read_all_no_error" << endl;
 }
 
 void InfixParser::read_token() {
+    // cout << "23orif" << endl;
     if (index >= tokens.size()) {
         return;
     }
@@ -83,6 +87,7 @@ void InfixParser::read_token() {
 }
 
 bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_index) {
+    cout << "check_error" << endl;
     int count = 0;
     bool operator_last = false;
     bool last_left = 0;
@@ -133,6 +138,7 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
 }
 
 bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& error_index) {
+    // cout << "check_assignment" << endl;
     // cout << "begin_line " << begin_line << " end_line: " << end_line << endl;
     if (begin_line == end_line && tokens.at(begin_line)->raw_value == "=") {
         error_index = begin_line;
@@ -170,6 +176,7 @@ bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& e
 }
 
 AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Node* in_parent) {
+    // cout << "enter" << endl;
     // cout << "enter" << endl;
     if (index + 1 == tokens.size()) {
         return nullptr;
@@ -417,6 +424,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
 
     count = 0;
     for (size_t i = end_line; i >= begin_line; --i) {
+        cout << "here4" << endl;
         if (tokens.at(i)->raw_value == "(") {
             ++count;
         }
@@ -461,6 +469,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
 }
 
 void InfixParser::delete_help(AST_Node* in_node) {
+    cout << "pro" << endl;
     if (!in_node) {
         return;
     }
@@ -483,6 +492,7 @@ void InfixParser::print_all() {
     // cout << "print all: end" << endl;
 }
 void InfixParser::print_AST(AST_Node* node) const {
+    // cout << "here3" << endl;
     if (!node) {
         return;
     }
@@ -510,6 +520,7 @@ void InfixParser::print_AST(AST_Node* node) const {
 }
 
 Data InfixParser::evaluate(AST_Node* in_node) {
+    // cout << "here2" << endl;
     if (!in_node) {
         Data a;
         return a;
@@ -522,6 +533,7 @@ Data InfixParser::evaluate(AST_Node* in_node) {
 }
 
 void InfixParser::evaluate_print(AST_Node* head) {
+    // cout << "here1" << endl;
     Data calculate = evaluate(head);
     // cout << "calculation ended ++++++++++++++++" << endl;
     // for (auto b: Data::curr_variables) {
@@ -549,6 +561,7 @@ void InfixParser::evaluate_print(AST_Node* head) {
 }
 
 void InfixParser::update_variables() {
+    // cout << "here" << endl;
     // cout << "before update: " << endl;
     // for (auto b: Data::curr_variables) {
     //     cout << b.first << endl;
