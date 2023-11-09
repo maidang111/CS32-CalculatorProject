@@ -74,11 +74,13 @@ AST_Node* InfixParser::single_value_token(size_t begin_a) {
     }
     else if (((isalpha(tokens.at(begin_a)->raw_value.at(0)) || (tokens.at(begin_a)->raw_value.at(0) == '_'))
                 && ((tokens.at(begin_a)->raw_value != "true") && (tokens.at(begin_a)->raw_value) != "false"))) {
+        cout << "enter here variable" << endl;
         Variable_Val* new_val = new Variable_Val(tokens.at(begin_a));
         new_val->single_val = true;
         return new_val;
     }
     else {
+        cout << "enter here number" << endl;
         Direct_Val* new_val = new Direct_Val(tokens.at(begin_a));
         new_val->single_val = true;
         return new_val;
