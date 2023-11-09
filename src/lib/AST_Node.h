@@ -15,6 +15,7 @@ class AST_Node {
     Token* data;
     string data_type;
     bool single_val;
+    bool is_number;
     Data val;
     AST_Node();
     AST_Node(Token* in_data);

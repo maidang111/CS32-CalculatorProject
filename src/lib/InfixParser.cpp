@@ -491,7 +491,12 @@ void InfixParser::print_AST(AST_Node* node) const {
     if (!node->single_val) {
         cout << " ";
     }
-    cout << node->data->raw_value;
+    if (node->is_number) {
+        cout << stod(node->data->raw_value);
+    }
+    else {
+        cout << node->data->raw_value;
+    }
     if (!node->single_val) {
         cout << " ";
     }

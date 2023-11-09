@@ -5,10 +5,10 @@
 using namespace std;
 
 AST_Node::AST_Node() : left(nullptr), right(nullptr), parent(nullptr), data(nullptr), 
-                        single_val(false) {}
+                        single_val(false), is_number(false) {}
 
 AST_Node::AST_Node(Token* in_data) : left(nullptr), right(nullptr), parent(nullptr), data(in_data), 
-                        single_val(false) {}
+                        single_val(false), is_number(false) {}
 
 AST_Node::~AST_Node() { }
 
@@ -41,6 +41,7 @@ map<string, Data> AST_Node::prev_variables;
 bool AST_Node::runtime_error = false;
 
 Double_Operation::Double_Operation(Token* in_data){
+    is_number = false;
     data = in_data;
     val.actual_val = in_data->raw_value;
     val.data_type = "DOUBLE";
@@ -50,6 +51,7 @@ Double_Operation::Double_Operation(Token* in_data){
 }
 
 Boolean_Operation::Boolean_Operation(Token* in_data){
+    is_number = false;
     val.actual_val = in_data->raw_value;
     val.data_type = "BOOL";
     data = in_data;
@@ -57,6 +59,7 @@ Boolean_Operation::Boolean_Operation(Token* in_data){
 
 Direct_Val::Direct_Val(Token* in_data){
     val.actual_val = in_data->raw_value;
+    is_number = false;
     if (in_data->raw_value == "true") {
         val.bool_val = true;
         val.data_type = "BOOL";
@@ -66,6 +69,7 @@ Direct_Val::Direct_Val(Token* in_data){
         val.data_type = "BOOL";
     }
     else {
+        is_number = true;
         val.double_val = stod(in_data->raw_value);
         val.data_type = "DOUBLE";
     }
@@ -73,6 +77,7 @@ Direct_Val::Direct_Val(Token* in_data){
 }
 
 Variable_Val::Variable_Val(Token* in_data) {
+    is_number = false;
     val.actual_val = in_data->raw_value;
     data = in_data;
     val.data_type = "EMPTY";
@@ -82,17 +87,20 @@ Variable_Val::Variable_Val(Token* in_data) {
 }
 
 Assign::Assign(Token* in_data) {
+    is_number = false;
     val.actual_val = in_data->raw_value; 
     data = in_data;
 }
 
 Comparison_Val::Comparison_Val(Token* in_data) {
+    is_number = false;
     val.actual_val = in_data->raw_value;
     val.data_type = "BOOL";
     data = in_data;
 }
 
 Equality_Val::Equality_Val(Token* in_data) {
+    is_number = false;
     val.actual_val = in_data->raw_value;
     val.data_type = "BOOL";
     data = in_data;
