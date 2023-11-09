@@ -119,6 +119,7 @@ void While::calculate(InfixParser* infixParser){
     // }
     AST_Node* a = infixParser->read_one_line(0, body.size() -2, nullptr);
     Data b = infixParser->evaluate(a);
+    cout << b.data_type << endl;
     infixParser->update_variables();
 
     if (b.data_type == "BOOL") {
