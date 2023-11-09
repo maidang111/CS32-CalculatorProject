@@ -82,10 +82,6 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
     // one line included endtoken
     for (size_t i = begin_line; i <= end_line + 1; ++i) {
         if (operators.count(tokens.at(i)->raw_value)) {
-            if (last_left) {
-                error_index = i;
-                return true;
-            }
             if (operator_last) {
                 error_index = i;
                 return true;
