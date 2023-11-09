@@ -9,9 +9,9 @@ class Statement{
     public:
     Statement();
     size_t level;
-    virtual ~Statement();
     vector <Token*> condition;
     vector <Statement*> body;
+    virtual ~Statement();
     virtual void print();
     virtual void deleteStatement();
     // virtual vector <Token*> getValue();

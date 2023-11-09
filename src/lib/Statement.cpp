@@ -50,11 +50,9 @@ void If::print(){
         cout << "    ";
     }
     cout << "if "; 
-
     InfixParser infixParser(condition);
-    infixParser.print_val = false;
-    infixParser.print_endl = false;
-    infixParser.build_AST();
+    AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
+    infixParser.print_AST(a);
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
@@ -78,11 +76,12 @@ void Else::print(){
     }
     // cout << level << "else";
     cout << "else"; 
-    
     InfixParser infixParser(condition);
-    infixParser.print_val = false;
-    infixParser.print_endl = false;
-    infixParser.build_AST();    
+    AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
+    infixParser.print_AST(a);
+    // infixParser.print_val = false;
+    // infixParser.print_endl = false;
+    // infixParser.build_AST();    
     
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
@@ -106,11 +105,12 @@ void While::print(){
         cout << "    ";
     }
     cout << "while "; 
-    // cout << condition.size();
     InfixParser infixParser(condition);
-    infixParser.print_val = false;
-    infixParser.print_endl = false;
-    infixParser.build_AST();
+    AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
+    infixParser.print_AST(a);
+    // infixParser.print_val = false;
+    // infixParser.print_endl = false;
+    // infixParser.build_AST();
     
     cout << " {" << endl;
     // cout <<  body.size();
@@ -153,9 +153,9 @@ void Expression::print(){
         cout << "    ";
     }
     InfixParser infixParser(body);
-    infixParser.print_val = false;
-    infixParser.print_endl = true;
-    infixParser.build_AST();
+    AST_Node* a = infixParser.read_one_line(0, body.size() -2, nullptr);
+    infixParser.print_AST(a);
+    cout << endl;
 }
 
 void Expression::deleteStatement(){

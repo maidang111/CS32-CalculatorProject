@@ -138,6 +138,7 @@ Statement* Formater::buildAST(){
 }
 
 void Formater::printFormated(){
+    // cout << ASTHeads.size() << endl;
     for(size_t i = 0; i < ASTHeads.size(); i++){
         // cout << i;
         // cout << ASTHeads.at(i)->body.size();
