@@ -31,15 +31,16 @@ void InfixParser::read_all_token() {
     if (tokens.size() <= 1) {
         return;
     }
+    cout << "tokens size() " << tokens.size() << endl;
     while (index < tokens.size()) {
         // cout << index << endl;
+        cout << "index: " << index << endl;
         read_token();
         error_index.clear();
+        cout << "ast size(): " << ASTs.size() << endl;
         // cout << index << endl;
     }
-    if (ASTs.at(ASTs.size() - 1) == nullptr) {
-        ASTs.pop_back();
-    }
+    ASTs.pop_back();
     // cout << "read_all_no_error" << endl;
 }
 
@@ -71,6 +72,7 @@ AST_Node* InfixParser::single_value_token(size_t begin_a) {
 
 void InfixParser::read_token() {
     if (index >= tokens.size()) {
+        cout << "return read_token" << endl;
         return;
     }
     size_t curr_index = index;
@@ -87,7 +89,9 @@ void InfixParser::read_token() {
     if (index == curr_index) {
         AST_Node* v = single_value_token(index);
         ASTs.push_back(v);
+        cout << index << "index" << endl;
         index = curr_index + 2;
+        cout << index << endl;
         return; 
     }
     // cout << "index: " << index << endl;
@@ -509,7 +513,7 @@ void InfixParser::delete_help(AST_Node* in_node) {
 
 void InfixParser::print_all() {
     // cout << "print all: enter" << endl;
-    for (size_t i = 0; i + 1 < ASTs.size(); ++i) {
+    for (size_t i = 0; i < ASTs.size(); ++i) {
         // cout << "print all: loop top\tindex: " << i << endl;
         print_AST(ASTs.at(i));
         cout << endl;
