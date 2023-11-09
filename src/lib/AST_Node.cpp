@@ -1,3 +1,4 @@
+
 #include "AST.h"
 #include "AST_Node.h"
 #include <cmath>
@@ -16,10 +17,7 @@ AST_Node::~AST_Node() { }
 //     left_val.actual_val = "base";
 //     right_val.actual_val = "base";
 //     return Data();
-// }'
-
-
-
+// }
 
 bool AST_Node::is_variable(Data& a) const {
     if (Data::curr_variables.find(a.actual_val) != Data::curr_variables.end()) {
@@ -61,28 +59,21 @@ Boolean_Operation::Boolean_Operation(Token* in_data){
 }
 
 Direct_Val::Direct_Val(Token* in_data){
-    // cout << "direct val constructor" << endl;
     val.actual_val = in_data->raw_value;
     is_number = false;
     if (in_data->raw_value == "true") {
         val.bool_val = true;
         val.data_type = "BOOL";
-        // cout << 10 << endl;
     }
     else if (in_data->raw_value == "false") {
         val.bool_val = false;
         val.data_type = "BOOL";
-        // cout << 11 << endl;
     }
     else {
-        // cout << 14 << endl;
         is_number = true;
-        // cout << in_data->raw_value << endl;
         val.double_val = stod(in_data->raw_value);
-        // cout << val.double_val << endl;
         val.data_type = "DOUBLE";
     }
-    // cout << "end" << endl;
     data = in_data;
 }
 
@@ -211,7 +202,6 @@ Data Direct_Val::get_value(Data& left_val, Data& right_val) {
     }
     left_val.data_type = "NONE";
     right_val.data_type = "NONE";
-    // cout << "her100" << endl;
     return val;
 }
 
@@ -229,11 +219,6 @@ Data Variable_Val::get_value(Data& left_val, Data& right_val) {
     }
     else if (prev_variables.find(val.actual_val) != prev_variables.end()) {
         return prev_variables.at(val.actual_val);
-    }
-    else {
-        cout << "Runtime error: unknown identifier " << val.actual_val;
-        runtime_error = true;
-        return Data();    
     }
     // error 
     return result;
