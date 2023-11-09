@@ -28,6 +28,9 @@ InfixParser::~InfixParser() {
 }
 
 void InfixParser::read_all_token() {
+    if (tokens.size() <= 1) {
+        return;
+    }
     while (index < tokens.size()) {
         // cout << index << endl;
         read_token();
