@@ -132,7 +132,7 @@ Data Double_Operation::get_value(Data& left_val, Data& right_val) {
     }    
     else if (this->data->raw_value == "/") {
         if (right_val.double_val == 0) {
-            cout << "Runtime error: divison by zero." << endl;
+            cout << "Runtime error: division by zero." << endl;
             runtime_error = true;
             Data err;
             return err;

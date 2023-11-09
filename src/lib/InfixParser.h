@@ -32,8 +32,8 @@ class InfixParser{
     void evaluate_print(AST_Node* head); 
     void update_variables();
     vector<size_t> error_index;
-    void check_parenthesis(size_t first_element, size_t last_element); 
-    void check_operator(size_t first_element, size_t last_element);
+    bool check_error(size_t begin_line, size_t end_line, size_t& error_index);
+    bool check_assignment(size_t begin_line, size_t end_line);
     set<string> operators;
     // build tree
     // A print function

@@ -52,17 +52,11 @@ void InfixParser::read_token() {
     // cout << "curr_index: " << curr_index << endl;
     // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
     // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
-    check_parenthesis(index, curr_index);
-    check_operator(index, curr_index);
-    if (!error_index.empty()) {
-        size_t min = error_index.at(0);
-        for (size_t j = 0; j < error_index.size(); ++j) {
-            if (min > error_index.at(j)) {
-                min = error_index.at(j);
-            }
-        }
-        cout << "Unexpected token at line 1 column " << tokens.at(min)->column << ": " << tokens.at(min)->raw_value << endl;
-        index = curr_index + 2;
+    size_t error_ = 0;
+    bool a = check_error(index, curr_index, error_);
+    if (a) {
+        cout << "Unexpected token at line 1 column " << tokens.at(error_)->column << ": " << tokens.at(error_)->raw_value << endl;
+        index = curr_index + 2; 
         return;
     }
     // cout << "Here++++++++++++++++++++++++" << endl;
@@ -81,85 +75,55 @@ void InfixParser::read_token() {
     // cout << "checking index: " << index << endl;
 }
 
-void InfixParser::check_parenthesis(size_t first_element, size_t last_element) {
-    // cout << "check_parenthesis: " << endl;
-    // cout << first_element << " " << last_element << endl;
-    // if (first_element >= last_element -1) {
-    //     return;
-    // }
-    size_t first_error = 0;
+bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_index) {
     int count = 0;
-    size_t last_left = 0;
-    bool is_error = false;
-    
-    for (size_t i = first_element; i < last_element + 2; ++i) {
-        // cout << "index: " << i << endl;
+    bool operator_last = false;
+    bool last_left = 0;
+    // one line included endtoken
+    for (size_t i = begin_line; i <= end_line + 1; ++i) {
+        if (operators.count(tokens.at(i)->raw_value)) {
+            if (last_left) {
+                error_index = i;
+                return true;
+            }
+            if (operator_last) {
+                error_index = i;
+                return true;
+            }
+            else {
+                operator_last = true;
+            }
+            last_left = false;
+        }
         if (tokens.at(i)->raw_value == "(") {
-            count++;
-            last_left = i;
-            // cout << 10 << endl;
+            last_left = true;
+            operator_last = false;
+            ++count;
         }
         else if (tokens.at(i)->raw_value == ")") {
-            count--;
-            if (last_left + 1 == i) {
-                first_error = i;
-                is_error = true;
-                break;
-                // cout << 11 << endl;
+            if (operator_last || last_left) {
+                error_index = i;
+                return true;
             }
+            last_left = false;
+            operator_last = false;
+            --count;
+        }
+        else {
+            last_left = false;
+            operator_last = true;
         }
         if (count < 0) {
-            first_error = i;
-            is_error = true;
-            // cout << 12 << endl;
-            break;
+            error_index = i;
+            return true;
         }
     }
-    if ((count != 0) && !is_error) {
-        is_error = true;
-        first_error = last_element + 1;
-        // cout << 13 << endl;
+    if (count != 0) {
+        error_index = end_line + 1;
+        return true;
     }
-    // cout << "is_error: " << is_error << " first_error: " << first_error << endl;
-    if (is_error) {
-        error_index.push_back(first_error);
-    }
+    return false;
 }
-
-void InfixParser::check_operator(size_t first_element, size_t last_element) {
-    // if (first_element + 1 >= last_element) {
-    //     return;
-    // }
-    bool is_error = false;
-    size_t first_error = 0;
-
-    for (size_t i = first_element; i < last_element + 2; ++i) {
-        if (operators.count(tokens.at(i)->raw_value)) {
-            if ((i == first_element) || (i == last_element)) {
-                is_error = true;
-                first_error = i;
-                break;
-            }
-            if (operators.count(tokens.at(i - 1)->raw_value) || (tokens.at(i - 1)->raw_value == "(")) {
-                is_error = true;
-                first_error = i;
-                break;
-            }
-            if (tokens.at(i + 1)->raw_value == ")") {
-                is_error = true;
-                first_error = i;
-                break;
-            }
-        }
-    }
-    if (is_error) {
-        error_index.push_back(first_error);
-    }
-
-}
-
-
-
 
 AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Node* in_parent) {
     // cout << "enter" << endl;
