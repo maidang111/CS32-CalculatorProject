@@ -34,6 +34,7 @@ void InfixParser::read_all_token() {
         error_index.clear();
         // cout << index << endl;
     }
+    delete_help(ASTs.at(ASTs.size() - 1));
     // cout << "read_all_no_error" << endl;
 }
 
@@ -137,6 +138,7 @@ bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& e
     }
     if (tokens.at(end_line)->raw_value == "=") {
         error_index = end_line + 1;
+        // cout << "p" << endl;
         return true;
     }
     // cout << "here" << endl;
@@ -149,7 +151,7 @@ bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& e
                 // cout << "here 1 " << endl;
                 return true;
             }
-            else if (!isalpha(tokens.at(i - 1)->raw_value.at(0)) || (tokens.at(i - 1)->raw_value.at(0) != '_')){
+            else if (!isalpha(tokens.at(i - 1)->raw_value.at(0)) && (tokens.at(i - 1)->raw_value.at(0) != '_')){
                 error_index = i;
                 // cout << "return here" << endl;
                 return true;
@@ -159,6 +161,7 @@ bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& e
     }
     if (tokens.at(begin_line)->raw_value == "=") {
         error_index = begin_line;
+        // cout << "00" << endl;
         return true;
     }
     return false;
