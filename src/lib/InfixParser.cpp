@@ -27,6 +27,19 @@ InfixParser::~InfixParser() {
     }
 }
 
+void InfixParser::testing_AST() {
+    cout << "testing ast" << endl;
+    for (size_t i = 0; i < ASTs.size(); ++i) {
+        if (ASTs.at(i) == nullptr) {
+            cout << i << " is nullptr" << endl;
+        }
+        else {
+            cout << "AST head val: " << ASTs.at(i)->data->raw_value << endl;
+        }
+    }
+    cout << "testing finished" << endl;
+}
+
 void InfixParser::read_all_token() {
     if (tokens.size() <= 1) {
         return;
@@ -41,6 +54,7 @@ void InfixParser::read_all_token() {
         // cout << index << endl;
     }
     ASTs.pop_back();
+    testing_AST();
     // cout << "read_all_no_error" << endl;
 }
 

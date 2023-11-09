@@ -26,6 +26,7 @@ class InfixParser{
     void delete_help(AST_Node* in_node);
     void print_all();
     void print_AST(AST_Node* node) const;
+    void testing_AST();
     double result_double;
     bool result_bool;
     Data evaluate(AST_Node* in_node);
