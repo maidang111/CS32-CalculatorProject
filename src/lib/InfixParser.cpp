@@ -131,6 +131,14 @@ void InfixParser::read_token(bool calc) {
         if (v) {
             ASTs.push_back(v);
         }
+        if (v) {
+        print_AST(v);
+        cout << endl;
+        evaluate_print(v);
+        if (curr_index + 2 < tokens.size()) {
+            cout << endl;
+        }
+        }
         index = curr_index + 2;
         return; 
     }
@@ -161,6 +169,9 @@ void InfixParser::read_token(bool calc) {
         print_AST(root);
         cout << endl;
         evaluate_print(root);
+        if (curr_index + 2 < tokens.size()) {
+            cout << endl;
+        }
     }
     index = curr_index + 2;
     error = false;
