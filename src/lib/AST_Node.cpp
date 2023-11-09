@@ -18,6 +18,8 @@ AST_Node::~AST_Node() { }
 //     return Data();
 // }
 
+
+
 bool AST_Node::is_variable(Data& a) const {
     if (Data::curr_variables.find(a.actual_val) != Data::curr_variables.end()) {
         return true;
