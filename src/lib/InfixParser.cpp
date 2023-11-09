@@ -157,6 +157,11 @@ void InfixParser::read_token(bool calc) {
     else {
         delete_help(root);
     }
+    if (root) {
+        print_AST(root);
+        cout << endl;
+        evaluate_print(root);
+    }
     index = curr_index + 2;
     error = false;
     // cout << "ended" << endl;
