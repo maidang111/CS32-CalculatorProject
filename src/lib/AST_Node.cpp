@@ -178,7 +178,6 @@ Data Boolean_Operation::get_value(Data& left_val, Data& right_val) {
         return a;
     }
     Data result("", "BOOL");
-    result.data_type = "DOUBLE";
     if (this->data->raw_value == "|") {
         result.bool_val = (left_val.bool_val || right_val.bool_val);
     }
