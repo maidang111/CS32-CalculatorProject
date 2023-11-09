@@ -3,11 +3,13 @@
 #include <vector>
 #include "AST.h"
 #include "Statement.h"
+#include "InfixParser.h"
 using namespace std;
 
 class Scrypter{
    public:
     Scrypter(vector <Token*>);
+    InfixParser* infixparser;
     vector <Token*> tokens;
     vector <Statement*> ASTHeads;
     size_t index;
@@ -18,7 +20,7 @@ class Scrypter{
     void check();
     void deleteFunc();
     void buildASTs();
-    void printFormated();
+    void calculate();
     private:
     Statement* buildAST();
 };

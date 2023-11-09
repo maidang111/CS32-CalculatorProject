@@ -18,6 +18,8 @@ class InfixParser{
     size_t index;
     bool error;
     
+    double printValue;
+    bool isTrue;
     InfixParser(vector<Token*>& tokens);
     ~InfixParser();
     void read_all_token();

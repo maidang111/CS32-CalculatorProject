@@ -5,9 +5,15 @@
 using namespace std;
 
 Scrypter::Scrypter(vector<Token*> tokens){
+    InfixParser* infixparser = new InfixParser(tokens);
+    this->infixparser = infixparser;
     this->tokens = tokens;
     this->index = 0;
+    // cout << this->infixparser->tokens.size();
 }
+// Scrypter::~Scrypter(){
+//     // delete infixparser;
+// }
 
 void Scrypter::deleteStatements(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
@@ -132,11 +138,11 @@ Statement* Scrypter::buildAST(){
     }
 }
 
-void Scrypter::printFormated(){
+void Scrypter::calculate(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
         // cout << i;
         // cout << ASTHeads.at(i)->body.size();
-        ASTHeads.at(i)->print();
+        ASTHeads.at(i)->calculate(infixparser);
     }
 }
 void Scrypter::deleteFunc(){

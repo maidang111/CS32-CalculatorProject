@@ -24,6 +24,11 @@ void Statement::print(){
     cout << "not a vaild function for type" << endl;
     return;
 }
+void Statement::calculate(InfixParser* infixParser){
+    cout << infixParser->index;
+    cout << "not a vaild function for type" << endl;
+    return;
+}
 
 void If::print(){
     for(size_t i = 0; i < level; i++){
@@ -51,6 +56,10 @@ void If::deleteStatement(){
     }
     delete this;
 }
+void If::calculate(InfixParser* infixParser){
+    cout << infixParser->index;
+    return;
+}
 
 void Else::print(){
     for(size_t i = 0; i < level; i++){
@@ -72,6 +81,10 @@ void Else::deleteStatement(){
         body.at(i)->deleteStatement();
     }
     delete this;
+}
+void Else::calculate(InfixParser* infixParser){
+    cout << infixParser->index;
+    return;
 }
 
 void While::print(){
@@ -99,6 +112,25 @@ void While::deleteStatement(){
     }
     delete this;
 }
+void While::calculate(InfixParser* infixParser){
+    infixParser->tokens = condition;
+    // for(size_t i = 0; i < condition.size(); i++){
+    //     cout << condition.at(i)->raw_value << endl;
+    // }
+    AST_Node* a = infixParser->read_one_line(0, body.size() -2, nullptr);
+    Data b = infixParser->evaluate(a);
+    infixParser->update_variables();
+
+    if (b.data_type == "BOOL") {
+        infixParser->isTrue = b.double_val;
+    }
+    if (infixParser->isTrue){
+        for(size_t i = 0; i < body.size(); i++){
+        body.at(i)->deleteStatement();
+        }
+    }
+    return;
+}
 
 void Print::print(){
     for(size_t i = 0; i < level; i++){
@@ -109,12 +141,17 @@ void Print::print(){
         body.at(i)->print();
     }
 }
-
 void Print::deleteStatement(){
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->deleteStatement();
     }
     delete this;
+}
+void Print::calculate(InfixParser* infixParser){
+    if(body.size() > 0){
+        body.at(0)->calculate(infixParser);
+        cout << infixParser->printValue << endl;
+    }
 }
 
 void Expression::print(){
@@ -128,6 +165,16 @@ void Expression::print(){
     cout << endl;
 }
 
+void Expression::calculate(InfixParser* infixParser){
+    // cout << infixParser->tokens.size();
+    infixParser->tokens = body;
+    AST_Node* a = infixParser->read_one_line(0, body.size() -2, nullptr);
+    Data b = infixParser->evaluate(a);
+    infixParser->update_variables();
+    if (b.data_type == "DOUBLE") {
+        infixParser->printValue = b.double_val;
+    }
+}
 void Expression::deleteStatement(){
     delete this;
 }

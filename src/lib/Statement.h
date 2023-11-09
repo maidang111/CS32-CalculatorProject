@@ -3,6 +3,7 @@
 #include <vector>
 #include "AST.h"
 #include "Lexer.h"
+#include "InfixParser.h"
 using namespace std;
 
 class Statement{
@@ -14,6 +15,7 @@ class Statement{
     virtual ~Statement();
     virtual void print();
     virtual void deleteStatement();
+    virtual void calculate(InfixParser* infixParser);
     // virtual vector <Token*> getValue();
 };
 
@@ -24,6 +26,7 @@ class While: public Statement{
     vector <Statement*> body;
     void deleteStatement();
     void print();
+    void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
 
@@ -34,6 +37,7 @@ class If: public Statement{
     vector <Statement*> body;
     void deleteStatement();
     void print();
+    void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
 
@@ -45,6 +49,7 @@ class Else: public Statement{
     vector <Statement*> body;
     void deleteStatement();
     void print();
+    void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
 
@@ -54,6 +59,7 @@ class Print: public Statement{
     vector <Statement*> body;
     void print();
     void deleteStatement();
+    void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
 
@@ -63,5 +69,6 @@ class Expression: public Statement{
     vector <Token*> body;
     void print();
     void deleteStatement();
+    void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };

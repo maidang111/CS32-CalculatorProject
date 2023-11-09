@@ -12,7 +12,7 @@ int main(){
     Scrypter scrypt(lexer.multi_end_tokens);
 
     scrypt.buildASTs();
-    scrypt.printFormated();
+    scrypt.calculate();
     // // lexer.delete_endtokens();
     // // cout << formater.ASTHeads.size();
     // formater.deleteStatements();
