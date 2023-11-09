@@ -128,7 +128,7 @@ void InfixParser::read_token(bool calc) {
     // cout << "currIndex3: " << curr_index << endl;
     if (index == curr_index) {
         AST_Node* v = single_value_token(index);
-        if (!v) {
+        if (v) {
             ASTs.push_back(v);
         }
         index = curr_index + 2;
