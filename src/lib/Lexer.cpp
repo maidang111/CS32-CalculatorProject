@@ -339,6 +339,7 @@ void Lexer::create_endtokens(){
                     variable = false;
                     last_digit = false;
                 } else{    // ending variable with more than length 1?
+                    // cout << raw_value << endl;
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
@@ -353,6 +354,7 @@ void Lexer::create_endtokens(){
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
                 error = true;
                 prev_error = true;
+                exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;

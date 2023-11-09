@@ -47,6 +47,8 @@
         "__memory": "cpp",
         "iostream": "cpp",
         "__config": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
     }
 }

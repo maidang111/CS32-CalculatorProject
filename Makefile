@@ -5,7 +5,7 @@ MAIN= calc
 
 all: $(MAIN)
 
-calc: $(OBJS)
+format: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 %.o: %.cpp
