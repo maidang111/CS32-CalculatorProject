@@ -53,7 +53,9 @@ void InfixParser::read_all_token() {
         // cout << "ast size(): " << ASTs.size() << endl;
         // cout << index << endl;
     }
-    ASTs.pop_back();
+    if (!ASTs.at(ASTs.size() - 1)) {
+        ASTs.pop_back();
+    }
     testing_AST();
     // cout << "read_all_no_error" << endl;
 }
