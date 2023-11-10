@@ -1,4 +1,3 @@
-
 #include "InfixParser.h"
 #include "AST_Node.h"
 #include "Lexer.h"
@@ -6,19 +5,7 @@
 #include <string>
 #include <vector>
 using namespace std;
-InfixParser::InfixParser(){
-    index = 0;
-    operators = {"+", "-", "*", "/", "%", "&", "|", "^", "<", "<=", ">", ">=", "!=", "==", "="};
-    // check tokens
-    // cout << "check lexer" << endl;
-    // for (auto a: tokens) {
-    //     cout << a->raw_value << endl;
-    // }
-    // cout << "finish checking" << endl;
-    error = false;
-    result_double = 0;
-    result_bool = false;
-}
+
 InfixParser::InfixParser(vector<Token*>& tokens) {
     index = 0;
     this->tokens = tokens;
