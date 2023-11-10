@@ -102,6 +102,7 @@ void Else::calculate(InfixParser* infixParser){
         for(size_t i = 0; i < body.size(); i++){
         body.at(i)->calculate(infixParser);
         }
+        infixParser->isTrue = false;
     }
     return;
 }
