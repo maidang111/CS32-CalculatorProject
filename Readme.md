@@ -91,10 +91,8 @@ AST is a class that was defined for lexer input that stores the user-input as st
 Lexer:
 Lexer is a class that generate user input as a vector of AST pointer variables
 
-
-
 ### Track B: 
-#### Purpose: The purpose of this track is to code a calculator that takes infix notations. The calculator would have defined order of operations starting with parentheses, then multiplication, subtraction, addition, subtraction. It can also set vaulues and store them with the assignment operation. The InfixParser takes in tokens parsed from a slightly modfied Lexer from track A. 
+#### Purpose: The purpose of this track is to implement if, while, and print statement that uses expressions from Track A. The If statement body executes when its conditional is true. If it is false, it executes the else statement body. The while statement repeates the body until condition becomes false. The print statement just print out the body. If, while, and print can be in each other's body.  
 
 InfixParser will be supporting the following operations from highest to lowest:
 *Parentheses.
