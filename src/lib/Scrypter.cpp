@@ -11,6 +11,10 @@ Scrypter::Scrypter(vector<Token*> tokens){
     this->index = 0;
 }
 
+Scrypter::~Scrypter(){
+    delete infixparser;
+}
+
 void Scrypter::deleteStatements(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
             // cout << i;
