@@ -39,7 +39,6 @@ void If::print(){
     AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
     infixParser.print_AST(a);
     infixParser.delete_help(a);
-
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
@@ -57,7 +56,19 @@ void If::deleteStatement(){
     delete this;
 }
 void If::calculate(InfixParser* infixParser){
-    cout << infixParser->index;
+    infixParser->tokens = condition;
+    AST_Node* a = infixParser->read_one_line(0, condition.size() -2, nullptr);
+    Data b = infixParser->evaluate(a);
+    infixParser->update_variables();
+    if (b.data_type == "BOOL") {
+        infixParser->isTrue = b.bool_val;
+        if (infixParser->isTrue){
+            for(size_t i = 0; i < body.size(); i++){
+            body.at(i)->calculate(infixParser);
+            }
+            infixParser->isTrue = true;
+        }
+    }
     return;
 }
 
@@ -83,7 +94,11 @@ void Else::deleteStatement(){
     delete this;
 }
 void Else::calculate(InfixParser* infixParser){
-    cout << infixParser->index;
+    if(!infixParser->isTrue){
+        for(size_t i = 0; i < body.size(); i++){
+        body.at(i)->calculate(infixParser);
+        }
+    }
     return;
 }
 
@@ -114,9 +129,6 @@ void While::deleteStatement(){
 }
 void While::calculate(InfixParser* infixParser){
     infixParser->tokens = condition;
-    // for(size_t i = 0; i < condition.size(); i++){
-    //     cout << condition.at(i)->raw_value << endl;
-    // }
     AST_Node* a = infixParser->read_one_line(0, condition.size() -2, nullptr);
     Data b = infixParser->evaluate(a);
     // cout << b.data_type << endl;
@@ -125,13 +137,15 @@ void While::calculate(InfixParser* infixParser){
         infixParser->isTrue = b.bool_val;
     }
     while (infixParser->isTrue){
-        // cout << "here" << endl;
         for(size_t i = 0; i < body.size(); i++){
         body.at(i)->calculate(infixParser);
-        b = infixParser->evaluate(a);
-        infixParser->update_variables();
-        infixParser->isTrue = b.bool_val;
         }
+        infixParser->tokens = condition;  
+        b = infixParser->evaluate(a);
+        if (b.data_type == "BOOL") {
+            infixParser->isTrue = b.bool_val;
+        }
+        // cout << infixParser->printValue << endl;
     }
     return;
 }
@@ -163,6 +177,10 @@ void Expression::print(){
         cout << "    ";
     }
     InfixParser infixParser(body);
+    // if (infixParser->check_error(0, body.size() -2, i)){
+    //     cout << "Unexpected token at line 1 column " << body.at(i)->column << " : " << body.at(i)->raw_value << endl;
+    //     return;
+    // }
     AST_Node* a = infixParser.read_one_line(0, body.size() -2, nullptr);
     infixParser.print_AST(a);
     infixParser.delete_help(a);
@@ -172,6 +190,11 @@ void Expression::print(){
 void Expression::calculate(InfixParser* infixParser){
     // cout << infixParser->tokens.size();
     infixParser->tokens = body;
+    size_t i = 0;
+    if (infixParser->check_error(0, body.size() -2, i)){
+        cout << "Unexpected token at line 1 column " << body.at(i)->column << " : " << body.at(i)->raw_value << endl;
+        return;
+    }
     AST_Node* a = infixParser->read_one_line(0, body.size() -2, nullptr);
     Data b = infixParser->evaluate(a);
     infixParser->update_variables();
