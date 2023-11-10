@@ -34,7 +34,6 @@ void If::print(){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
-    cout << "if "; 
     InfixParser infixParser(condition);
     AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
     infixParser.print_AST(a);
@@ -43,7 +42,6 @@ void If::print(){
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->print();
     }
-
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
@@ -69,7 +67,6 @@ void If::calculate(InfixParser* infixParser){
             infixParser->isTrue = true;
         }
     } else {
-        cout << infixParser->printValue << endl;
         cout << "Runtime error: condition is not a bool." << endl;
     }
     infixParser->delete_help(a);
@@ -149,7 +146,7 @@ void While::calculate(InfixParser* infixParser){
         if (b.data_type == "BOOL") {
             infixParser->isTrue = b.bool_val;
         } else {
-            cout << "19" << endl;
+            cout << 19 << endl;
             cout << "Runtime error: condition is not a bool." << endl;
             exit(3);
         }
