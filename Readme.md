@@ -2,6 +2,18 @@
 ## Purpose: 
 The purpose of this project is to build user-friendly high-level programming language using c++. We included the basic features of computer science language which involve arithmetic operations, variables, boolean operations, if/else statements, while loop, and implemented print functions. 
 
+## And Overview of each Feature: 
+Format formats the user's input into a more readable set of instructions. This is useful if the user wants to check for mistakes in their input. 
+Scrypt calculates the user's input and returns a number. 
+Calc takes in one line at a time and calculates, print and stores the result
+
+## How to Execute The Program: 
+*Clone the file to a local directory and open it with an IDE such as VSCode
+*Run the make file using the command "make"
+*To run format.cpp use the command ./format
+*To run scrypt.cpp use the command ./scrypt
+*To run calc.cpp use the command ./calc
+
 ### TrackA
 ### Purpose: The purpose of this tract is to include boolean type as well as the operations that involve boolean value to infix parser. Also, mode was included into one of its arithmetic operations. The main class that supports the following functionalities are InfixParser calss. 
 
@@ -131,20 +143,29 @@ The class Statement has five subclasses (While, If, Else, Print, Expression). Th
 *virtual void calculate(InfixParser* infixParser) (calculates the value of the expression and updates the value for the scope of the input call)
 
 The class Formater is used by format.cpp to print out the formated version of the user's input. The Fomater class has the following functions and variables:
-*Formater(vector <Token*>);
-*~Formater();
-*vector <Token*> tokens;
-*vector <Statement*> ASTHeads;
-*size_t index;
-*int level;
-*void delete_tokens();
-*void deleteStatements();
-*void delete_help(Statement* node);
-*void check();
-*void deleteFunc();
-*void buildASTs();
-*void printFormated();
-*private:
-*Statement* buildAST();
+*Formater(vector <Token*>) (creates a Formter class with a vector of tokens)
+*~Formater() (Destructor for Formater)
+*vector <Token*> tokens (stores a vector of tokens lexed from the user's input)
+*vector <Statement*> ASTHeads (store the head of every )
+*size_t index (keeps track the index of the current token)
+*int level (keeps track of the depth of the AST)
+*void delete_tokens() (deletes tokens lexed)
+*void deleteStatements() (deletes the statments for every AST in a recursive manner)
+*void buildASTs() (Build all the AST expressions)
+*void printFormated() (prints the formated version of user's input)
+*Statement* buildAST() (builds indivisual AST child with While, If, Else, Print, Expression)
 
+The class Formater is used by scrypt.cpp to print out the the calculated value of the user's input. The Scrypt class has the following functions and variables:
+*Scrypter(vector <Token*>) (creates a Scrypter class with a vector of tokens)
+*~Scrypter() (Destructor for Scrypter)
+*InfixParser* infixparser (stores the pointer to an infixeparser)
+*Vector <Token*> tokens (stores a vector of tokens lexed from the user's input)
+*vector <Statement*> ASTHeads (store the head of every )
+*size_t index (keeps track the index of the current token)
+*int level (keeps track of the depth of the AST)
+*void delete_tokens() (deletes tokens lexed)
+*void deleteStatements() (deletes the statments for every AST in a recursive manner)
+*void buildASTs() (Build all the AST expressions)
+*void calculate() (calculates the value of the user's input)
+*Statement* buildAST() (builds indivisual AST child with While, If, Else, Print, Expression)
 
