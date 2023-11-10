@@ -107,65 +107,65 @@ Lexer is a class that generate user input as a vector of AST pointer variables
 #### Purpose: The purpose of this track is to implement if, while, and print statement that uses expressions from Track A. The If statement body executes when its conditional is true. If it is false, it executes the else statement body. The while statement repeates the body until condition becomes false. The print statement just print out the body. If, while, and print can be in each other's body.  
 
 InfixParser will be supporting the following operations from highest to lowest:
-*Parentheses.
-*Multiplication and division.
-*Addition and subtraction.
-*Assignment.
+* Parentheses.
+* Multiplication and division.
+* Addition and subtraction.
+* Assignment.
 
 We define the calculator to be left associative except for the equal sign which will be right associative
 
 The InfixParser is a class that contains the following functions:
-*InfixParser() (calls the Lexer to lex the user's inputs into tokens)
-*Token* parseExpression() (Evaluates + and - tokens)
-*Token* parseFactor() (Evaluates * and / tokens)
-*Token* parseTerm() (Evaluates variables, numbers and parantheses)
-*Token* parseEqual() (Evaluates equal signs)
-*void delete_tokens() (delete lex tokens)
-*void delete_variables() (delete storied variable tokens)
-*bool error_parenthesis(size_t index) (handels errors that relates to parentheses)
-*bool error_assignment(size_t index) (handel assignment errors)
-*void scanToken() (movies pointer to the next token in vector)
-*~InfixParser() (Destructor)
+* InfixParser() (calls the Lexer to lex the user's inputs into tokens)
+* Token* parseExpression() (Evaluates + and - tokens)
+* Token* parseFactor() (Evaluates * and / tokens)
+* Token* parseTerm() (Evaluates variables, numbers and parantheses)
+* Token* parseEqual() (Evaluates equal signs)
+* void delete_tokens() (delete lex tokens)
+* void delete_variables() (delete storied variable tokens)
+* bool error_parenthesis(size_t index) (handels errors that relates to parentheses)
+* bool error_assignment(size_t index) (handel assignment errors)
+* void scanToken() (movies pointer to the next token in vector)
+* ~InfixParser() (Destructor)
 
 Some examples of invaild inputs includes: 
-*Invalid Operations (some examples includes multiple operators in a row, ending with an operator)
-*Invalid Assignment (some examples includes assigning a variable to a number)
-*Invalid parentheses (some examples includes open parentheses, an absent of closing parenthese, invalid expressing inside of parenthese)
+* Invalid Operations (some examples includes multiple operators in a row, ending with an operator)
+* Invalid Assignment (some examples includes assigning a variable to a number)
+* Invalid parentheses (some examples includes open parentheses, an absent of closing parenthese, invalid expressing inside of parenthese)
 
 The class Statement has five subclasses (While, If, Else, Print, Expression). The statement class contain the following functions and variables: 
-*Statement() (create a new statment block for one of the following type)
-*size_t level (stores the depth of each block)
-*vector <Token*> condition (stores a vector of tokens for evaulating true and false statements)
-*vector <Statement*> body (stores a vector of statements that is called in that block)
-*virtual ~Statement() (destructor the statement class)
-*virtual void print() (prints out the format of expressions with correct grammar and indentation)
-*virtual void deleteStatement() (a helper function that deletes each statement block and its childrens)
-*virtual void calculate(InfixParser* infixParser) (calculates the value of the expression and updates the value for the scope of the input call)
+* Statement() (create a new statment block for one of the following type)
+* size_t level (stores the depth of each block)
+* vector <Token*> condition (stores a vector of tokens for evaulating true and false statements)
+* vector <Statement*> body (stores a vector of statements that is called in that block)
+* virtual ~Statement() (destructor the statement class)
+* virtual void print() (prints out the format of expressions with correct grammar and indentation)
+* virtual void deleteStatement() (a helper function that deletes each statement block and its childrens)
+* virtual void calculate(InfixParser* infixParser) (calculates the value of the expression and updates the value for the scope of the input call)
 
 The class Formater is used by format.cpp to print out the formated version of the user's input. The Fomater class has the following functions and variables:
-*Formater(vector <Token*>) (creates a Formter class with a vector of tokens)
-*~Formater() (Destructor for Formater)
-*vector <Token*> tokens (stores a vector of tokens lexed from the user's input)
-*vector <Statement*> ASTHeads (store the head of every )
-*size_t index (keeps track the index of the current token)
-*int level (keeps track of the depth of the AST)
-*void delete_tokens() (deletes tokens lexed)
-*void deleteStatements() (deletes the statments for every AST in a recursive manner)
-*void buildASTs() (Build all the AST expressions)
-*void printFormated() (prints the formated version of user's input)
-*Statement* buildAST() (builds indivisual AST child with While, If, Else, Print, Expression)
+* Formater(vector <Token*>) (creates a Formter class with a vector of tokens)
+* ~Formater() (Destructor for Formater)
+* vector <Token*> tokens (stores a vector of tokens lexed from the user's input)
+* vector <Statement*> ASTHeads (store the head of every )
+* size_t index (keeps track the index of the current token)
+* int level (keeps track of the depth of the AST)
+* void delete_tokens() (deletes tokens lexed)
+* void deleteStatements() (deletes the statments for every AST in a recursive manner)
+* void buildASTs() (Build all the AST expressions)
+* void printFormated() (prints the formated version of user's input)
+* Statement* buildAST() (builds indivisual AST child with While, If, Else, Print, Expression)
 
 The class Formater is used by scrypt.cpp to print out the the calculated value of the user's input. The Scrypt class has the following functions and variables:
-*Scrypter(vector <Token*>) (creates a Scrypter class with a vector of tokens)
-*~Scrypter() (Destructor for Scrypter)
-*InfixParser* infixparser (stores the pointer to an infixeparser)
-*Vector <Token*> tokens (stores a vector of tokens lexed from the user's input)
-*vector <Statement*> ASTHeads (store the head of every )
-*size_t index (keeps track the index of the current token)
-*int level (keeps track of the depth of the AST)
-*void delete_tokens() (deletes tokens lexed)
-*void deleteStatements() (deletes the statments for every AST in a recursive manner)
-*void buildASTs() (Build all the AST expressions)
-*void calculate() (calculates the value of the user's input)
-*Statement* buildAST() (builds indivisual AST child with While, If, Else, Print, Expression)
+* Scrypter(vector <Token*>) (creates a Scrypter class with a vector of tokens)
+* ~Scrypter() (Destructor for Scrypter)
+* InfixParser* infixparser (stores the pointer to an infixeparser)
+* Vector <Token*> tokens (stores a vector of tokens lexed from the user's input)
+* vector <Statement*> ASTHeads (store the head of every )
+* size_t index (keeps track the index of the current token)
+* int level (keeps track of the depth of the AST)
+* void delete_tokens() (deletes tokens lexed)
+* void deleteStatements() (deletes the statments for every AST in a recursive manner)
+* void buildASTs() (Build all the AST expressions)
+* void calculate() (calculates the value of the user's input)
+* Statement* buildAST() (builds indivisual AST child with While, If, Else, Print, Expression)
 
