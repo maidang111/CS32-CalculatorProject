@@ -150,7 +150,6 @@ void While::calculate(InfixParser* infixParser){
         if (b.data_type == "BOOL") {
             infixParser->isTrue = b.bool_val;
         } else {
-            cout << "19" << endl;
             cout << "Runtime error: condition is not a bool." << endl;
             exit(3);
         }
