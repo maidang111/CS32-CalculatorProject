@@ -151,6 +151,7 @@ void While::calculate(InfixParser* infixParser){
         } else {
             cout << "19" << endl;
             cout << "Runtime error: condition is not a bool." << endl;
+            exit(3);
         }
         // cout << infixParser->printValue << endl;
     }
