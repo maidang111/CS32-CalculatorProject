@@ -120,3 +120,31 @@ Some examples of invaild inputs includes:
 *Invalid Assignment (some examples includes assigning a variable to a number)
 *Invalid parentheses (some examples includes open parentheses, an absent of closing parenthese, invalid expressing inside of parenthese)
 
+The class Statement has five subclasses (While, If, Else, Print, Expression). The statement class contain the following functions and variables: 
+*Statement() (create a new statment block for one of the following type)
+*size_t level (stores the depth of each block)
+*vector <Token*> condition (stores a vector of tokens for evaulating true and false statements)
+*vector <Statement*> body (stores a vector of statements that is called in that block)
+*virtual ~Statement() (destructor the statement class)
+*virtual void print() (prints out the format of expressions with correct grammar and indentation)
+*virtual void deleteStatement() (a helper function that deletes each statement block and its childrens)
+*virtual void calculate(InfixParser* infixParser) (calculates the value of the expression and updates the value for the scope of the input call)
+
+The class Formater is used by format.cpp to print out the formated version of the user's input. The Fomater class has the following functions and variables:
+*Formater(vector <Token*>);
+*~Formater();
+*vector <Token*> tokens;
+*vector <Statement*> ASTHeads;
+*size_t index;
+*int level;
+*void delete_tokens();
+*void deleteStatements();
+*void delete_help(Statement* node);
+*void check();
+*void deleteFunc();
+*void buildASTs();
+*void printFormated();
+*private:
+*Statement* buildAST();
+
+
