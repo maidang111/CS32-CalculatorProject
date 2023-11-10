@@ -186,16 +186,16 @@ void Expression::print(){
         cout << "    ";
     }
     InfixParser infixParser(body);
-    AST_Node* a = infixParser.read_one_line(0, body.size() -2, nullptr);
+    AST_Node* a = infixParser.read_one_line(0, body.size() -3, nullptr);
     infixParser.print_AST(a);
     infixParser.delete_help(a);
     size_t i = 0;
-    if (infixParser.check_error(0, body.size() -2, i)){
+    if (infixParser.check_error(0, body.size() -3, i)){
         cout << "Unexpected token at line 1 column " << body.at(i)->column << ": " << body.at(i)->raw_value << endl;
         exit(2);
         return;
     }
-    cout << endl;
+    cout << ";" << endl;
     return;
 }
 
@@ -203,7 +203,7 @@ void Expression::calculate(InfixParser* infixParser){
     // cout << infixParser->tokens.size();
     infixParser->tokens = body;
     size_t i = 0;
-    if (infixParser->check_error(0, body.size() -2, i)){
+    if (infixParser->check_error(0, body.size() -3, i)){
         cout << "Unexpected token at line 1 column " << body.at(i)->column << ": " << body.at(i)->raw_value << endl;
         exit(2);
         return;

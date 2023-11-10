@@ -93,12 +93,6 @@ Statement* Scrypter::buildAST(){
         elseBlock->level = level;
         level++;
         if (tokens.at(index)->raw_value == "if"){
-            // size_t tempLevel = level;
-            // elseBlock->body.push_back(buildAST());
-            // level = tempLevel;
-            // index++;
-            // elseBlock->body.push_back(buildAST());
-            // return elseBlock;
             size_t tempLevel = level;
             elseBlock->body.push_back(buildAST());
             level = tempLevel;

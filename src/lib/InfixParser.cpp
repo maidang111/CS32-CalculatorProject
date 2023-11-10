@@ -601,7 +601,7 @@ void InfixParser::print_all() {
     // cout << "print all: end" << endl;
 }
 void InfixParser::print_AST(AST_Node* node) const {
-    if (!node) {
+    if (node != nullptr) {
         return;
     }
     if (!node->single_val) {
