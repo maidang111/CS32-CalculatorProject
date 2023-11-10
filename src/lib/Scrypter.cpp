@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include "Scrypter.h"
+#include "AST_Node.h"
 using namespace std;
 
 Scrypter::Scrypter(vector<Token*> tokens){

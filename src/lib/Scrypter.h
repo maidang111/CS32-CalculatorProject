@@ -1,3 +1,5 @@
+#ifndef SCRYPTER_H
+#define SCRYPTER_H
 #include <iostream>
 #include <iostream>
 #include <vector>
@@ -25,3 +27,5 @@ class Scrypter{
     private:
     Statement* buildAST();
 };
+
+#endif
