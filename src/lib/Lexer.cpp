@@ -349,8 +349,8 @@ void Lexer::create_endtokens(){
                 }
             } else if((!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))) && !prev_error){ // not a possible token
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
-                exit(1);
                 error = true;
+                this->error = true;
                 prev_error = true;
             } 
             if (isspace(whole_input.at(i).at(j))){

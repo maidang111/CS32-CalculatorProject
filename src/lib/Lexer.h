@@ -12,7 +12,7 @@ class Lexer{
     vector <char> user_input;
     Lexer();
     unsigned int num_line;
-
+    bool error;
     vector <string> whole_input;
     set <char> possible_values;
     set <char> inequalities;
