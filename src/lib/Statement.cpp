@@ -68,7 +68,11 @@ void If::calculate(InfixParser* infixParser){
             }
             infixParser->isTrue = true;
         }
-    }
+    } 
+    // else {
+    //     cout << infixParser->printValue << endl;
+    //     cout << "Runtime error: condition is not a bool." << endl;
+    // }
     infixParser->delete_help(a);
     return;
 }
@@ -136,7 +140,11 @@ void While::calculate(InfixParser* infixParser){
     infixParser->update_variables();
     if (b.data_type == "BOOL") {
         infixParser->isTrue = b.bool_val;
-    }
+    } 
+    // else {
+    //     cout << infixParser->printValue << endl;
+    //     cout << "Runtime error: condition is not a bool." << endl;
+    // }
     while (infixParser->isTrue){
         for(size_t i = 0; i < body.size(); i++){
         body.at(i)->calculate(infixParser);
@@ -189,6 +197,7 @@ void Expression::print(){
         exit(2);
         return;
     }
+    return;
 }
 
 void Expression::calculate(InfixParser* infixParser){
