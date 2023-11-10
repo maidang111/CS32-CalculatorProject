@@ -1,4 +1,3 @@
-
 #include "InfixParser.h"
 #include "AST_Node.h"
 #include "Lexer.h"
@@ -6,19 +5,7 @@
 #include <string>
 #include <vector>
 using namespace std;
-InfixParser::InfixParser(){
-    index = 0;
-    operators = {"+", "-", "*", "/", "%", "&", "|", "^", "<", "<=", ">", ">=", "!=", "==", "="};
-    // check tokens
-    // cout << "check lexer" << endl;
-    // for (auto a: tokens) {
-    //     cout << a->raw_value << endl;
-    // }
-    // cout << "finish checking" << endl;
-    error = false;
-    result_double = 0;
-    result_bool = false;
-}
+
 InfixParser::InfixParser(vector<Token*>& tokens) {
     index = 0;
     this->tokens = tokens;
@@ -33,7 +20,19 @@ InfixParser::InfixParser(vector<Token*>& tokens) {
     result_double = 0;
     result_bool = false;
 }
-
+InfixParser::InfixParser(){
+    index = 0;
+    operators = {"+", "-", "*", "/", "%", "&", "|", "^", "<", "<=", ">", ">=", "!=", "==", "="};
+    // check tokens
+    // cout << "check lexer" << endl;
+    // for (auto a: tokens) {
+    //     cout << a->raw_value << endl;
+    // }
+    // cout << "finish checking" << endl;
+    error = false;
+    result_double = 0;
+    result_bool = false;
+}
 InfixParser::~InfixParser() {
     for (const auto& a: ASTs) {
         delete_help(a);
@@ -145,12 +144,10 @@ void InfixParser::read_token(bool calc) {
             ASTs.push_back(v);
         }
         if (v) {
-        print_AST(v);
-        cout << endl;
-        evaluate_print(v);
-        if (curr_index + 2 < tokens.size()) {
+            print_AST(v);
             cout << endl;
-        }
+            evaluate_print(v);
+            cout << endl;
         }
         index = curr_index + 2;
         return; 
