@@ -12,6 +12,7 @@ using namespace std;
 Lexer::Lexer(){
     // change here
     this->possible_values = {'=', '(', ')', '+', '-', '*', '/', '%', '{', '}', '|', '&', '^'};
+    this->error = false;
     inequalities = {'<', '>', '!'};
     string line = "";
     num_line = 0;
@@ -314,13 +315,11 @@ void Lexer::create_endtokens(){
             } else if(raw_value.length() > 0){
                 if(whole_input.at(i).at(j) == '.'){
                     if (variable) {
-                        cout << "exit here 2";
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         error = true;
                     }
                     raw_value += whole_input.at(i).at(j);
                     if(count(raw_value.begin(), raw_value.end(), '.') > 1){ // multiple decimals
-                    cout << "exit here 3";
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         error = true;
                     } else if((j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1)))){
@@ -339,7 +338,6 @@ void Lexer::create_endtokens(){
                     variable = false;
                     last_digit = false;
                 } else{    // ending variable with more than length 1?
-                    // cout << raw_value << endl;
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
@@ -353,8 +351,8 @@ void Lexer::create_endtokens(){
             } else if((!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))) && !prev_error){ // not a possible token
                 cout << "Syntax error on line " << row << " column " << column << "." << endl;
                 error = true;
+                this->error = true;
                 prev_error = true;
-                exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
