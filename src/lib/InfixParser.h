@@ -20,6 +20,7 @@ class InfixParser{
     
     double printValue;
     bool isTrue;
+    InfixParser();
     InfixParser(vector<Token*>& tokens);
     ~InfixParser();
     void read_all_token(bool calc);

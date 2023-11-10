@@ -18,7 +18,6 @@ void Formater::deleteStatements(){
             ASTHeads.at(i)->deleteStatement();
         }
     delete_tokens();
-
 }
 void Formater::buildASTs(){
     while(index != tokens.size()){

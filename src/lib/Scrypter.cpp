@@ -5,15 +5,11 @@
 using namespace std;
 
 Scrypter::Scrypter(vector<Token*> tokens){
-    InfixParser* infixparser = new InfixParser(tokens);
+    InfixParser* infixparser = new InfixParser();
     this->infixparser = infixparser;
     this->tokens = tokens;
     this->index = 0;
-    // cout << this->infixparser->tokens.size();
 }
-// Scrypter::~Scrypter(){
-
-// }
 
 void Scrypter::deleteStatements(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
@@ -51,9 +47,6 @@ Statement* Scrypter::buildAST(){
         index++;
         whileBlock->condition.push_back(tokens.at(index));
         index++;
-        // while(tokens.at(index)->raw_value == "END"){
-        //     index++;
-        // }
         while(tokens.at(index)->raw_value != "}"){
             // cout << level << endl;
             if(tokens.at(index)->raw_value != "END"){
@@ -95,7 +88,6 @@ Statement* Scrypter::buildAST(){
         Else* elseBlock = new Else();
         elseBlock->level = level;
         level++;
-        // cout << level << "elseBlock" << endl;
         while(tokens.at(index)->raw_value != "{"){
             elseBlock->condition.push_back(tokens.at(index));
             index++;
@@ -122,12 +114,10 @@ Statement* Scrypter::buildAST(){
         level = 0;
         printBlock->body.push_back(buildAST());
         level = tempLevel;
-        // cout << printBlock->body.size();
         return printBlock;
     } else {
         Expression* expressionBlock = new Expression();
         expressionBlock->level = level;
-        // cout << "expressionblock" << level << endl;
         while (tokens.at(index)->raw_value != "END"){
             expressionBlock->body.push_back(tokens.at(index));
             index++;
@@ -140,17 +130,11 @@ Statement* Scrypter::buildAST(){
 
 void Scrypter::calculate(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
-        // cout << i;
-        // cout << ASTHeads.at(i)->body.size();
         ASTHeads.at(i)->calculate(infixparser);
     }
 }
 void Scrypter::deleteFunc(){
-    // cout << ASTHeads.size() << endl;
-
     for(size_t i = 0 ; i < ASTHeads.size(); i++){
-        // cout << "deleteFuc" << i << endl;
-        // cout << ASTHeads.at(i)->body.size() << endl;
         delete_help(ASTHeads.at(i));
     }
 }
@@ -160,15 +144,12 @@ void Scrypter::check() {
 }
 
 void Scrypter::delete_help(Statement* node) {
-    // cout << "1" << endl;
     if (!node) {
         return;
     }
-    // cout << "2" << endl;
     for (size_t i = 0; i < node->body.size(); ++i) {
         delete_help(node->body.at(i));
     }
-    // cout << "3" << endl;
     delete node; 
 }
 

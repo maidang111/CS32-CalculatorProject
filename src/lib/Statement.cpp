@@ -179,10 +179,6 @@ void Expression::print(){
         cout << "    ";
     }
     InfixParser infixParser(body);
-    // if (infixParser->check_error(0, body.size() -2, i)){
-    //     cout << "Unexpected token at line 1 column " << body.at(i)->column << " : " << body.at(i)->raw_value << endl;
-    //     return;
-    // }
     AST_Node* a = infixParser.read_one_line(0, body.size() -2, nullptr);
     infixParser.print_AST(a);
     infixParser.delete_help(a);
