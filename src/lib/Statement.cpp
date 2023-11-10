@@ -69,6 +69,7 @@ void If::calculate(InfixParser* infixParser){
             infixParser->isTrue = true;
         }
     }
+    infixParser->delete_help(a);
     return;
 }
 
@@ -147,6 +148,7 @@ void While::calculate(InfixParser* infixParser){
         }
         // cout << infixParser->printValue << endl;
     }
+    infixParser->delete_help(a);
     return;
 }
 
@@ -193,6 +195,7 @@ void Expression::calculate(InfixParser* infixParser){
     size_t i = 0;
     if (infixParser->check_error(0, body.size() -2, i)){
         cout << "Unexpected token at line 1 column " << body.at(i)->column << ": " << body.at(i)->raw_value << endl;
+        exit(2);
         return;
     }
     AST_Node* a = infixParser->read_one_line(0, body.size() -2, nullptr);
