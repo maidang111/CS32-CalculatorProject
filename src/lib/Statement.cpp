@@ -68,11 +68,10 @@ void If::calculate(InfixParser* infixParser){
             }
             infixParser->isTrue = true;
         }
-    } 
-    // else {
-    //     cout << infixParser->printValue << endl;
-    //     cout << "Runtime error: condition is not a bool." << endl;
-    // }
+    } else {
+        cout << infixParser->printValue << endl;
+        cout << "Runtime error: condition is not a bool." << endl;
+    }
     infixParser->delete_help(a);
     return;
 }
@@ -141,10 +140,6 @@ void While::calculate(InfixParser* infixParser){
     if (b.data_type == "BOOL") {
         infixParser->isTrue = b.bool_val;
     } 
-    // else {
-    //     cout << infixParser->printValue << endl;
-    //     cout << "Runtime error: condition is not a bool." << endl;
-    // }
     while (infixParser->isTrue){
         for(size_t i = 0; i < body.size(); i++){
         body.at(i)->calculate(infixParser);
@@ -153,6 +148,9 @@ void While::calculate(InfixParser* infixParser){
         b = infixParser->evaluate(a);
         if (b.data_type == "BOOL") {
             infixParser->isTrue = b.bool_val;
+        } else {
+            cout << "19" << endl;
+            cout << "Runtime error: condition is not a bool." << endl;
         }
         // cout << infixParser->printValue << endl;
     }
@@ -190,13 +188,13 @@ void Expression::print(){
     AST_Node* a = infixParser.read_one_line(0, body.size() -2, nullptr);
     infixParser.print_AST(a);
     infixParser.delete_help(a);
-    cout << endl;
     size_t i = 0;
     if (infixParser.check_error(0, body.size() -2, i)){
         cout << "Unexpected token at line 1 column " << body.at(i)->column << ": " << body.at(i)->raw_value << endl;
         exit(2);
         return;
     }
+    cout << endl;
     return;
 }
 
