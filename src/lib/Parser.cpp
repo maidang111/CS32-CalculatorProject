@@ -352,7 +352,7 @@ double Parser::calculate_help(Node* operator_node) {
     // in case of variable
     if (operator_node->is_variable) {
         if (!known_variables.at(operator_node->data->raw_value)) {
-            cout << "Runtime error: unknown identifier " << operator_node->data->raw_value << endl;
+            // cout << "Runtime error: unknown identifier " << operator_node->data->raw_value << endl;
             for (unsigned int i = 0; i < roots.size(); ++i) {
                 delete_help(roots.at(i));
             }
@@ -398,7 +398,7 @@ double Parser::calculate_help(Node* operator_node) {
         else if (operator_sign == "/") {
             division_check = calculate_help(current_node);
             if (i != 0 && division_check == 0) {
-                cout << "Runtime error: division by zero." << endl;
+                // cout << "Runtime error: division by zero." << endl;
                 for (unsigned int i = 0; i < roots.size(); ++i) {
                     delete_help(roots.at(i));
                 }
