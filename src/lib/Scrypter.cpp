@@ -52,8 +52,8 @@ Statement* Scrypter::buildAST(){
         index++;
         whileBlock->condition.push_back(tokens.at(index));
         index++;
+        
         while(tokens.at(index)->raw_value != "}"){
-            // cout << level << endl;
             if(tokens.at(index)->raw_value != "END"){
                 size_t tempLevel = level;
                 whileBlock->body.push_back(buildAST());
@@ -77,7 +77,6 @@ Statement* Scrypter::buildAST(){
         ifBlock->condition.push_back(tokens.at(index));
         index++;
         while(tokens.at(index)->raw_value != "}"){
-            // cout << tokens.at(index)->raw_value;
             if(tokens.at(index)->raw_value != "END"){
                 size_t tempLevel = level;
                 ifBlock->body.push_back(buildAST());
@@ -93,12 +92,24 @@ Statement* Scrypter::buildAST(){
         Else* elseBlock = new Else();
         elseBlock->level = level;
         level++;
-        while(tokens.at(index)->raw_value != "{"){
-            elseBlock->condition.push_back(tokens.at(index));
+        if (tokens.at(index)->raw_value == "if"){
+            // size_t tempLevel = level;
+            // elseBlock->body.push_back(buildAST());
+            // level = tempLevel;
+            // index++;
+            // elseBlock->body.push_back(buildAST());
+            // return elseBlock;
+            size_t tempLevel = level;
+            elseBlock->body.push_back(buildAST());
+            level = tempLevel;
             index++;
+            if (tokens.at(index)->raw_value == "else"){
+                Statement* elseBody = buildAST();
+                elseBlock->body.push_back(elseBody);
+            }
+            index -= 2;
+            return elseBlock;
         }
-        index++;
-        elseBlock->condition.push_back(tokens.at(index));
         index++;
         while(tokens.at(index)->raw_value != "}"){
             if(tokens.at(index)->raw_value != "END"){
@@ -121,6 +132,10 @@ Statement* Scrypter::buildAST(){
         level = tempLevel;
         return printBlock;
     } else {
+        if(tokens.at(index)->raw_value == "}"){
+            index += 2;
+            return nullptr;
+        }
         Expression* expressionBlock = new Expression();
         expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){

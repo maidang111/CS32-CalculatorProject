@@ -6,6 +6,7 @@
 #include <vector>
 using namespace std;
 
+//creates infixParser using a list of tokens from lexer
 InfixParser::InfixParser(vector<Token*>& tokens) {
     index = 0;
     this->tokens = tokens;
@@ -62,7 +63,6 @@ void InfixParser::read_all_token(bool calc) {
 }
 
 AST_Node* InfixParser::single_value_token(size_t begin_a) {
-    // cout << "enter sing_value_token" << endl;
     if (tokens.at(begin_a)->raw_value == ")") {
         cout << "Unexpected token at line 1 column " << tokens.at(begin_a)->column << ": " << tokens.at(begin_a)->raw_value << endl;
         return nullptr;
@@ -77,13 +77,11 @@ AST_Node* InfixParser::single_value_token(size_t begin_a) {
     }
     else if (((isalpha(tokens.at(begin_a)->raw_value.at(0)) || (tokens.at(begin_a)->raw_value.at(0) == '_'))
                 && ((tokens.at(begin_a)->raw_value != "true") && (tokens.at(begin_a)->raw_value) != "false"))) {
-        // cout << "enter here variable" << endl;
         Variable_Val* new_val = new Variable_Val(tokens.at(begin_a));
         new_val->single_val = true;
         return new_val;
     }
     else {
-        // cout << "enter here number" << endl;
         Direct_Val* new_val = new Direct_Val(tokens.at(begin_a));
         new_val->single_val = true;
         return new_val;
@@ -105,20 +103,16 @@ bool InfixParser::check_for_statement(size_t begin_line, size_t end_line) const 
 }
 
 void InfixParser::read_token(bool calc) {
-    // cout << "read_token() enter" << endl;
     if (index >= tokens.size()) {
         // cout << "return read_token" << endl;
         return;
     }
     size_t curr_index = index;
-    // cout << "currIndex1: " << curr_index << endl;
-    // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
     AST_Node* root = nullptr;
     while (tokens.at(curr_index)->raw_value != "END") {
         ++curr_index;
     }
-    // cout << "currIndex2: " << curr_index << endl;
-    // cout << "2 Index here: " << index<< "  currIndex: " << curr_index << endl;
+
     curr_index -= 1;
     if (calc) {
         if (check_for_statement(index, curr_index)) {
@@ -126,7 +120,6 @@ void InfixParser::read_token(bool calc) {
             return;
         }
     }
-    // cout << "currIndex3: " << curr_index << endl;
     if (index == curr_index) {
         AST_Node* v = single_value_token(index);
         if (v) {
@@ -141,10 +134,7 @@ void InfixParser::read_token(bool calc) {
         index = curr_index + 2;
         return; 
     }
-    // cout << "index: " << index << endl;
-    // cout << "curr_index: " << curr_index << endl;
-    // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
-    // cout << "1 Index here: " << index<< "  currIndex: " << curr_index << endl;
+
     size_t error_ = 0;
     bool a = check_error(index, curr_index, error_);
     if (!a) {
@@ -155,8 +145,6 @@ void InfixParser::read_token(bool calc) {
         index = curr_index + 2; 
         return;
     }
-    // cout << "Here++++++++++++++++++++++++" << endl;
-
     root = read_one_line(index, curr_index, nullptr);
     if (!error) {
         ASTs.push_back(root);
@@ -251,50 +239,40 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
 }
 
 bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& error_index) {
-    // cout << "begin_line " << begin_line << " end_line: " << end_line << endl;
     if (begin_line == end_line && tokens.at(begin_line)->raw_value == "=") {
         error_index = begin_line;
         return true;
     }
     if (tokens.at(end_line)->raw_value == "=") {
         error_index = end_line + 1;
-        // cout << "p" << endl;
         return true;
     }
-    // cout << "here" << endl;
     for (size_t i = end_line; i > begin_line; --i) {
-        // cout << "a" << endl;
         if (tokens.at(i)->raw_value == "=") {
             if ((tokens.at(i + 1)->raw_value == ")") || (operators.count(tokens.at(i + 1)->raw_value))) {
                 
                 error_index = i + 1;
-                // cout << "here 1 " << endl;
                 return true;
             }
             else if (!isalpha(tokens.at(i - 1)->raw_value.at(0)) && (tokens.at(i - 1)->raw_value.at(0) != '_')){
                 error_index = i;
-                // cout << "return here" << endl;
                 return true;
             }
         }
-        // cout << "b" << endl;
     }
     if (tokens.at(begin_line)->raw_value == "=") {
         error_index = begin_line;
-        // cout << "00" << endl;
         return true;
     }
     return false;
 }
 
 AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Node* in_parent) {
-    // cout << "enter" << endl;
     if (index + 1 == tokens.size()) {
         return nullptr;
     }
     if (begin_line > end_line) {
-        // cout << "here" << endl;
-        // error here for parenthesis () 
+
         return nullptr;
     }
     if (begin_line == end_line) {
