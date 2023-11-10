@@ -147,7 +147,6 @@ Statement* Scrypter::buildAST(){
         return expressionBlock;
     }
 }
-
 void Scrypter::calculate(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
         ASTHeads.at(i)->calculate(infixparser);

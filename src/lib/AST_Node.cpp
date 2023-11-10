@@ -129,6 +129,7 @@ Data Double_Operation::get_value(Data& left_val, Data& right_val) {
         return a;
     }
     Data result("", "DOUBLE");
+    result.actual_val = data->raw_value;
     if (this->data->raw_value == "+") {
         result.double_val = left_val.double_val + right_val.double_val;
     }
@@ -178,6 +179,7 @@ Data Boolean_Operation::get_value(Data& left_val, Data& right_val) {
         return a;
     }
     Data result("", "BOOL");
+    result.actual_val = data->raw_value;
     if (this->data->raw_value == "|") {
         result.bool_val = (left_val.bool_val || right_val.bool_val);
     }
@@ -237,27 +239,28 @@ Data Equality_Val::get_value(Data& left_val, Data& right_val) {
         runtime_error = true;
         return Data();
     }
-    if (((left_val.data_type != right_val.data_type) || (left_val.data_type == "NONE")) && !runtime_error) {
-        cout << "runtime error: invalid operand type.";
-        runtime_error = true;
-        Data a;
-        return a;
-    }
     Data result("", "BOOL");
+    result.actual_val = data->raw_value;
     if (this->data->raw_value == "==") {
-        if (left_val.data_type == "BOOL") {
+        if (left_val.data_type == "BOOL" && right_val.data_type == "BOOL") {
             result.bool_val = (left_val.bool_val == right_val.bool_val);
         }
-        else if (left_val.data_type == "DOUBLE") {
+        else if (left_val.data_type == "DOUBLE" && right_val.data_type == "DOUBLE") {
             result.bool_val = (left_val.double_val == right_val.double_val);
+        }
+        else {
+            result.bool_val = false;
         }
     }
     else if (this->data->raw_value == "!=") {
-        if (left_val.data_type == "BOOL") {
+        if (left_val.data_type == "BOOL" && right_val.data_type == "BOOL") {
             result.bool_val = (left_val.bool_val != right_val.bool_val);
         }
-        else if (left_val.data_type == "DOUBLE") {
+        else if (left_val.data_type == "DOUBLE" && right_val.data_type == "DOUBLE") {
             result.bool_val = (left_val.double_val != right_val.double_val);
+        }
+        else {
+            result.bool_val = true;
         }
     }
     return result;
@@ -269,6 +272,12 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
     }
     // cout << right_val.actual_val << endl;
     // cout << "type: " << right_val.data_type << endl;
+    if (!isalpha(left_val.actual_val.at(0)) && (left_val.actual_val.at(0) != '_')) {
+        cout << "Runtime error: invalid assignee.";
+        runtime_error = true;
+        Data a;
+        return a;
+    }
     if (invalid_variable(right_val) && !runtime_error) {
         // cout << "q" << endl;
         cout << "Runtime error: unknown identifier " << right_val.actual_val;
@@ -289,6 +298,7 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
     else {
         Data::curr_variables.emplace(left_val.actual_val, result);
     }
+    result.actual_val = data->raw_value;
     // cout << "check for map curr_variables " << Data::curr_variables.at(left_val.actual_val).double_val << endl;
     return result;
 }
@@ -315,6 +325,7 @@ Data Comparison_Val::get_value(Data& left_val, Data& right_val) {
     }
 
     Data result("", "BOOL");
+    result.actual_val = data->raw_value;
     if (this->data->raw_value == "<") {
         result.bool_val = left_val.double_val < right_val.double_val;
     }
