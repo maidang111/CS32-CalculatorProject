@@ -169,3 +169,17 @@ The class Formater is used by scrypt.cpp to print out the the calculated value o
 * void calculate() (calculates the value of the user's input)
 * Statement* buildAST() (builds indivisual AST child with While, If, Else, Print, Expression)
 
+
+The class Formater is used by scrypt.cpp to print out the the calculated value of the user's input. The Scrypt class has the following functions and variables:
+* Scrypter(vector <Token*>) (creates a Scrypter class with a vector of tokens)
+* ~Scrypter() (Destructor for Scrypter)
+* InfixParser* infixparser (stores the pointer to an infixeparser)
+* Vector <Token*> tokens (stores a vector of tokens lexed from the user's input)
+* vector <Statement*> ASTHeads (store the head of every )
+* size_t index (keeps track the index of the current token)
+* int level (keeps track of the depth of the AST)
+* void delete_tokens() (deletes tokens lexed)
+* void deleteStatements() (deletes the statments for every AST in a recursive manner)
+* void buildASTs() (Build all the AST expressions)
+* void calculate() (calculates the value of the user's input)
+* Statement* buildAST() (builds indivisual AST child with While, If, Else, Print, Expression)
