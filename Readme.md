@@ -12,14 +12,14 @@ The purpose of this project is to build user-friendly high-level programming lan
 InfixParser:
 InfixParser will be supporting the following operations from highes to lowest:
 * Parentheses.
-* Multiplication, division, and modulo.
-* Addition and subtraction.
-* Comparisons.
-* Equality and inequality.
-* Logical: and.
-* Logical: or exclusive.
-* Logical: or inclusive.
-* Assignment.
+* Multiplication, division, and modulo. (arithmetic operation that returns double)
+* Addition and subtraction. (arithmetic operation that returns double)
+* Comparisons. (arithemetic operation that returns bool)
+* Equality and inequality. (it can both evaluate either double or bool but it cannot handle different type operand case)
+* Logical: and. (a boolean operation that takes in bool returns bool)
+* Logical: or exclusive. (a boolean operation that takes in bool returns bool)
+* Logical: or inclusive. (a boolean operation that takes in bool returns bool)
+* Assignment. (it assigns left operand(variable) to value)
 
 InfixParser linked files:
 * AST.h
@@ -40,6 +40,13 @@ InfixParser is the class that stores the following functions:
 * evaluate_print() (It prints out evaluated value)
 * update_variables() (It updates the variable that was modified on the last evaluation)
 * single_value_token() (It handles the line that has only single element and make it into a AST, it is a edge case for read_one_line function)
+
+Invalid cases:
+* not assigned idenitfier
+* invalid assignee
+* invalid parenthesis
+* invalid operation (ex. operator that only handles double has bool has its operand)
+* divide by zero
 
 AST_Node:
 AST_Node is a node class for AST that is built in InfixParser class. It has numerous derived classes that was built to store different values/operations. It uses the class Data to store the value of each token
