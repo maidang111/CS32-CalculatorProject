@@ -271,7 +271,7 @@ bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& e
                 // cout << "here 1 " << endl;
                 return true;
             }
-            else if (!isalpha(tokens.at(i - 1)->raw_value.at(0)) && (tokens.at(i - 1)->raw_value.at(0) != '_')){
+            else if (tokens.at(i - 1)->raw_value == "(" || operators.count(tokens.at(i - 1)->raw_value)){
                 error_index = i;
                 // cout << "return here" << endl;
                 return true;
