@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Statement.h"
 #include "InfixParser.h"
+#include "AST_Node.h"
 using namespace std;
 
 //Creating a statment block that takes a vector and sperates it into a condidtion and body vector for easily evaluation
