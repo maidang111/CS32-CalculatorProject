@@ -32,9 +32,9 @@ void Scrypter::buildASTs(){
         } else {
             level = 0;
             Statement* root = buildAST();
-            // root->print();
-            ASTHeads.push_back(root);
-            // ASTHeads.at(0)->print();
+            if (root != nullptr){
+                ASTHeads.push_back(root);
+            }
         }
     }
 }

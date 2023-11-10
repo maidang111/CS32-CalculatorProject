@@ -11,7 +11,7 @@ using namespace std;
 
 Lexer::Lexer(){
     // change here
-    this->possible_values = {'=', '(', ')', '+', '-', '*', '/', '%', '{', '}', '|', '&', '^'};
+    this->possible_values = {'=', '(', ')', '+', '-', '*', '/', '%', '{', '}', '|', '&', '^', ',', ';', ']', '['};
     this->error = false;
     inequalities = {'<', '>', '!'};
     string line = "";

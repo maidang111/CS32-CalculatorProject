@@ -130,7 +130,6 @@ Statement* Formater::buildAST(){
     } else {
         if(tokens.at(index)->raw_value == "}"){
             index += 2;
-            // if(tokens.at(index)->raw_value == "END"){
             return nullptr;
         }
         Expression* expressionBlock = new Expression();
@@ -151,7 +150,6 @@ void Formater::printFormated(){
     }
 }
 void Formater::deleteFunc(){
-
     for(size_t i = 0 ; i < ASTHeads.size(); i++){
         delete_help(ASTHeads.at(i));
     }
