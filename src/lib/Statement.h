@@ -1,5 +1,3 @@
-#ifndef STATEMENT_H
-#define STATEMENT_H
 #include <iostream>
 #include <string>
 #include <vector>
@@ -74,5 +72,3 @@ class Expression: public Statement{
     void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
-
-#endif

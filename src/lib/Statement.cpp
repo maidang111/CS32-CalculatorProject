@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Statement.h"
 #include "InfixParser.h"
-#include "AST_Node.h"
 using namespace std;
 
 //Creating a statment block that takes a vector and sperates it into a condidtion and body vector for easily evaluation
@@ -103,7 +102,6 @@ void Else::calculate(InfixParser* infixParser){
         for(size_t i = 0; i < body.size(); i++){
         body.at(i)->calculate(infixParser);
         }
-        infixParser->isTrue = false;
     }
     return;
 }
@@ -133,11 +131,11 @@ void While::deleteStatement(){
     }
     delete this;
 }
-
 void While::calculate(InfixParser* infixParser){
     infixParser->tokens = condition;
     AST_Node* a = infixParser->read_one_line(0, condition.size() -2, nullptr);
     Data b = infixParser->evaluate(a);
+    // cout << b.data_type << endl;
     infixParser->update_variables();
     if (b.data_type == "BOOL") {
         infixParser->isTrue = b.bool_val;
@@ -151,6 +149,7 @@ void While::calculate(InfixParser* infixParser){
         if (b.data_type == "BOOL") {
             infixParser->isTrue = b.bool_val;
         } else {
+            cout << "19" << endl;
             cout << "Runtime error: condition is not a bool." << endl;
             exit(3);
         }
@@ -201,6 +200,7 @@ void Expression::print(){
 }
 
 void Expression::calculate(InfixParser* infixParser){
+    // cout << infixParser->tokens.size();
     infixParser->tokens = body;
     size_t i = 0;
     if (infixParser->check_error(0, body.size() -2, i)){

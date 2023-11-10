@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include "Scrypter.h"
-#include "AST_Node.h"
 using namespace std;
 
 Scrypter::Scrypter(vector<Token*> tokens){
@@ -134,6 +133,7 @@ Statement* Scrypter::buildAST(){
     } else {
         if(tokens.at(index)->raw_value == "}"){
             index += 2;
+            // if(tokens.at(index)->raw_value == "END"){
             return nullptr;
         }
         Expression* expressionBlock = new Expression();
