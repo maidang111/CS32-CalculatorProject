@@ -134,7 +134,9 @@ Statement* Scrypter::buildAST(){
         Expression* expressionBlock = new Expression();
         expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){
-            expressionBlock->body.push_back(tokens.at(index));
+            if (tokens.at(index)->raw_value != ";"){
+                expressionBlock->body.push_back(tokens.at(index));
+            }
             index++;
         }
         expressionBlock->body.push_back(tokens.at(index));

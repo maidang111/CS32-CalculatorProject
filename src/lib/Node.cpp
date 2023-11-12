@@ -39,4 +39,3 @@ string Node::return_operator() const {
 // AddNode::Node(Node* parent, Token* in_data, bool in_is_operator, bool equality_sign, bool is_variable){
 
 // };
-
