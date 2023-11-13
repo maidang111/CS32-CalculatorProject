@@ -69,8 +69,9 @@ void If::calculate(InfixParser* infixParser){
             infixParser->isTrue = true;
         }
     } else {
-        cout << infixParser->printValue << endl;
+        // cout << infixParser->printValue << endl;
         cout << "Runtime error: condition is not a bool." << endl;
+        exit(1);
     }
     infixParser->delete_help(a);
     return;

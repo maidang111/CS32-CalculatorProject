@@ -1,19 +1,24 @@
-Scrypt: Old Statement
-print a = 132;
-print b = 72;
-
-while a != 0 {
-   if a > b {
-     a = a % b;
+Format: Function Definition
+def noop1() {}
+def noop2() {return;}
+def noop3() {return null;}
+def print_if_bool(val)
+{
+   if val == true | val == false {
+    print val;
+  }
+  }
+def make_mac(factor, scalar)
+{
+   def multiply_and_accumulate(value)
+  {
+     return factor * value + scalar;
    }
-   else if b > a {
-     c = a;
-     a = b % a;
-     b = c;
-   }
-   else {}
- }
  
- print b;
- 
+   return multiply_and_accumulate;
+  }
 
+Format: Function call
+twelve = 3 * four();
+forty1 = forty(1);
+print max(1, 2, 3, four());
