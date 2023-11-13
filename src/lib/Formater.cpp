@@ -107,6 +107,9 @@ Statement* Formater::buildAST(){
             return elseBlock;
         }
         index++;
+        if(tokens.at(index)->raw_value == "}"){
+            return elseBlock;
+        }
         while(tokens.at(index)->raw_value != "}"){
             if(tokens.at(index)->raw_value != "END"){
                 size_t tempLevel = level;
