@@ -72,3 +72,16 @@ class Expression: public Statement{
     void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
+
+
+class Function: public Statement{
+    public:
+    size_t level;
+    vector <Statement*> body;
+    vector <Token*> returnStatement;
+    string functionName;
+    void print();
+    // void deleteStatement();
+    // void calculate(InfixParser* infixParser);
+    // vector <Token*> getValue();
+};

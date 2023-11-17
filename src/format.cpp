@@ -12,12 +12,11 @@ int main(){
         exit(1);
     }
     // lexer.print_endtokens();
+
     Formater formater(lexer.multi_end_tokens);
     formater.buildASTs();
     formater.printFormated();
-    // lexer.delete_endtokens();
-    // cout << formater.ASTHeads.size();
-    formater.deleteStatements();
+    // formater.deleteStatements();
 
     return 0;
 }

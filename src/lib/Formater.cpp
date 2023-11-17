@@ -19,12 +19,13 @@ void Formater::deleteStatements(){
         }
     delete_tokens();
 }
+
 void Formater::buildASTs(){
     while(index != tokens.size()){
+        level = 0;
         if(tokens.at(index)->raw_value == "END"){
             index++;
         } else {
-            level = 0;
             Statement* root = buildAST();
             if (root != nullptr){
                 ASTHeads.push_back(root);
@@ -36,7 +37,53 @@ void Formater::buildASTs(){
 }
 
 Statement* Formater::buildAST(){
-    if(tokens.at(index)->raw_value == "while"){
+    if(tokens.at(index)->raw_value == "def"){
+        index++;
+    level++;
+    Function* function = new Function();
+    function->functionName = tokens.at(index)->raw_value;
+    //get function parameters
+    index += 2;
+
+    // cout << tokens.at(index)->raw_value << endl << endl;
+
+    while(tokens.at(index)->raw_value != ")"){
+        function->condition.push_back(tokens.at(index));
+        index++;
+    }
+    while(tokens.at(index)->raw_value != "{"){
+        index++;
+    }
+    index++;
+    // cout << tokens.at(index)->raw_value << endl;
+    //skip to token after {
+    // if(tokens.at(index)->raw_value == "END"){
+    //     function->condition.push_back(tokens.at(index));
+    //     index++;
+    // } else {
+    //     Token* endToken = new Token;
+    //     endToken->raw_value = "END";
+    //     function->condition.push_back(endToken);
+    // }
+    //Parsing the body
+    while(tokens.at(index)->raw_value != "return" && tokens.at(index)->raw_value != "}"){
+        if(tokens.at(index)->raw_value != "END"){
+                size_t tempLevel = level;
+                function->body.push_back(buildAST());
+                level = tempLevel;
+            } else {
+                index++;
+            }
+    }
+    //Creating return statement
+    if(tokens.at(index)->raw_value == "return"){
+        while(tokens.at(index)->raw_value != "}"){
+            function->returnStatement.push_back(tokens.at(index));
+            index++;
+        }
+    }
+    return function;
+    } else if(tokens.at(index)->raw_value == "while"){
         index++;
         While* whileBlock = new While();
         whileBlock->level = level;
@@ -138,7 +185,7 @@ Statement* Formater::buildAST(){
         Expression* expressionBlock = new Expression();
         expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){
-            if (tokens.at(index)->raw_value != ";"){
+            if(tokens.at(index)->raw_value != ";"){
                 expressionBlock->body.push_back(tokens.at(index));
             }
             index++;

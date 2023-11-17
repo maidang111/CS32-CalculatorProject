@@ -71,7 +71,7 @@ void If::calculate(InfixParser* infixParser){
     } else {
         // cout << infixParser->printValue << endl;
         cout << "Runtime error: condition is not a bool." << endl;
-        exit(1);
+        exit(3);
     }
     infixParser->delete_help(a);
     return;
@@ -186,10 +186,17 @@ void Expression::print(){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
+
     InfixParser infixParser(body);
-    AST_Node* a = infixParser.read_one_line(0, body.size() -2, nullptr);
+
+    // for(size_t i = 0; i < body.size(); i++){
+    //     cout << body.at(i)->raw_value << endl;
+    // }
+
+    AST_Node* a = infixParser.read_one_line(0, body.size() - 2, nullptr);
     infixParser.print_AST(a);
     cout << ";" << endl;
+
     infixParser.delete_help(a);
     size_t i = 0;
     if (infixParser.check_error(0, body.size() -2, i)){
@@ -222,4 +229,35 @@ void Expression::calculate(InfixParser* infixParser){
 }
 void Expression::deleteStatement(){
     delete this;
+}
+
+void Function::print(){
+    cout << "def " << functionName << "(";
+    if(condition.size() > 0){
+        for(size_t i = 0; i < condition.size(); i++){
+        cout << condition.at(i)->raw_value;
+        }
+    }
+
+    cout << ") {" << endl;
+    if(body.size() > 0){
+        for(size_t i = 0; i < body.size(); i++){
+            body.at(i)->print();
+        }
+    }
+
+    if(returnStatement.size() > 0){
+        cout << "    return";
+        if(returnStatement.size() > 2){
+            cout << " ";
+            for(size_t i = 1; i < returnStatement.size(); i++){
+            cout << returnStatement.at(i)->raw_value;
+            }
+        } else{
+            cout << ";" << endl;
+        }
+        cout << endl;
+    } 
+    cout << "}";
+    return;
 }

@@ -6,13 +6,15 @@ def print_if_bool(val)
 {
    if val == true | val == false {
     print val;
+  } else {
+    print 5;
   }
   }
 def make_mac(factor, scalar)
 {
    def multiply_and_accumulate(value)
   {
-     return factor * value + scalar;
+    return factor * value + scalar;
    }
  
    return multiply_and_accumulate;
