@@ -41,6 +41,8 @@ class InfixParser{
     bool check_assignment(size_t begin_line, size_t end_line, size_t& error_index);
     set<string> operators;
     AST_Node* single_value_token(size_t begin_a);
+    vector <Token*> functionNames;
+    bool isFunction(string functionName);
     // build tree
     // A print function
     // calculate function

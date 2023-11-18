@@ -4,6 +4,12 @@
 using namespace std;
 
 //Creating a statment block that takes a vector and sperates it into a condidtion and body vector for easily evaluation
+void printTokens(vector <Token*> tokens){
+    for (size_t i = 0; i < tokens.size(); i++){
+        cout << tokens.at(i)->raw_value << endl;
+    }
+}
+
 Statement::Statement(){}
 
 Statement::~Statement(){
@@ -20,7 +26,8 @@ void Statement::deleteStatement(){
     }
     delete this;
 }
-void Statement::print(){
+void Statement::print(InfixParser* infixParser){
+    infixParser->index = 0;
     cout << "not a vaild function for type" << endl;
     return;
 }
@@ -30,18 +37,18 @@ void Statement::calculate(InfixParser* infixParser){
     return;
 }
 
-void If::print(){
+void If::print(InfixParser* infixParser){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
     cout << "if "; 
-    InfixParser infixParser(condition);
-    AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
-    infixParser.print_AST(a);
-    infixParser.delete_help(a);
+    infixParser->tokens = condition;
+    AST_Node* a = infixParser->read_one_line(0, condition.size() -2, nullptr);
+    infixParser->print_AST(a);
+    infixParser->delete_help(a);
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
-        body.at(i)->print();
+        body.at(i)->print(infixParser);
     }
 
     for(size_t i = 0; i < level; i++){
@@ -77,14 +84,14 @@ void If::calculate(InfixParser* infixParser){
     return;
 }
 
-void Else::print(){
+void Else::print(InfixParser* infixParser){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
     cout << "else"; 
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
-        body.at(i)->print();
+        body.at(i)->print(infixParser);
     }
 
     for(size_t i = 0; i < level; i++){
@@ -108,18 +115,18 @@ void Else::calculate(InfixParser* infixParser){
     return;
 }
 
-void While::print(){
+void While::print(InfixParser* infixParser){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
     cout << "while "; 
-    InfixParser infixParser(condition);
-    AST_Node* a = infixParser.read_one_line(0, condition.size() -2, nullptr);
-    infixParser.print_AST(a);
-    infixParser.delete_help(a);
+    infixParser->tokens = condition;
+    AST_Node* a = infixParser->read_one_line(0, condition.size() -2, nullptr);
+    infixParser->print_AST(a);
+    infixParser->delete_help(a);
     cout << " {" << endl;
     for(size_t i = 0; i < body.size(); i++){
-        body.at(i)->print();
+        body.at(i)->print(infixParser);
     }
 
     for(size_t i = 0; i < level; i++){
@@ -160,13 +167,13 @@ void While::calculate(InfixParser* infixParser){
     return;
 }
 
-void Print::print(){
+void Print::print(InfixParser* infixParser){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
     cout << "print ";
     for(size_t i = 0; i < body.size(); i++){
-        body.at(i)->print();
+        body.at(i)->print(infixParser);
     }
 }
 void Print::deleteStatement(){
@@ -182,24 +189,24 @@ void Print::calculate(InfixParser* infixParser){
     }
 }
 
-void Expression::print(){
+void Expression::print(InfixParser* infixParser){
     for(size_t i = 0; i < level; i++){
         cout << "    ";
     }
 
-    InfixParser infixParser(body);
+    infixParser->tokens = body;
 
     // for(size_t i = 0; i < body.size(); i++){
     //     cout << body.at(i)->raw_value << endl;
     // }
 
-    AST_Node* a = infixParser.read_one_line(0, body.size() - 2, nullptr);
-    infixParser.print_AST(a);
+    AST_Node* a = infixParser->read_one_line(0, body.size() - 2, nullptr);
+    infixParser->print_AST(a);
     cout << ";" << endl;
 
-    infixParser.delete_help(a);
+    infixParser->delete_help(a);
     size_t i = 0;
-    if (infixParser.check_error(0, body.size() -2, i)){
+    if (infixParser->check_error(0, body.size() -2, i)){
         cout << "Unexpected token at line 1 column " << body.at(i)->column << ": " << body.at(i)->raw_value << endl;
         exit(2);
         return;
@@ -231,7 +238,10 @@ void Expression::deleteStatement(){
     delete this;
 }
 
-void Function::print(){
+void Function::print(InfixParser* infixParser){
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
+    }
     cout << "def " << functionName << "(";
     if(condition.size() > 0){
         for(size_t i = 0; i < condition.size(); i++){
@@ -242,22 +252,42 @@ void Function::print(){
     cout << ") {" << endl;
     if(body.size() > 0){
         for(size_t i = 0; i < body.size(); i++){
-            body.at(i)->print();
+            body.at(i)->print(infixParser);
         }
     }
 
+    // InfixParser infixParser(body);
+    // AST_Node* a = infixParser.read_one_line(0, body.size() - 2, nullptr);
+    // infixParser.print_AST(a);
+    // cout << ";" << endl;
+
+    // printTokens(returnStatement);
+
+    // infixParser.delete_help(a);
     if(returnStatement.size() > 0){
-        cout << "    return";
+        for(size_t i = 0; i < level+1; i++){
+        cout << "    ";
+        }
+        cout << "return";
+        // for (size_t i = 0; i < returnStatement.size(); i++){
+        //     cout << returnStatement.at(i)->raw_value << endl;
+        // }
         if(returnStatement.size() > 2){
             cout << " ";
-            for(size_t i = 1; i < returnStatement.size(); i++){
-            cout << returnStatement.at(i)->raw_value;
+            if(infixParser->isFunction(returnStatement.at(1)->raw_value)){
+                cout << returnStatement.at(1)->raw_value;
+            } else {
+                infixParser->tokens = returnStatement;
+                AST_Node* a = infixParser->read_one_line(1, returnStatement.size() - 2, nullptr);
+                infixParser->print_AST(a);
+                infixParser->delete_help(a);
             }
-        } else{
-            cout << ";" << endl;
         }
-        cout << endl;
+        cout << ";" << endl;
     } 
-    cout << "}";
+    for(size_t i = 0; i < level; i++){
+        cout << "    ";
+    }
+    cout << "}" << endl;;
     return;
 }

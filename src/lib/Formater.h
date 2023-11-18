@@ -8,6 +8,7 @@ using namespace std;
 class Formater{
     public:
     Formater(vector <Token*>);
+    InfixParser* infixparser;
     ~Formater();
     vector <Token*> tokens;
     vector <Statement*> ASTHeads;

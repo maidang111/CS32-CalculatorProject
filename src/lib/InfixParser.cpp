@@ -686,3 +686,12 @@ void InfixParser::update_variables() {
     // }
     // cout << "complete after update:" << endl;
 }
+
+bool InfixParser::isFunction(string functionName){
+    for(size_t i = 0; i < functionNames.size(); i++){
+        if(functionName == functionNames.at(i)->raw_value){
+            return true;
+        }
+    }
+    return false;
+}

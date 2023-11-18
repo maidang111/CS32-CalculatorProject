@@ -12,11 +12,10 @@ def print_if_bool(val)
   }
 def make_mac(factor, scalar)
 {
-   def multiply_and_accumulate(value)
+  def multiply_and_accumulate(value)
   {
     return factor * value + scalar;
-   }
- 
+  }
    return multiply_and_accumulate;
   }
 
@@ -24,3 +23,12 @@ Format: Function call
 twelve = 3 * four();
 forty1 = forty(1);
 print max(1, 2, 3, four());
+
+
+def make_mac(factor, scalar)
+{
+  def multiply_and_accumulate(value)
+  {
+    return factor * value + scalar;
+  }
+}

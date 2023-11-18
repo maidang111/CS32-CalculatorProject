@@ -13,7 +13,7 @@ class Statement{
     vector <Token*> condition;
     vector <Statement*> body;
     virtual ~Statement();
-    virtual void print();
+    virtual void print(InfixParser* infixParser);
     virtual void deleteStatement();
     virtual void calculate(InfixParser* infixParser);
     // virtual vector <Token*> getValue();
@@ -25,7 +25,7 @@ class While: public Statement{
     vector <Token*> condition;
     vector <Statement*> body;
     void deleteStatement();
-    void print();
+    void print(InfixParser* infixParser);
     void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
@@ -36,7 +36,7 @@ class If: public Statement{
     vector <Token*> condition;
     vector <Statement*> body;
     void deleteStatement();
-    void print();
+    void print(InfixParser* infixParser);
     void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
@@ -48,7 +48,7 @@ class Else: public Statement{
     vector <Token*> condition;
     vector <Statement*> body;
     void deleteStatement();
-    void print();
+    void print(InfixParser* infixParser);
     void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };
@@ -57,7 +57,7 @@ class Print: public Statement{
     public:
     size_t level;
     vector <Statement*> body;
-    void print();
+    void print(InfixParser* infixParser);
     void deleteStatement();
     void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
@@ -67,7 +67,7 @@ class Expression: public Statement{
     public:
     size_t level;
     vector <Token*> body;
-    void print();
+    void print(InfixParser* infixParser);
     void deleteStatement();
     void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
@@ -80,7 +80,7 @@ class Function: public Statement{
     vector <Statement*> body;
     vector <Token*> returnStatement;
     string functionName;
-    void print();
+    void print(InfixParser* infixParser);
     // void deleteStatement();
     // void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
