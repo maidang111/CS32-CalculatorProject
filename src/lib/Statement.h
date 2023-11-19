@@ -81,7 +81,7 @@ class Function: public Statement{
     vector <Token*> returnStatement;
     string functionName;
     void print(InfixParser* infixParser);
-    // void deleteStatement();
+    void deleteStatement();
     // void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };

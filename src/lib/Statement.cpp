@@ -294,3 +294,11 @@ void Function::print(InfixParser* infixParser){
     cout << "}" << endl;;
     return;
 }
+
+void Function::deleteStatement(){
+    
+    for(size_t i = 0; i < body.size(); i++){
+        body.at(i)->deleteStatement();
+    }
+    delete this;
+}
