@@ -14,7 +14,7 @@ int main(){
     Formater formater(lexer.multi_end_tokens);
     formater.buildASTs();
     formater.printFormated();
-    // formater.deleteStatements();
+    formater.deleteStatements();
 
     return 0;
 }
