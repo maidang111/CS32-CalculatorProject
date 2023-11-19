@@ -371,12 +371,20 @@ void Lexer::create_endtokens(){
             mini.push_back(new_token);
         }
         
-        Token* new_token = new Token();
-        new_token->raw_value = "END";
-        new_token->column = column;
-        new_token->row = row;
-        mini.push_back(new_token);
+        // cout << mini.size() << endl;
+        if(mini.size() > 0 && mini.at(mini.size() - 1)->raw_value != "END"){
+            Token* new_token = new Token();
+            new_token->raw_value = "END";
+            new_token->column = column;
+            new_token->row = row;
+            mini.push_back(new_token);
+        }
 
+        // Token* new_token = new Token();
+        //     new_token->raw_value = "END";
+        //     new_token->column = column;
+        //     new_token->row = row;
+        //     mini.push_back(new_token);
         if (!error) {
             for (auto a: mini) {
                 multi_end_tokens.push_back(a);

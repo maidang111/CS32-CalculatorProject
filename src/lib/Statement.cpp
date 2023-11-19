@@ -246,6 +246,9 @@ void Function::print(InfixParser* infixParser){
     if(condition.size() > 0){
         for(size_t i = 0; i < condition.size(); i++){
         cout << condition.at(i)->raw_value;
+            if (condition.at(i)->raw_value == ","){
+                cout << " ";
+            }
         }
     }
 
