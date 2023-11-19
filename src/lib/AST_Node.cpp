@@ -291,7 +291,7 @@ Data Array_Val::get_value(Data& left_val, Data& right_val) {
         runtime_error = true;
         return Data();
     }
-    cout << left_val.array_elements.at(0).double_val << endl;
+    // cout << left_val.array_elements.at(0).double_val << endl;
     int index_array = static_cast<int>(left_val.array_elements.at(0).double_val);
     right_val.array_elements.at(index_array).index_val = left_val.array_elements.at(0).double_val;
     right_val.array_elements.at(index_array).actual_val = data->raw_value;
@@ -489,18 +489,18 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
         result.array_elements = right_val.array_elements;
     }
     else {
-        cout << "result.actual_val" << result.actual_val << endl;
+        // cout << "result.actual_val" << result.actual_val << endl;
         if (Data::curr_variables.find(result.actual_val) != Data::curr_variables.end()) {
             result = Data::curr_variables.at(result.actual_val);
-            cout << 100 << endl;
+            // cout << 100 << endl;
         }
         else if (prev_variables.find(result.actual_val) != prev_variables.end()) {
             result = prev_variables.at(result.actual_val);
-            cout << 101 << endl;
+            // cout << 101 << endl;
         }
-        cout << "here" << endl;
-        cout << left_val.index_val << endl;
-        cout << result.array_elements.size() << endl;
+        // cout << "here" << endl;
+        // cout << left_val.index_val << endl;
+        // cout << result.array_elements.size() << endl;
         result.array_elements.at(left_val.index_val) = right_val; 
     }
     if (Data::curr_variables.find(left_val.actual_val) != Data::curr_variables.end()) {
