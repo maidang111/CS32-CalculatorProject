@@ -184,12 +184,21 @@ void InfixParser::read_token(bool calc) {
 
 // check if the value is array val or array
 bool InfixParser::check_array_val(size_t begin_line, size_t end_line) {
+    bool a = false;
+    int count = 0;
     for (size_t i = begin_line; i <= end_line; ++i) {
         if (tokens.at(i)->raw_value == "[") {
-            return true;
+            ++count;
+            if (count == 0) {
+                a = true;
+                return a;
+            }
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count;
         }
     }
-    return false;
+    return a;
 }
 
 bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_index) {

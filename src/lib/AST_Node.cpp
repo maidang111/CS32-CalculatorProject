@@ -271,12 +271,14 @@ Data Array_Val::get_value(Data& left_val, Data& right_val) {
     }
     if (left_val.array_elements.size() != 1) {
         cout << "Runtime error: index is not a number.";
+        // cout << 1 << endl;
         runtime_error = true;
         return Data();
     }
     else if (left_val.array_elements.at(0).data_type != "DOUBLE") {
         cout << "Runtime error: index is not a number.";
         runtime_error = true;
+        // cout << 2 << endl;
         return Data();
     }
     double c = 1.0;
