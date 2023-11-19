@@ -981,7 +981,7 @@ Data InfixParser::evaluate(AST_Node* in_node) {
         }
         if (in_node->is_array_val) {
             left_val = evaluate(in_node->index);
-            cout << left_val.double_val << endl;
+            // cout << left_val.double_val << endl;
         }
         right_val = result;
     }
