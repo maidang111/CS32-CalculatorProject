@@ -407,6 +407,7 @@ void Lexer::create_endtokens(){
                 delete a;
             }
         }
+
         error = false;
         mini.clear();
         
@@ -416,6 +417,11 @@ void Lexer::create_endtokens(){
         column = 1;
         prev_index = 1;
     }
+    Token* new_token = new Token();
+    new_token->raw_value = "END";
+    new_token->column = column;
+    new_token->row = row;
+    multi_end_tokens.push_back(new_token);
 }
 
 void Lexer::print_endtokens(){
