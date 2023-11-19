@@ -16,9 +16,15 @@ class AST_Node {
     string data_type;
     bool single_val;
     bool is_number;
+    bool is_array;
+    bool is_array_val;
     Data val;
     AST_Node();
     AST_Node(Token* in_data);
+    void update_array_elements();
+    vector<AST_Node*> elements;
+    AST_Node* index;
+    AST_Node* parameters;
     virtual ~AST_Node();
     virtual Data get_value(Data& left_val, Data& right_val) = 0;
     virtual bool is_variable(Data& a) const;
@@ -30,6 +36,18 @@ class AST_Node {
 class Double_Operation: public AST_Node{
     public:
     Double_Operation(Token* in_data);
+    Data get_value(Data& left_val, Data& right_val);
+};
+
+class Array: public AST_Node{
+    public:
+    Array(Token* in_data);
+    Data get_value(Data& left_val, Data& right_val);
+};
+
+class Array_Val: public AST_Node {
+    public:
+    Array_Val(Token* in_data);
     Data get_value(Data& left_val, Data& right_val);
 };
 
@@ -67,6 +85,12 @@ class Equality_Val: public AST_Node {
 class Comparison_Val: public AST_Node {
     public:
     Comparison_Val(Token* in_data);
+    Data get_value(Data& left_val, Data& right_val);
+};
+
+class Array_Fct: public AST_Node {
+    public:
+    Array_Fct(Token* in_data);
     Data get_value(Data& left_val, Data& right_val);
 };
 
