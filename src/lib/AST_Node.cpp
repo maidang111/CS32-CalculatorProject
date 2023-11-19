@@ -264,7 +264,7 @@ Data Array_Val::get_value(Data& left_val, Data& right_val) {
         //     return Data();
         // }
         if (right_val.data_type != "ARRAY") {
-            cout << "Runtime error: not an array";
+            cout << "Runtime error: not an array.";
             runtime_error = true;
             return Data();
         }
