@@ -273,7 +273,7 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
     // cout << right_val.actual_val << endl;
     // cout << "type: " << right_val.data_type << endl;
     if (!isalpha(left_val.actual_val.at(0)) && (left_val.actual_val.at(0) != '_')) {
-        cout << "Runtime error: invalid assignee.";
+        cout << "Runtime error: invalid assignee." << endl;
         runtime_error = true;
         Data a;
         return a;
