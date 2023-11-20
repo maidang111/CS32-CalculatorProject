@@ -91,6 +91,7 @@ Statement* Formater::buildAST(){
         Token* endToken = new Token;
         endToken->raw_value = "END";
         function->returnStatement.push_back(endToken);
+        tokens.push_back(endToken);
         index++;
     }
     return function;
