@@ -6,10 +6,10 @@
 using namespace std;
 
 AST_Node::AST_Node() : left(nullptr), right(nullptr), parent(nullptr), data(nullptr), 
-                        single_val(false), is_number(false) {}
+                        single_val(false), is_number(false), is_array(false), is_array_val(false) {}
 
 AST_Node::AST_Node(Token* in_data) : left(nullptr), right(nullptr), parent(nullptr), data(in_data), 
-                        single_val(false), is_number(false) {}
+                        single_val(false), is_number(false), is_array(false), is_array_val(false) {}
 
 AST_Node::~AST_Node() { }
 
