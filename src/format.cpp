@@ -11,6 +11,7 @@ int main(){
     if(lexer.error){
         exit(1);
     }
+    lexer.print_endtokens();
     Formater formater(lexer.multi_end_tokens);
     formater.buildASTs();
     formater.printFormated();

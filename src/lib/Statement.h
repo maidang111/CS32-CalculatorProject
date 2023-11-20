@@ -77,6 +77,7 @@ class Expression: public Statement{
 class Function: public Statement{
     public:
     size_t level;
+    vector <Token*> condition;
     vector <Statement*> body;
     vector <Token*> returnStatement;
     string functionName;

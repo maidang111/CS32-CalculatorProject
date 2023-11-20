@@ -233,7 +233,11 @@ void Formater::delete_help(Statement* node) {
 }
 
 void Formater::delete_tokens(){
+    // cout << tokens.size() << endl;
     for(size_t i = 0; i < tokens.size(); i++){
+        // cout << tokens.at(i)->raw_value << endl;
         delete tokens.at(i);
+        // cout << "deleted" << endl;
+
     }   
 }
