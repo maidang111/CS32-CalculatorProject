@@ -38,4 +38,38 @@ ostream& operator<<(ostream& out, const Data& val) {
     return out;
 }
 
+bool Data::operator==(const Data& val) {
+    if (data_type != val.data_type) {
+        return false;
+    }
+    if (data_type == "BOOL") {
+        if (bool_val == val.bool_val) {
+            return true;
+        }
+    }
+    else if (data_type == "DOUBLE") {
+        if (double_val == val.double_val) {
+            return true;
+        }
+    }
+    else if (data_type == "ARRAY") {
+        if (array_elements.empty() && val.array_elements.empty()) {
+            return true;
+        }
+        else if (array_elements.size() != val.array_elements.size()) {
+            return false;
+        }
+        for (size_t i = 0; i < array_elements.size(); ++i) {
+            if (!(array_elements.at(i) == val.array_elements.at(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    else if (data_type == "NULL") {
+        return true;
+    }
+    return false;
+}
+
 

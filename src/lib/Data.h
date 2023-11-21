@@ -18,6 +18,7 @@ struct Data {
     Data();
     Data(string raw_val, string in_data_type);
     friend ostream& operator<<(ostream& out, const Data& val);
+    bool operator==(const Data& val);
     static map<string, Data> curr_variables;
 };
 

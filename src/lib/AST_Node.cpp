@@ -442,26 +442,10 @@ Data Equality_Val::get_value(Data& left_val, Data& right_val) {
     Data result("", "BOOL");
     result.actual_val = data->raw_value;
     if (this->data->raw_value == "==") {
-        if (left_val.data_type == "BOOL" && right_val.data_type == "BOOL") {
-            result.bool_val = (left_val.bool_val == right_val.bool_val);
-        }
-        else if (left_val.data_type == "DOUBLE" && right_val.data_type == "DOUBLE") {
-            result.bool_val = (left_val.double_val == right_val.double_val);
-        }
-        else {
-            result.bool_val = false;
-        }
+        result.bool_val = (left_val == right_val);
     }
     else if (this->data->raw_value == "!=") {
-        if (left_val.data_type == "BOOL" && right_val.data_type == "BOOL") {
-            result.bool_val = (left_val.bool_val != right_val.bool_val);
-        }
-        else if (left_val.data_type == "DOUBLE" && right_val.data_type == "DOUBLE") {
-            result.bool_val = (left_val.double_val != right_val.double_val);
-        }
-        else {
-            result.bool_val = true;
-        }
+        result.bool_val = (!(left_val == right_val));
     }
     return result;
 }
