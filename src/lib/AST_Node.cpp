@@ -194,11 +194,19 @@ Data Array_Fct::get_value(Data& left_val, Data& right_val) {
         return Data();
     }
     left_val.data_type = "NONE";
-    if (right_val.array_elements.size() == 0) {
-        //
-        cout << "Runtime error: not enough parameters.";
-        runtime_error = false;
-        return Data();
+    if ((data->raw_value == "len") || (data->raw_value == "pop")) {
+        if (right_val.array_elements.size() != 1) {
+            cout << "Runtime error: incorrect argument count.";
+            runtime_error = true;
+            return Data();
+        }
+    }
+    else if (data->raw_value == "push") {
+        if (right_val.array_elements.size() != 2) {
+            cout << "Runtime error: incorrect argument count.";
+            runtime_error = true;
+            return Data();
+        }
     }
     if (right_val.array_elements.at(0).data_type != "ARRAY") {
         cout << "Runtime error: not an array.";
