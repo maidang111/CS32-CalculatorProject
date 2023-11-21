@@ -182,23 +182,44 @@ void InfixParser::read_token(bool calc) {
     // cout << "checking index: " << index << endl;
 }
 
-// check if the value is array val or array
-bool InfixParser::check_array_val(size_t begin_line, size_t end_line) {
-    bool a = false;
+bool InfixParser::check_array(size_t begin_line, size_t end_line) {
     int count = 0;
     for (size_t i = begin_line; i <= end_line; ++i) {
         if (tokens.at(i)->raw_value == "[") {
             ++count;
-            if (count == 0) {
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count;
+        }
+        if ((count == -1) &&  (i != end_line)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+// check if the value is array val or array
+bool InfixParser::check_array_val(size_t begin_line, size_t end_line) {
+    bool a = false;
+    int count = 0;
+    bool b = false;
+    for (size_t i = begin_line; i <= end_line; ++i) {
+        if (tokens.at(i)->raw_value == "[") {
+            ++count;
+            if (count == 0 && !a) {
                 a = true;
-                return a;
+                b = true;
+            }
+            else if (count == 0) {
+                b = false;
             }
         }
         else if (tokens.at(i)->raw_value == "]") {
             --count;
         }
     }
-    return a;
+    return b;
 }
 
 bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_index) {
@@ -417,6 +438,10 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
 
     if ((tokens.at(begin_line)->raw_value == "[")  && (tokens.at(end_line)->raw_value == "]")) {
         bool x = check_array_val(begin_line + 1, end_line);
+        bool y = check_array(begin_line + 1, end_line);
+        // if (x) {
+        //     cout << "true" << endl;
+        // }
         if (x) {
             // array val
             Array_Val* add_array_val = new Array_Val(tokens.at(begin_line));
@@ -428,6 +453,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
                 start_access_index = begin_line + 2;
             }
             else {
+                // cout << "here" << endl;
                 for (size_t w = begin_line + 1; w <= end_line; ++w) {
                     if (tokens.at(w)->raw_value == "[") {
                         ++count_array;
@@ -435,10 +461,17 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
                     else if (tokens.at(w)->raw_value == "]") {
                         --count_array;
                     }
-                    if ((tokens.at(w)->raw_value == ",") || (count_array == -1)) {
+                    if (((tokens.at(w)->raw_value == ",") && (count_array == 0)) || (count_array == -1)) {
+                        // // cout << "here checking: ";
+                        // for (size_t v = start_element_index; v < w; ++v) {
+                        //     cout << tokens.at(v)->raw_value << " ";
+                        // }
+                        // cout << "done checking" << endl;
                         add_element = read_one_line(start_element_index, w - 1, add_array_val);
                         add_array_val->elements.push_back(add_element);
                         start_element_index = w + 1;
+                        // cout << start_element_index << endl;
+                        // cout << "children num: " << add_array_val->elements.size() << endl;
                     }
                     if (count_array == -1) {
                         start_access_index = w + 1;
@@ -451,7 +484,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             add_array_val->single_val = true;
             return add_array_val;
         }
-        else {
+        else if (y) {
             // array
             // cout << "array" << endl;
             Array* add_array = new Array(tokens.at(begin_line));
@@ -462,6 +495,8 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             AST_Node* add_element = nullptr;
             for (size_t w = begin_line + 1; w <= end_line; ++w) {
                 if ((tokens.at(w)->raw_value == ",") || (w == end_line)) {
+                    // cout << "checking: ";
+                    // cout << tokens.at(w - 1)->raw_value << endl;
                     add_element = read_one_line(start_element_index, w - 1, add_array);
                     add_array->elements.push_back(add_element);
                     // cout << add_element->data->raw_value << endl;
@@ -541,6 +576,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             --count;
         }
         if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "=")) {
+            // cout << "equal" << endl;
             Assign* add = new Assign(tokens.at(i));
             add->parent = in_parent;
             add->left = read_one_line(begin_line, i - 1, add);
@@ -889,24 +925,7 @@ void InfixParser::print_AST(AST_Node* node) const {
     else if (!node->single_val) {
         cout << "(";
     }
-    if (node->parameters) {
-        cout << node->data->raw_value;
-        cout << "(";
-        if (!node->parameters->elements.empty()) {
-            // cout << "not empty" << endl;
-            for (size_t j = 0; j < node->parameters->elements.size(); ++j) {
-                print_AST(node->parameters->elements.at(j));
-                if (j + 1 != node->parameters->elements.size()) {
-                    cout << ", ";
-                }
-            }
-        }
-        // else {
-        //     cout << "empty" << endl;
-        // }
-        cout << ")";
-    }
-    else if (!node->is_array && !node->is_array_val) {
+    if (!node->is_array && !node->is_array_val) {
         print_AST(node->left);
         if (!node->single_val) {
             cout << " ";
@@ -931,6 +950,24 @@ void InfixParser::print_AST(AST_Node* node) const {
                 }
             }
         }
+    }
+    else if (node->parameters) {
+        // cout << "here" << endl;
+        cout << node->data->raw_value;
+        cout << "(";
+        if (!node->parameters->elements.empty()) {
+            // cout << "not empty" << endl;
+            for (size_t j = 0; j < node->parameters->elements.size(); ++j) {
+                print_AST(node->parameters->elements.at(j));
+                if (j + 1 != node->parameters->elements.size()) {
+                    cout << ", ";
+                }
+            }
+        }
+        // else {
+        //     cout << "empty" << endl;
+        // }
+        cout << ")";
     }
     else {
         if (!node->elements.empty()) {

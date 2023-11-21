@@ -297,6 +297,7 @@ Data Array_Val::get_value(Data& left_val, Data& right_val) {
     int index_array = static_cast<int>(left_val.array_elements.at(0).double_val);
     right_val.array_elements.at(index_array).index_val = left_val.array_elements.at(0).double_val;
     right_val.array_elements.at(index_array).actual_val = data->raw_value;
+    right_val.array_elements.at(index_array).is_array_val_ = true;
     return right_val.array_elements.at(index_array);
 }
 
@@ -469,7 +470,9 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
     // cout << right_val.actual_val << endl;
     // cout << "type: " << right_val.data_type << endl;
     // cout << "enter assign" << endl;
-    if (!isalpha(left_val.actual_val.at(0)) && (left_val.actual_val.at(0) != '_')) {
+    if ((!isalpha(left_val.actual_val.at(0)) && (left_val.actual_val.at(0) != '_')) &&
+        (!left_val.is_array_val_)) {
+        // cout << left_val.data_type << endl;
         cout << "Runtime error: invalid assignee.";
         runtime_error = true;
         Data a;
@@ -484,11 +487,14 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
     }
     Data result;
     result.actual_val = left_val.actual_val;
-    if (left_val.index_val == -1) {
+    if (left_val.index_val == -1 || (!isalpha(left_val.actual_val.at(0)) && (left_val.actual_val.at(0) != '_'))) {
         result.data_type = right_val.data_type;
         result.double_val = right_val.double_val;
         result.bool_val = right_val.bool_val;
         result.array_elements = right_val.array_elements;
+        if (left_val.index_val != -1) {
+            return result;
+        }
     }
     else {
         // cout << "result.actual_val" << result.actual_val << endl;

@@ -13,6 +13,7 @@ struct Data {
     bool bool_val = false;
     double double_val = 0;
     int index_val = -1;
+    bool is_array_val_;
     vector<Data> array_elements;
     Data();
     Data(string raw_val, string in_data_type);
