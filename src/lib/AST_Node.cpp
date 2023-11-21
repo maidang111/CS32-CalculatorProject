@@ -291,7 +291,8 @@ Data Array_Val::get_value(Data& left_val, Data& right_val) {
         runtime_error = true;
         return Data();
     }
-    else if (left_val.array_elements.at(0).double_val >= static_cast<double>(right_val.array_elements.size())) {
+    else if ((left_val.array_elements.at(0).double_val >= static_cast<double>(right_val.array_elements.size())) ||
+                (left_val.array_elements.at(0).double_val < 0)) {
         cout << "Runtime error: index out of bounds.";
         runtime_error = true;
         return Data();
