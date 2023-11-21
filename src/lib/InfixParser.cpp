@@ -426,13 +426,15 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
     if (begin_line == end_line) {
         // direct values such as numbers, true/false, variables
-        if (isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line)->raw_value != "true") && (tokens.at(begin_line)->raw_value != "false")) {
+        if (isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line)->raw_value != "true") && (tokens.at(begin_line)->raw_value != "false")
+            && (tokens.at(begin_line)->raw_value != "null")) {
             //variable
             Variable_Val* add_variable = new Variable_Val(tokens.at(begin_line));
             add_variable->single_val = true;
             return add_variable;
         }
-        else if (isdigit((tokens.at(begin_line)->raw_value).at(0)) || (tokens.at(begin_line)->raw_value == "true") || (tokens.at(begin_line)->raw_value == "false")) {
+        else if (isdigit((tokens.at(begin_line)->raw_value).at(0)) || (tokens.at(begin_line)->raw_value == "true") || (tokens.at(begin_line)->raw_value == "false")
+                || (tokens.at(begin_line)->raw_value == "null")) {
             Direct_Val* direct_val = new Direct_Val(tokens.at(begin_line));
             direct_val->single_val = true;
             return direct_val;

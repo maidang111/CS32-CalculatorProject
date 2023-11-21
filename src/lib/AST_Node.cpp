@@ -124,6 +124,9 @@ Direct_Val::Direct_Val(Token* in_data){
         val.bool_val = false;
         val.data_type = "BOOL";
     }
+    else if (in_data->raw_value == "null") {
+        val.data_type = "NULL";
+    }
     else {
         is_number = true;
         val.double_val = stod(in_data->raw_value);
