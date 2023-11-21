@@ -931,7 +931,25 @@ void InfixParser::print_AST(AST_Node* node) const {
     else if (!node->single_val) {
         cout << "(";
     }
-    if (!node->is_array && !node->is_array_val) {
+    if (node->parameters) {
+        // cout << "here" << endl;
+        cout << node->data->raw_value;
+        cout << "(";
+        if (!node->parameters->elements.empty()) {
+            // cout << "not empty" << endl;
+            for (size_t j = 0; j < node->parameters->elements.size(); ++j) {
+                print_AST(node->parameters->elements.at(j));
+                if (j + 1 != node->parameters->elements.size()) {
+                    cout << ", ";
+                }
+            }
+        }
+        // else {
+        //     cout << "empty" << endl;
+        // }
+        cout << ")";
+    }
+    else if (!node->is_array && !node->is_array_val) {
         print_AST(node->left);
         if (!node->single_val) {
             cout << " ";
@@ -956,24 +974,6 @@ void InfixParser::print_AST(AST_Node* node) const {
                 }
             }
         }
-    }
-    else if (node->parameters) {
-        // cout << "here" << endl;
-        cout << node->data->raw_value;
-        cout << "(";
-        if (!node->parameters->elements.empty()) {
-            // cout << "not empty" << endl;
-            for (size_t j = 0; j < node->parameters->elements.size(); ++j) {
-                print_AST(node->parameters->elements.at(j));
-                if (j + 1 != node->parameters->elements.size()) {
-                    cout << ", ";
-                }
-            }
-        }
-        // else {
-        //     cout << "empty" << endl;
-        // }
-        cout << ")";
     }
     else {
         if (!node->elements.empty()) {
