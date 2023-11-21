@@ -11,8 +11,11 @@ int main(){
     // a.create_endtokens();
     InfixParser infixParser;
     vector<Token*> line;
-    for (size_t i = 0; i + 1 < a.whole_input.size(); ++i) {
+    for (size_t i = 0; i < a.whole_input.size(); ++i) {
         line = a.create_one_line_tokens(i);
+        if (line.size() == 1) {
+            break;
+        }
         if (!a.error) {
             infixParser.tokens = line;
             infixParser.read_token(true);
