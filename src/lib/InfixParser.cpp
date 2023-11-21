@@ -218,6 +218,11 @@ bool InfixParser::check_array_val(size_t begin_line, size_t end_line) {
         else if (tokens.at(i)->raw_value == "]") {
             --count;
         }
+        else {
+            if (count < 0) {
+                return false;
+            }
+        }
     }
     return b;
 }
@@ -510,8 +515,9 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
 
     if (isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line + 1)->raw_value == "[") && (tokens.at(end_line)->raw_value == "]")) {
-        bool is_val = check_array_val(begin_line + 2, end_line);
-        if (!is_val) {
+        bool is_val = check_array(begin_line + 2, end_line);
+        if (is_val) {
+            // cout << "is here" << endl;
             Array_Val* add_array_val = new Array_Val(tokens.at(begin_line));
             add_array_val->index = read_one_line(begin_line + 1, end_line, add_array_val);
             return add_array_val;
