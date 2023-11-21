@@ -290,12 +290,12 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             last_left_b = false;
         }
         else if (tokens.at(i)->raw_value == ")") {
-            if (operator_last || last_left || last_left_b) {
+            if ((fct_p + 1 == count) && is_fct) {
+                is_fct = false;
+            }
+            else if (operator_last || last_left || last_left_b) {
                 error_index = i;
                 return true;
-            }
-            if ((fct_p == count) && is_fct) {
-                is_fct = false;
             }
             last_left = false;
             operator_last = false;
