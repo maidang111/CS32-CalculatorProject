@@ -97,6 +97,7 @@ void Lexer::create_tokens(){
                 if(raw_value.length() > 0){
                     if(raw_value[raw_value.length()-1] == '.'){
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                        exit(1);
                     }
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;

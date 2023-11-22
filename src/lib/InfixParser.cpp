@@ -271,7 +271,7 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
         } 
         else if (tokens.at(i)->raw_value == "(" && is_function){
             if(tokens.at(i + 1)->raw_value == ","){
-                error_index = i++;
+                error_index = i;
                 return true;
             }
             ++count;
@@ -995,7 +995,7 @@ void InfixParser::print_AST(AST_Node* node) const {
         cout << node->data->raw_value;
         cout << "(";
         if (!node->parameters->elements.empty()) {
-            cout << "not empty" << endl;
+            // cout << "not empty" << endl;
             for (size_t j = 0; j < node->parameters->elements.size(); ++j) {
                 print_AST(node->parameters->elements.at(j));
                 if (j + 1 != node->parameters->elements.size()) {
