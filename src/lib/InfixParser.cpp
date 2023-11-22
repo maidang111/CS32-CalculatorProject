@@ -984,9 +984,9 @@ void InfixParser::print_AST(AST_Node* node) const {
     //     cout << node->val.actual_val;
     // }
     // cout << "is_array" << endl;
-    // if (node->is_array) {
-    //     cout << "[";
-    // }
+    if (node->is_array) {
+        cout << "[";
+    }
     else if (!node->single_val) {
         cout << "(";
     }
