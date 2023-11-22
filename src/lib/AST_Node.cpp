@@ -113,10 +113,10 @@ Function_Val::Function_Val(vector<Token*> in_data) {
     // cout << "before adding raw values" << endl; 
     for (size_t i = 0; i < in_data.size(); i++){
         // cout << "adding raw_values" << in_data.at(i)->raw_value << endl;
+        val.actual_val += in_data.at(i)->raw_value;
         if (in_data.at(i)->raw_value == ","){
             val.actual_val += " ";
         }
-        val.actual_val += in_data.at(i)->raw_value;
     }
     // cout << "after creating function" << endl;   
     val.data_type = "EMPTY" ;

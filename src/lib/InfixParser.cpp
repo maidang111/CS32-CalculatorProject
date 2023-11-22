@@ -326,7 +326,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         return nullptr;
     }
     if (begin_line == end_line) {
-        cout << "here" << endl;
+        // cout << "here" << endl;
         if (isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line)->raw_value != "true") && (tokens.at(begin_line)->raw_value != "false")) {
             //variable
             Variable_Val* add_variable = new Variable_Val(tokens.at(begin_line));

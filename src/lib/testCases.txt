@@ -16,7 +16,7 @@ def make_mac(factor, scalar)
   {
     return factor * value + scalar;
   }
-  
+
    return multiply_and_accumulate;
   }
 
@@ -33,3 +33,24 @@ def make_mac(factor, scalar)
     return factor * value + scalar;
   }
 }
+
+old lexer;
+x = 89
+n = 0
+ 
+while(x > 1)
+{
+   print x
+   if x % 2 == 0
+   {
+     x = x / 2
+   }
+   else
+   {
+     x = x * 3 + 1
+   }
+ 
+   n = n + 1
+ }
+ 
+ print n
