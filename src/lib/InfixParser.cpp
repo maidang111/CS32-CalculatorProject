@@ -942,18 +942,18 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
 }
 
 void InfixParser::delete_help(AST_Node* in_node) {
+    // cout << "called" << endl;
     if (!in_node) {
         return;
     }
+    // cout << in_node->val.actual_val << endl;
+
     // cout << "delete left" << endl;
     // cout << in_node->val.actual_val << endl;
-    if (in_node->left){
-        delete_help(in_node->left);
-    }
-    if (in_node->right){
-        delete_help(in_node->right);
-    }
+    // cout << in_node->val.actual_val << endl;
+    delete_help(in_node->left);
     // cout << "delete right" << endl;
+    delete_help(in_node->right);
     if (!in_node->elements.empty()) {
         for (size_t i = 0; i < in_node->elements.size(); ++i) {
             delete_help(in_node->elements.at(i));
@@ -965,6 +965,7 @@ void InfixParser::delete_help(AST_Node* in_node) {
     if (in_node->parameters) {
         delete_help(in_node->parameters);
     }
+    // cout << "here" << endl;
     delete in_node;
 }
 
