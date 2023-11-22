@@ -9,9 +9,9 @@ using namespace std;
 
 class AST_Node {
     public:
-    AST_Node* left;
-    AST_Node* right;
-    AST_Node* parent;
+    AST_Node* left = nullptr;
+    AST_Node* right = nullptr;
+    AST_Node* parent = nullptr;
     Token* data;
     string data_type;
     bool single_val;

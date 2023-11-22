@@ -945,7 +945,9 @@ void InfixParser::delete_help(AST_Node* in_node) {
     if (!in_node) {
         return;
     }
+    // cout << "delete left" << endl;
     delete_help(in_node->left);
+    // cout << "delete right" << endl;
     delete_help(in_node->right);
     if (!in_node->elements.empty()) {
         for (size_t i = 0; i < in_node->elements.size(); ++i) {
@@ -975,14 +977,15 @@ void InfixParser::print_all() {
     // cout << "print all: end" << endl;
 }
 void InfixParser::print_AST(AST_Node* node) const {
+    // cout << "here" << endl;
     if (!node) {
         return;
     }
     // cout << "is function" << endl;
-    cout << "node->is_function" << endl;
-    // if (node->is_function){
-    //     cout << node->val.actual_val;
-    // }
+    // cout << "node->is_function" << endl;
+    if (node->is_function){
+        cout << node->val.actual_val;
+    }
     // cout << "is_array" << endl;
     if (node->is_array) {
         cout << "[";

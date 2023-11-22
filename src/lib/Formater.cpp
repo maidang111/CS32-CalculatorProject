@@ -199,6 +199,7 @@ Statement* Formater::buildAST(){
         expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){
             if(tokens.at(index)->raw_value != ";"){
+                // cout<< tokens.at(index) << tokens.at(index)->raw_value << endl;
                 expressionBlock->body.push_back(tokens.at(index));
             }
             index++;
