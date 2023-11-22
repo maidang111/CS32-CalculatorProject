@@ -50,6 +50,7 @@ void AST_Node::update_array_elements() {
 
 Array_Fct::Array_Fct(Token* in_data) {
     data = in_data;
+    is_function = false;
     is_array = false;
     is_array_val = false;
     is_number = false;
@@ -62,6 +63,7 @@ Array_Fct::Array_Fct(Token* in_data) {
 
 Array::Array(Token* in_data) {
     data = in_data;
+    is_function = false;
     is_array = true;
     is_array_val = false;
     is_number = false;
@@ -74,6 +76,7 @@ Array::Array(Token* in_data) {
 
 Array_Val::Array_Val(Token* in_data) {
     data = in_data;
+    is_function = false;
     is_array = false;
     is_array_val = true;
     is_number = false;
