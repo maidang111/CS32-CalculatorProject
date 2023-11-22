@@ -10,6 +10,7 @@ InfixParser::InfixParser(vector<Token*>& tokens) {
     index = 0;
     this->tokens = tokens;
     operators = {"+", "-", "*", "/", "%", "&", "|", "^", "<", "<=", ">", ">=", "!=", "==", "="};
+    array_functions = {"len", "pop", "push"};
     error = false;
     result_double = 0;
     result_bool = false;
@@ -17,7 +18,7 @@ InfixParser::InfixParser(vector<Token*>& tokens) {
 InfixParser::InfixParser(){
     index = 0;
     operators = {"+", "-", "*", "/", "%", "&", "|", "^", "<", "<=", ">", ">=", "!=", "==", "="};
-
+    array_functions = {"len", "pop", "push"};
     error = false;
     result_double = 0;
     result_bool = false;
@@ -42,6 +43,8 @@ InfixParser::~InfixParser() {
 // }
 
 void InfixParser::read_all_token(bool calc) {
+    // cout << "read_all_token() enter" << endl;
+
     if (tokens.size() <= 1) {
         return;
     }
@@ -168,9 +171,10 @@ void InfixParser::read_token(bool calc) {
         print_AST(root);
         cout << endl;
         evaluate_print(root);
-        if (curr_index + 2 < tokens.size()) {
-            cout << endl;
-        }
+        cout << endl;
+        // if (curr_index + 2 < tokens.size()) {
+        //     cout << endl;
+        // }
     }
     index = curr_index + 2;
     error = false;
@@ -179,12 +183,61 @@ void InfixParser::read_token(bool calc) {
     // cout << "checking index: " << index << endl;
 }
 
+bool InfixParser::check_array(size_t begin_line, size_t end_line) {
+    int count = 0;
+    for (size_t i = begin_line; i <= end_line; ++i) {
+        if (tokens.at(i)->raw_value == "[") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count;
+        }
+        if ((count == -1) &&  (i != end_line)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+// check if the value is array val or array
+bool InfixParser::check_array_val(size_t begin_line, size_t end_line) {
+    bool a = false;
+    int count = 0;
+    bool b = false;
+    for (size_t i = begin_line; i <= end_line; ++i) {
+        if (tokens.at(i)->raw_value == "[") {
+            ++count;
+            if (count == 0 && !a) {
+                a = true;
+                b = true;
+            }
+            else if (count == 0) {
+                b = false;
+            }
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count;
+        }
+        else {
+            if (count < 0) {
+                return false;
+            }
+        }
+    }
+    return b;
+}
+
 bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_index) {
     int count = 0;
+    int count_b = 0;
     bool operator_last = false;
     bool last_left = false;
     bool last_val = false;
     bool is_function = false;
+    bool last_left_b = false;
+    bool is_fct = false;
+    int fct_p = 0;
     // one line included endtoken
     for (size_t i = begin_line; i <= end_line + 1; ++i) {
         if(tokens.at(i)->is_function){
@@ -213,6 +266,7 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
                 return true;
             }
             last_left = false;
+            last_left_b = false;
             last_val = false;
         } 
         else if (tokens.at(i)->raw_value == "(" && is_function){
@@ -221,6 +275,22 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             last_left = false;
             operator_last = false;
             last_val = true;
+        }
+        else if (array_functions.count(tokens.at(i)->raw_value)) {
+            if (i + 2 > end_line) {
+                error_index = i;
+                return true;
+            }
+            if (tokens.at(i + 1)->raw_value != "(") {
+                error_index = i + 1;
+                return true;
+            }
+            last_left = false;
+            is_fct = true;
+            fct_p = count;
+            last_val = false;
+            last_left_b = false;
+            operator_last = true;
         }
         else if (tokens.at(i)->raw_value == "(") {
             // cout << "here left paratheses" << endl;
@@ -232,12 +302,13 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
                 return true;
             }
             last_val = false;
+            last_left_b = false;
         }
         else if (tokens.at(i)->raw_value == ")") {
-            // cout << "right parathese" << endl;
-            // cout << "operator_last" << operator_last << endl;
-            // cout << "last_left" << last_left << endl;
-            if (operator_last || last_left) {
+            if ((fct_p + 1 == count) && is_fct) {
+                is_fct = false;
+            }
+            else if (operator_last || last_left || last_left_b) {
                 error_index = i;
                 // cout << "here exit" << endl;
                 return true;
@@ -253,6 +324,36 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             last_left = false;
             operator_last = false;
             last_val = false;
+            last_left_b = false;
+        }
+        else if (tokens.at(i)->raw_value == ",") {
+            if (((count_b < 1) && !is_fct) || operator_last || last_left || last_left_b) {
+                // cout << "error here" << endl;
+                error_index = i;
+                return true;
+            }
+            last_left = false;
+            operator_last = false;
+            last_val = false;
+            last_left_b = false;
+        }
+        else if (tokens.at(i)->raw_value == "[") {
+            last_left_b = false;
+            last_left = false;
+            operator_last = false;
+            last_val = false;
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            if (operator_last || last_left) {
+                error_index = i;
+                return true;
+            }
+            last_left = false;
+            operator_last = false;
+            last_left_b = false;
+            last_val = true;
+            --count_b;
         }
         else {
             // cout << "exit here" << tokens.at(index)->raw_value << endl;
@@ -269,8 +370,12 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             error_index = i;
             return true;
         }
+        else if (count_b < 0) {
+            error_index = i;
+            return true;
+        }
     }
-    if (count != 0) {
+    if ((count != 0) || (count_b != 0)) {
         error_index = end_line + 1;
         return true;
     }
@@ -292,13 +397,13 @@ bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& e
     for (size_t i = end_line; i > begin_line; --i) {
         // cout << "a" << endl;
         if (tokens.at(i)->raw_value == "=") {
-            if ((tokens.at(i + 1)->raw_value == ")") || (operators.count(tokens.at(i + 1)->raw_value))) {
+            if ((tokens.at(i + 1)->raw_value == ")") || (operators.count(tokens.at(i + 1)->raw_value)) || (tokens.at(i + 1)->raw_value == "]")) {
                 
                 error_index = i + 1;
                 // cout << "here 1 " << endl;
                 return true;
             }
-            else if (tokens.at(i - 1)->raw_value == "(" || operators.count(tokens.at(i - 1)->raw_value)){
+            else if (tokens.at(i - 1)->raw_value == "(" || operators.count(tokens.at(i - 1)->raw_value) || (tokens.at(i - 1)->raw_value == "[")){
                 error_index = i;
                 // cout << "return here" << endl;
                 return true;
@@ -310,6 +415,26 @@ bool InfixParser::check_assignment(size_t begin_line, size_t end_line, size_t& e
         error_index = begin_line;
         // cout << "00" << endl;
         return true;
+    }
+    return false;
+}
+
+bool InfixParser::check_single_array_function(size_t begin_line, size_t end_line) {
+    int count = 0;
+    bool is_first = false;
+    for (size_t i = begin_line; i <= end_line; ++i) {
+        if (tokens.at(i)->raw_value == "(") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == ")") {
+            --count;
+        }
+        if ((count == 0) && !is_first && (i == end_line)) {
+            return true;
+        }
+        if (count == 0) {
+            is_first = true;
+        }
     }
     return false;
 }
@@ -326,14 +451,16 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         return nullptr;
     }
     if (begin_line == end_line) {
-        // cout << "here" << endl;
-        if (isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line)->raw_value != "true") && (tokens.at(begin_line)->raw_value != "false")) {
+        // direct values such as numbers, true/false, variables
+        if (isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line)->raw_value != "true") && (tokens.at(begin_line)->raw_value != "false")
+            && (tokens.at(begin_line)->raw_value != "null")) {
             //variable
             Variable_Val* add_variable = new Variable_Val(tokens.at(begin_line));
             add_variable->single_val = true;
             return add_variable;
         }
-        else if (isdigit((tokens.at(begin_line)->raw_value).at(0)) || (tokens.at(begin_line)->raw_value == "true") || (tokens.at(begin_line)->raw_value == "false")) {
+        else if (isdigit((tokens.at(begin_line)->raw_value).at(0)) || (tokens.at(begin_line)->raw_value == "true") || (tokens.at(begin_line)->raw_value == "false")
+                || (tokens.at(begin_line)->raw_value == "null")) {
             Direct_Val* direct_val = new Direct_Val(tokens.at(begin_line));
             direct_val->single_val = true;
             return direct_val;
@@ -341,16 +468,149 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         // error not numbers, true/false, or variables
         return nullptr;
     }
+
+    if ((tokens.at(begin_line)->raw_value == "[")  && (tokens.at(end_line)->raw_value == "]")) {
+        bool x = check_array_val(begin_line + 1, end_line);
+        bool y = check_array(begin_line + 1, end_line);
+        // if (x) {
+        //     cout << "true" << endl;
+        // }
+        if (x) {
+            // array val
+            Array_Val* add_array_val = new Array_Val(tokens.at(begin_line));
+            size_t start_element_index = begin_line + 1;
+            size_t start_access_index = begin_line + 1;
+            AST_Node* add_element = nullptr;
+            int count_array = 0;
+            if (tokens.at(begin_line + 1)->raw_value == "]") {
+                start_access_index = begin_line + 2;
+            }
+            else {
+                // cout << "here" << endl;
+                for (size_t w = begin_line + 1; w <= end_line; ++w) {
+                    if (tokens.at(w)->raw_value == "[") {
+                        ++count_array;
+                    }
+                    else if (tokens.at(w)->raw_value == "]") {
+                        --count_array;
+                    }
+                    if (((tokens.at(w)->raw_value == ",") && (count_array == 0)) || (count_array == -1)) {
+                        // // cout << "here checking: ";
+                        // for (size_t v = start_element_index; v < w; ++v) {
+                        //     cout << tokens.at(v)->raw_value << " ";
+                        // }
+                        // cout << "done checking" << endl;
+                        add_element = read_one_line(start_element_index, w - 1, add_array_val);
+                        add_array_val->elements.push_back(add_element);
+                        start_element_index = w + 1;
+                        // cout << start_element_index << endl;
+                        // cout << "children num: " << add_array_val->elements.size() << endl;
+                    }
+                    if (count_array == -1) {
+                        start_access_index = w + 1;
+                        break;
+                    }
+                }
+                add_array_val->update_array_elements();
+            }
+            add_array_val->index = read_one_line(start_access_index, end_line, add_array_val);
+            add_array_val->single_val = true;
+            return add_array_val;
+        }
+        else if (y) {
+            // array
+            // cout << "array" << endl;
+            Array* add_array = new Array(tokens.at(begin_line));
+            if (begin_line + 1 == end_line) {
+                return add_array;
+            }
+            size_t start_element_index = begin_line + 1;
+            AST_Node* add_element = nullptr;
+            for (size_t w = begin_line + 1; w <= end_line; ++w) {
+                if ((tokens.at(w)->raw_value == ",") || (w == end_line)) {
+                    // cout << "checking: ";
+                    // cout << tokens.at(w - 1)->raw_value << endl;
+                    add_element = read_one_line(start_element_index, w - 1, add_array);
+                    add_array->elements.push_back(add_element);
+                    // cout << add_element->data->raw_value << endl;
+                    start_element_index = w + 1;
+                }
+            }
+            // cout << "finished" << endl;
+            add_array->update_array_elements();
+            return add_array;
+        }
+    }
+
+    if (isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line + 1)->raw_value == "[") && (tokens.at(end_line)->raw_value == "]")) {
+        bool is_val = check_array(begin_line + 2, end_line);
+        if (is_val) {
+            // cout << "is here" << endl;
+            Array_Val* add_array_val = new Array_Val(tokens.at(begin_line));
+            add_array_val->index = read_one_line(begin_line + 1, end_line, add_array_val);
+            return add_array_val;
+        }
+    }
+
+    if (array_functions.count(tokens.at(begin_line)->raw_value)) {
+            bool m = check_single_array_function(begin_line + 1, end_line);
+            if (m) {
+                Array_Fct* add_array_fct = new Array_Fct(tokens.at(begin_line));
+                add_array_fct->parameters = new Array(tokens.at(begin_line + 1));
+                if (begin_line + 2 == end_line) {
+                    return add_array_fct;
+                }
+                size_t start_p = begin_line + 2;
+                int co = 0;
+                int co_b = 0;
+                // cout << "parameters" << endl;
+                // cout << "end_line: " << end_line << endl;
+                for (size_t w = begin_line + 2; w <= end_line; ++w) {
+                    // cout << tokens.at(w)->raw_value << endl;
+                    // cout << "index: " << w << endl;
+                    if (tokens.at(w)->raw_value == "(") {
+                        ++co;
+                    }
+                    else if (tokens.at(w)->raw_value == "[") {
+                        ++co_b;
+                    }
+                    else if (tokens.at(w)->raw_value == "]") {
+                        --co_b;
+                    }
+                    else if (tokens.at(w)->raw_value == ")") {
+                        --co;
+                    }
+                    if (((co == 0) && (co_b == 0) && (tokens.at(w)->raw_value == ",")) || (w == end_line)) {
+                        // cout << "here" << endl;
+                        add_array_fct->parameters->elements.push_back(read_one_line(start_p, w - 1, add_array_fct->parameters));
+                        start_p = w + 1;
+                    }
+                    // cout << "last" << endl;
+                }
+                // cout << "k" << endl;
+                return add_array_fct;
+            }
+    }
+
+
     int count = 0;
+    int count_b = 0;
     for (size_t i = begin_line; i <= end_line; ++i) {
         // cout << "first: " << i << endl;
         if (tokens.at(i)->raw_value == "(") {
             ++count;
         }
+        else if (tokens.at(i)->raw_value == "[") {
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count_b;
+        }
         else if (tokens.at(i)->raw_value == ")") {
             --count;
         }
-        if ((count == 0) && (tokens.at(i)->raw_value == "=")) {
+        if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "=")) {
+            // cout << "equal" << endl;
             Assign* add = new Assign(tokens.at(i));
             add->parent = in_parent;
             add->left = read_one_line(begin_line, i - 1, add);
@@ -365,6 +625,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     // cout << "poitnt 1" << endl;
 
     count = 0;
+    count_b = 0;
     // cout << "end_line: " << end_line << endl;
     // cout << "begin_line: " << begin_line << endl;
     if(isalpha(tokens.at(begin_line)->raw_value.at(0)) && (tokens.at(begin_line)->raw_value != "true") && (tokens.at(begin_line)->raw_value != "false") && tokens.at(begin_line)->is_function){
@@ -399,7 +660,13 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         else if (tokens.at(i)->raw_value == ")") {
             --count;
         }
-        if ((count == 0) && (tokens.at(i)->raw_value == "|")) {
+        else if (tokens.at(i)->raw_value == "[") {
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count_b;
+        }
+        if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "|")) {
             add_bool = new Boolean_Operation(tokens.at(i));
             add_bool->parent = in_parent;
             add_bool->left = read_one_line(begin_line, i - 1, add_bool);
@@ -416,6 +683,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
     // cout << "point2" << endl;
     count = 0;
+    count_b = 0;
     for (size_t i = end_line; i >= begin_line; --i) {
         if (tokens.at(i)->raw_value == "(") {
             ++count;
@@ -423,7 +691,13 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         else if (tokens.at(i)->raw_value == ")") {
             --count;
         }
-        if ((count == 0) && (tokens.at(i)->raw_value == "^")) {
+        else if (tokens.at(i)->raw_value == "[") {
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count_b;
+        }
+        if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "^")) {
             add_bool = new Boolean_Operation(tokens.at(i));
             add_bool->parent = in_parent;
             add_bool->left = read_one_line(begin_line, i - 1, add_bool);
@@ -439,6 +713,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
 
     count = 0;
+    count_b = 0;
     for (size_t i = end_line; i >= begin_line; --i) {
         if (tokens.at(i)->raw_value == "(") {
             ++count;
@@ -446,7 +721,13 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         else if (tokens.at(i)->raw_value == ")") {
             --count;
         }
-        if ((count == 0) && (tokens.at(i)->raw_value == "&")) {
+        else if (tokens.at(i)->raw_value == "[") {
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count_b;
+        }
+        if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "&")) {
             add_bool = new Boolean_Operation(tokens.at(i));
             add_bool->parent = in_parent;
             add_bool->left = read_one_line(begin_line, i - 1, add_bool);
@@ -462,6 +743,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
 
     count = 0;
+    count_b = 0;
     Equality_Val* new_equal = nullptr;
     for (size_t i = end_line; i >= begin_line; --i) {
         if (tokens.at(i)->raw_value == "(") {
@@ -470,7 +752,13 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         else if (tokens.at(i)->raw_value == ")") {
             --count;
         }
-        if ((count == 0) && (tokens.at(i)->raw_value == "!=")) {
+        else if (tokens.at(i)->raw_value == "[") {
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count_b;
+        }
+        if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "!=")) {
             new_equal = new Equality_Val(tokens.at(i));
             new_equal->parent = in_parent;
             new_equal->left = read_one_line(begin_line, i - 1, new_equal);
@@ -480,7 +768,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             }
             return new_equal;
         }
-        else if ((count == 0) && (tokens.at(i)->raw_value == "==")) {
+        else if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "==")) {
             new_equal = new Equality_Val(tokens.at(i));
             new_equal->parent = in_parent;
             new_equal->left = read_one_line(begin_line, i - 1, new_equal);
@@ -496,6 +784,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
 
     count = 0;
+    count_b = 0;
     Comparison_Val* new_compare = nullptr;
     for (size_t i = end_line; i >= begin_line; --i) {
         if (tokens.at(i)->raw_value == "(") {
@@ -504,7 +793,13 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         else if (tokens.at(i)->raw_value == ")") {
             --count;
         }
-        if ((count == 0) && (tokens.at(i)->raw_value == ">=")) {
+        else if (tokens.at(i)->raw_value == "[") {
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count_b;
+        }
+        if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == ">=")) {
             new_compare = new Comparison_Val(tokens.at(i));
             new_compare->parent = in_parent;
             new_compare->left = read_one_line(begin_line, i - 1, new_compare);
@@ -514,7 +809,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             }
             return new_compare;
         }
-        else if ((count == 0) && (tokens.at(i)->raw_value == ">")) {
+        else if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == ">")) {
             new_compare = new Comparison_Val(tokens.at(i));
             new_compare->parent = in_parent;
             new_compare->left = read_one_line(begin_line, i - 1, new_compare);
@@ -524,7 +819,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             }
             return new_compare;
         }
-        else if ((count == 0) && (tokens.at(i)->raw_value == "<=")) {
+        else if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "<=")) {
             new_compare = new Comparison_Val(tokens.at(i));
             new_compare->parent = in_parent;
             new_compare->left = read_one_line(begin_line, i - 1, new_compare);
@@ -534,7 +829,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             }
             return new_compare;
         } 
-        else if ((count == 0) && (tokens.at(i)->raw_value == "<")) {
+        else if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "<")) {
             new_compare = new Comparison_Val(tokens.at(i));
             new_compare->parent = in_parent;
             new_compare->left = read_one_line(begin_line, i - 1, new_compare);
@@ -550,6 +845,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
 
     count = 0;
+    count_b = 0;
     Double_Operation* double_add = nullptr;
     for (size_t i = end_line; i >= begin_line; --i) {
         if (tokens.at(i)->raw_value == "(") {
@@ -558,7 +854,13 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         else if (tokens.at(i)->raw_value == ")") {
             --count;
         }
-        if ((count == 0) && (tokens.at(i)->raw_value == "-")) {
+        else if (tokens.at(i)->raw_value == "[") {
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count_b;
+        }
+        if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "-")) {
             double_add = new Double_Operation(tokens.at(i));
             double_add->parent = in_parent;
             double_add->left = read_one_line(begin_line, i - 1, double_add);
@@ -568,7 +870,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             }
             return double_add;
         }
-        else if ((count == 0) && (tokens.at(i)->raw_value == "+")) {
+        else if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "+")) {
             // cout << "+" << endl;
             double_add = new Double_Operation(tokens.at(i));
             double_add->parent = in_parent;
@@ -585,6 +887,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }
 
     count = 0;
+    count_b = 0;
     for (size_t i = end_line; i >= begin_line; --i) {
         if (tokens.at(i)->raw_value == "(") {
             ++count;
@@ -592,7 +895,13 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         else if (tokens.at(i)->raw_value == ")") {
             --count;
         }
-        if ((count == 0) && (tokens.at(i)->raw_value == "%")) {
+        else if (tokens.at(i)->raw_value == "[") {
+            ++count_b;
+        }
+        else if (tokens.at(i)->raw_value == "]") {
+            --count_b;
+        }
+        if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "%")) {
             double_add = new Double_Operation(tokens.at(i));
             double_add->parent = in_parent;
             double_add->left = read_one_line(begin_line, i - 1, double_add);
@@ -602,7 +911,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             }
             return double_add;
         }
-        else if ((count == 0) && (tokens.at(i)->raw_value == "/")) {
+        else if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "/")) {
             double_add = new Double_Operation(tokens.at(i));
             double_add->parent = in_parent;
             double_add->left = read_one_line(begin_line, i - 1, double_add);
@@ -612,7 +921,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
             }
             return double_add;
         }
-        else if ((count == 0) && (tokens.at(i)->raw_value == "*")) {
+        else if ((count == 0) && (count_b == 0) && (tokens.at(i)->raw_value == "*")) {
             double_add = new Double_Operation(tokens.at(i));
             double_add->parent = in_parent;
             double_add->left = read_one_line(begin_line, i - 1, double_add);
@@ -635,6 +944,17 @@ void InfixParser::delete_help(AST_Node* in_node) {
     }
     delete_help(in_node->left);
     delete_help(in_node->right);
+    if (!in_node->elements.empty()) {
+        for (size_t i = 0; i < in_node->elements.size(); ++i) {
+            delete_help(in_node->elements.at(i));
+        }
+    }
+    if (in_node->index) {
+        delete_help(in_node->index);
+    }
+    if (in_node->parameters) {
+        delete_help(in_node->parameters);
+    }
     delete in_node;
 }
 
@@ -652,40 +972,87 @@ void InfixParser::print_all() {
     // cout << "print all: end" << endl;
 }
 void InfixParser::print_AST(AST_Node* node) const {
+    // cout << "print_AST" << endl;
     if (!node) {
         return;
     }
     if (node->is_function){
         cout << node->val.actual_val;
     }
-    // cout << "here 1" << endl;
-    if (!node->single_val) {
+    if (node->is_array) {
+        cout << "[";
+    }
+    else if (!node->single_val) {
         cout << "(";
     }
-    //  cout << "here 2" << endl;
-    print_AST(node->left);
-    // cout << "here 3" << endl;
-    if (!node->single_val) {
-        cout << " ";
+    if (node->parameters) {
+        // cout << "here" << endl;
+        cout << node->data->raw_value;
+        cout << "(";
+        if (!node->parameters->elements.empty()) {
+            // cout << "not empty" << endl;
+            for (size_t j = 0; j < node->parameters->elements.size(); ++j) {
+                print_AST(node->parameters->elements.at(j));
+                if (j + 1 != node->parameters->elements.size()) {
+                    cout << ", ";
+                }
+            }
+        }
+        // else {
+        //     cout << "empty" << endl;
+        // }
+        cout << ")";
     }
-    // cout << "here 4" << endl;
-    if (node->is_number) {
-        cout << stod(node->data->raw_value);
+    else if (!node->is_array && !node->is_array_val) {
+        print_AST(node->left);
+        if (!node->single_val) {
+            cout << " ";
+        }
+        if  (node->is_number) {
+            cout << stod(node->data->raw_value);
+        }
+        else {
+            cout << node->data->raw_value;
+        }
+        if (!node->single_val) {
+            cout << " ";
+        }
+        print_AST(node->right);
+    }
+    else if (node->is_array) {
+        if (!node->elements.empty()) {
+            for (size_t i = 0; i < node->elements.size(); ++i) {
+                print_AST(node->elements.at(i));
+                if (i + 1 != node->elements.size()) {
+                    cout << ", ";
+                }
+            }
+        }
     }
     else if (node->is_function){
     }
     else {
-        // cout << "here a" << endl;
-        cout << node->data->raw_value;
+        if (!node->elements.empty()) {
+            cout << "[";
+            for (size_t i = 0; i < node->elements.size(); ++i) {
+                print_AST(node->elements.at(i));
+                if (i + 1 != node->elements.size()) { 
+                    cout << ", ";
+                }
+            }
+            cout << "]";
+        }
+        else {
+            cout << node->data->raw_value;
+        }
+        if (node->index) {
+            print_AST(node->index);
+        }
     }
-    // cout << "here 5" << endl;
-    if (!node->single_val) {
-        cout << " ";
+    if (node->is_array) {
+        cout << "]";
     }
-    // cout << "here 6" << endl;
-    print_AST(node->right);
-    // cout << "here 7" << endl;
-    if (!node->single_val) {
+    else if (!node->single_val) {
         cout << ")";
     }
     return;
@@ -700,6 +1067,34 @@ Data InfixParser::evaluate(AST_Node* in_node) {
     // cout << "left: " << left_val.double_val << endl;
     Data right_val = evaluate(in_node->right);
     // cout << "right: " << right_val.double_val << endl;
+    if (in_node->parameters) {
+        right_val = evaluate(in_node->parameters);
+    }
+    else if (in_node->is_array || in_node->is_array_val) {
+        if (AST_Node::runtime_error) {
+            return Data();
+        }
+        Data result;
+        if (in_node->is_array) {
+            result.data_type = "ARRAY";
+        }
+        else {
+            result.data_type = "ARRAY_VAL";
+        }
+        if (!in_node->elements.empty()) {
+            for (size_t i = 0; i < in_node->elements.size(); ++i) {
+                result.array_elements.push_back(evaluate(in_node->elements.at(i)));
+            }
+            if (in_node->is_array) {
+                return result;
+            }
+        }
+        if (in_node->is_array_val) {
+            left_val = evaluate(in_node->index);
+            // cout << left_val.double_val << endl;
+        }
+        right_val = result;
+    }
     return in_node->get_value(left_val, right_val);
 }
 
@@ -715,19 +1110,8 @@ void InfixParser::evaluate_print(AST_Node* head) {
         Data::curr_variables.clear();
         return;
     }
-    if (calculate.data_type == "DOUBLE") {
-        cout << calculate.double_val;
-        update_variables();
-    }
-    else if (calculate.data_type == "BOOL") {
-        if (calculate.bool_val) {
-            cout << "true";
-        }
-        else if (!calculate.bool_val) {
-            cout << "false";
-        }
-        update_variables();
-    }
+    cout << calculate;
+    update_variables();
 }
 
 void InfixParser::update_variables() {

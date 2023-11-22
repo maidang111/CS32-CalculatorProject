@@ -19,12 +19,14 @@ class Lexer{
     set <char> logicals;
     vector <Token*> tokens;
     vector <Token*> multi_end_tokens;
+    vector<vector<Token*>> data;
 
     ~Lexer();
 
     void print_tokens();
     void print_endtokens();
-    
+    void help_delete_data();
+    vector<Token*> create_one_line_tokens(size_t line_index);
     void create_tokens();
     void create_endtokens();
 
