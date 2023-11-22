@@ -275,9 +275,9 @@ void Lexer::create_endtokens(){
                     mini.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
-
-                    if((i < whole_input.at(i).size()) && whole_input.at(i).at(j) + 1 == '('){
+                    if((i < whole_input.at(i).size()) && whole_input.at(i).at(j) == '('){
                         new_token->is_function = true;
+
                     }
                 }
                 // == case
