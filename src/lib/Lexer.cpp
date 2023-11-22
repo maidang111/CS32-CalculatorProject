@@ -328,6 +328,7 @@ void Lexer::create_endtokens(){
                         error = true;
                     } else if((j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1)))){
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
+                        exit(1);
                         prev_error = true;
                         error = true;
                     }
