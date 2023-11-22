@@ -985,7 +985,7 @@ void InfixParser::print_AST(AST_Node* node) const {
     else if (!node->single_val) {
         cout << "(";
     }
-    if (node->parameters) {
+    if (node->parameters && !node->is_function) {
         // cout << "here" << endl;
         cout << node->data->raw_value;
         cout << "(";
