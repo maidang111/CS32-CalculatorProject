@@ -54,3 +54,96 @@ while(x > 1)
  }
  
  print n
+
+
+x = 1337;
+n = 0;
+while x > 1 {
+  n = n + 1;
+  if x % 2 == 0 {
+    x = x / 2;
+  }
+  else if x == 1 | x < 1 {
+     x = 1;
+     n = 0-1;
+  }
+  else {
+    x = 3 * x;
+    x = x + 1;
+  }
+}
+print n;
+
+
+x = 1337;
++ (x = 1337);
+? +        +
+- n = 0;
++ (n = 0);
+? +     +
+- 
+- while x > 1 {
++ while (x > 1) {
+?       +     +
+-   n = n + 1;
++     (n = (n + 1));
+?   +++    +     ++
+-   if x % 2 == 0 {
++     if ((x % 2) == 0) {
+? ++     ++     +     +
+-     x = x / 2;
++         (x = (x / 2));
+?     +++++    +     ++
+-   }
++     }
+? ++
+-   else if x == 1 | x < 1 {
+-     x = 1;
+-     n = 0-1;
+-   }
+-   else {
++     else {
+? ++
+-     x = 3 * x;
+-     x = x + 1;
++         if ((x == 1) | (x < 1)) {
++             (x = 1);
++             (n = (0 - 1));
++         }
++         else {
++             (x = (3 * x));
++             (x = (x + 1));
++         }
+-   }
++     }
+? ++
+  }
+- 
+  print n;
+- 
+
+Format: Function Definition (0/2)
+Test Failed: Incorrect output (stdout).
++ expected / - unexpected / ? hint
+
+ def noop1() {}
+ def noop2() {return;}
+ def noop3() {return null;}
+ 
+ def print_if_bool(val)
+ {
+   if val == true | val == false {
+     print val;
+   }
+  }
+ 
+ def make_mac(factor, scalar)
+ {
+   def multiply_and_accumulate(value)
+   {
+     return factor * value + scalar;
+   }
+ 
+   return multiply_and_accumulate;
+  }
+ 
