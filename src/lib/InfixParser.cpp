@@ -270,6 +270,10 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             last_val = false;
         } 
         else if (tokens.at(i)->raw_value == "(" && is_function){
+            if(tokens.at(i + 1)->raw_value == ","){
+                error_index = i++;
+                return true;
+            }
             ++count;
             is_function = true;
             last_left = false;
@@ -653,7 +657,6 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
     }// direct values such as numbers, true/false, variables
     Boolean_Operation* add_bool = nullptr;
     for (size_t i = end_line; i >= begin_line; --i) {
-        // cout << "loop top: " << i << endl;
         if (tokens.at(i)->raw_value == "(") {
             ++count;
         }
@@ -972,25 +975,27 @@ void InfixParser::print_all() {
     // cout << "print all: end" << endl;
 }
 void InfixParser::print_AST(AST_Node* node) const {
-    // cout << "print_AST" << endl;
-    if (node == nullptr || !node) {
+    if (!node) {
         return;
     }
+    // cout << "is function" << endl;
     if (node->is_function){
         cout << node->val.actual_val;
     }
+    // cout << "is_array" << endl;
     if (node->is_array) {
         cout << "[";
     }
     else if (!node->single_val) {
         cout << "(";
     }
+    // cout << "is_parameters" << endl;
     if (node->parameters && !node->is_function) {
         // cout << "here" << endl;
         cout << node->data->raw_value;
         cout << "(";
         if (!node->parameters->elements.empty()) {
-            // cout << "not empty" << endl;
+            cout << "not empty" << endl;
             for (size_t j = 0; j < node->parameters->elements.size(); ++j) {
                 print_AST(node->parameters->elements.at(j));
                 if (j + 1 != node->parameters->elements.size()) {
@@ -1002,8 +1007,11 @@ void InfixParser::print_AST(AST_Node* node) const {
         //     cout << "empty" << endl;
         // }
         cout << ")";
+    } else if (node->is_function){
+        // cout << "is_function" << endl;
     }
     else if (!node->is_array && !node->is_array_val) {
+        // cout << "not array" << endl;
         print_AST(node->left);
         if (!node->single_val) {
             cout << " ";
@@ -1020,6 +1028,7 @@ void InfixParser::print_AST(AST_Node* node) const {
         print_AST(node->right);
     }
     else if (node->is_array) {
+        // cout << "is array" << endl;
         if (!node->elements.empty()) {
             for (size_t i = 0; i < node->elements.size(); ++i) {
                 print_AST(node->elements.at(i));
@@ -1029,9 +1038,8 @@ void InfixParser::print_AST(AST_Node* node) const {
             }
         }
     }
-    else if (node->is_function){
-    }
     else {
+        // cout << "elements" << endl;
         if (!node->elements.empty()) {
             cout << "[";
             for (size_t i = 0; i < node->elements.size(); ++i) {

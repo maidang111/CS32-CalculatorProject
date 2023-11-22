@@ -201,7 +201,6 @@ void Expression::print(InfixParser* infixParser){
     // }
 
     AST_Node* a = infixParser->read_one_line(0, body.size() - 2, nullptr);
-    // cout << "before print" << endl;
     infixParser->print_AST(a);
     cout << ";" << endl;
 
