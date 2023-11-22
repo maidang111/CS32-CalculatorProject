@@ -979,13 +979,14 @@ void InfixParser::print_AST(AST_Node* node) const {
         return;
     }
     // cout << "is function" << endl;
-    if (node->is_function){
-        cout << node->val.actual_val;
-    }
+    cout << "node->is_function" << endl;
+    // if (node->is_function){
+    //     cout << node->val.actual_val;
+    // }
     // cout << "is_array" << endl;
-    if (node->is_array) {
-        cout << "[";
-    }
+    // if (node->is_array) {
+    //     cout << "[";
+    // }
     else if (!node->single_val) {
         cout << "(";
     }
