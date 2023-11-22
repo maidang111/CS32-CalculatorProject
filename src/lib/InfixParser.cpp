@@ -946,9 +946,14 @@ void InfixParser::delete_help(AST_Node* in_node) {
         return;
     }
     // cout << "delete left" << endl;
-    delete_help(in_node->left);
+    // cout << in_node->val.actual_val << endl;
+    if (in_node->left){
+        delete_help(in_node->left);
+    }
+    if (in_node->right){
+        delete_help(in_node->right);
+    }
     // cout << "delete right" << endl;
-    delete_help(in_node->right);
     if (!in_node->elements.empty()) {
         for (size_t i = 0; i < in_node->elements.size(); ++i) {
             delete_help(in_node->elements.at(i));
