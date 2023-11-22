@@ -196,11 +196,12 @@ void Expression::print(InfixParser* infixParser){
 
     infixParser->tokens = body;
 
-    // for(size_t i = 0; i < body.size(); i++){
+    // for(size_t i = 0; i < body.size() - 2; i++){
     //     cout << body.at(i)->raw_value << endl;
     // }
 
     AST_Node* a = infixParser->read_one_line(0, body.size() - 2, nullptr);
+    // cout << "before print" << endl;
     infixParser->print_AST(a);
     cout << ";" << endl;
 

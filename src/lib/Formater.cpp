@@ -45,6 +45,8 @@ void Formater::buildASTs(){
 Statement* Formater::buildAST(){
     if(tokens.at(index)->raw_value == "def"){
         index++;
+
+    tokens.at(index)->is_function = true;
     Function* function = new Function();
     function->level = level;
     function->functionName = tokens.at(index)->raw_value;

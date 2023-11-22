@@ -16,6 +16,7 @@ class AST_Node {
     string data_type;
     bool single_val;
     bool is_number;
+    bool is_function;
     Data val;
     AST_Node();
     AST_Node(Token* in_data);
@@ -67,6 +68,13 @@ class Equality_Val: public AST_Node {
 class Comparison_Val: public AST_Node {
     public:
     Comparison_Val(Token* in_data);
+    Data get_value(Data& left_val, Data& right_val);
+};
+
+class Function_Val: public AST_Node {
+    public:
+    Function_Val(vector<Token*> in_data);
+    vector <Token*> data_vec;
     Data get_value(Data& left_val, Data& right_val);
 };
 

@@ -106,6 +106,22 @@ Equality_Val::Equality_Val(Token* in_data) {
     data = in_data;
 }
 
+Function_Val::Function_Val(vector<Token*> in_data) {
+    is_number = false;
+    is_function = true;
+    val.actual_val = "";
+    // cout << "before adding raw values" << endl; 
+    for (size_t i = 0; i < in_data.size(); i++){
+        // cout << "adding raw_values" << in_data.at(i)->raw_value << endl;
+        if (in_data.at(i)->raw_value == ","){
+            val.actual_val += " ";
+        }
+        val.actual_val += in_data.at(i)->raw_value;
+    }
+    // cout << "after creating function" << endl;   
+    val.data_type = "EMPTY" ;
+    data_vec = in_data;
+}
 
 Data Double_Operation::get_value(Data& left_val, Data& right_val) {
     // cout << "double_operation: " << " left_val: " << left_val.data_type << " right_val: " << right_val.data_type << endl;
@@ -304,6 +320,45 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
 }
 
 Data Comparison_Val::get_value(Data& left_val, Data& right_val) {
+    if (runtime_error) {
+        return Data();
+    }
+    if (invalid_variable(left_val) && !runtime_error) {
+        cout << "Runtime error: unknown identifier " << left_val.actual_val;
+        runtime_error = true;
+        return Data();
+    }
+    else if (invalid_variable(right_val) && !runtime_error) {
+        cout << "Runtime error: unknown identifier " << right_val.actual_val;
+        runtime_error = true;
+        return Data();
+    }
+    if (((left_val.data_type != "DOUBLE") || (right_val.data_type != "DOUBLE")) && !runtime_error) {
+        cout << "Runtime error: invalid operand type.";
+        runtime_error = true;
+        Data a;
+        return a;
+    }
+
+    Data result("", "BOOL");
+    result.actual_val = data->raw_value;
+    if (this->data->raw_value == "<") {
+        result.bool_val = left_val.double_val < right_val.double_val;
+    }
+    else if (this->data->raw_value == "<=") {
+        result.bool_val = left_val.double_val <= right_val.double_val;
+    }    
+    else if (this->data->raw_value == ">") {
+        result.bool_val = left_val.double_val > right_val.double_val;
+    }  
+    else if (this->data->raw_value == ">=") {
+        result.bool_val = left_val.double_val >= right_val.double_val;
+    
+    }  
+    return result;
+}
+
+Data Function_Val::get_value(Data& left_val, Data& right_val) {
     if (runtime_error) {
         return Data();
     }

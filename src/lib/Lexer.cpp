@@ -96,7 +96,7 @@ void Lexer::create_tokens(){
                     }
                 }
                 if(raw_value.length() > 0){
-                    if(raw_value[raw_value.length()-1] == '.'){
+                    if(raw_value[raw_value.length()-1] == '.'){ //numbers
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                     }
                     Token* new_token = new Token();
@@ -165,7 +165,6 @@ void Lexer::create_tokens(){
                     new_token->column = prev_index;
                     new_token->row = row;
                     tokens.push_back(new_token);
-                    raw_value = "";
                     prev_index = column + 1;
                     variable = false;
                     last_digit = false;
@@ -273,6 +272,11 @@ void Lexer::create_endtokens(){
                     mini.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
+
+                    if((i < whole_input.at(i).size()) && whole_input.at(i).at(j++) == '('){
+                        new_token->is_function = true;
+                    }
+                    j--;
                 }
                 // == case
                 if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
@@ -429,6 +433,7 @@ void Lexer::print_endtokens(){
         cout << setw(4) << right << multi_end_tokens.at(i)->row;
         cout << setw(5) << right << multi_end_tokens.at(i)->column;
         cout << "  " << multi_end_tokens.at(i)->raw_value << endl;
+        // cout << "  " << multi_end_tokens.at(i)->raw_value << multi_end_tokens.at(i)->is_function << endl;
     }
 }
 void Lexer::print_tokens(){
