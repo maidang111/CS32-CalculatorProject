@@ -206,7 +206,7 @@ void Expression::print(InfixParser* infixParser){
     cout << ";" << endl;
 
     // cout << "before delete" << endl;
-    // infixParser->delete_help(a);
+    infixParser->delete_help(a);
     // cout << "after delete" << endl;
 
     size_t i = 0;
