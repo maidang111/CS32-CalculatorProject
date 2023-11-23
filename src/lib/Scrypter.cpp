@@ -28,7 +28,7 @@ void Scrypter::deleteStatements(){
 void Scrypter::buildASTs(){
     size_t count = 0;
     while(index != tokens.size()){
-        if(count == 3){
+        if(count == 2){
             cout << "Runtime error: not a function." << endl;
             exit(1);
         }
