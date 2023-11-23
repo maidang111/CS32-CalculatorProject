@@ -51,6 +51,7 @@ FunctionCall* Scrypter::buildFunction(){
     FunctionCall* functionCall = new FunctionCall();
     functionCall->is_fuction_def = false;
     functionCall->functionName = tokens.at(index)->raw_value;
+    index += 2;
     while(tokens.at(index)->raw_value != ")"){
     if (tokens.at(index)->raw_value != ","){
         functionCall->parameters.push_back(tokens.at(index));
@@ -78,12 +79,13 @@ Statement* Scrypter::buildAST(){
     level++;
     //get function parameters
     index += 2;
-
     // cout << tokens.at(index)->raw_value << endl << endl;
 
     while(tokens.at(index)->raw_value != ")"){
         // cout << tokens.at(index)->raw_value << endl;
-        function->parameters.push_back(tokens.at(index));
+        if (tokens.at(index)->raw_value != ","){
+            function->parameters.push_back(tokens.at(index));
+        }
         index++;
     }
     while(tokens.at(index)->raw_value != "{"){

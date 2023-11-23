@@ -187,9 +187,9 @@ void Print::calculate(InfixParser* infixParser){
         body.at(0)->calculate(infixParser);
         if (infixParser->isBool){
             if(infixParser->printValue == 0.0){
-                cout << "false";
+                cout << "false" << endl;
             } else {
-                cout << "true";
+                cout << "true" << endl;
             }
         } else {
             cout << infixParser->printValue << endl;
@@ -328,18 +328,24 @@ void Function::calculate(InfixParser* infixParser){
 }
 
 void FunctionCall::calculate(InfixParser* infixParser){
+    // for (size_t i = 0; i < parameters.size(); i++){
+    //         cout << parameters.at(i)->raw_value << endl;
+    //     }
     if (function->parameters.size() == this->parameters.size()){
-        double storeVals[function->parameters.size()];
-            for(size_t i = 0; i < function->parameters.size(); i++){
-            storeVals[i] = function->parameters.at(i)->value;
-            function->parameters.at(i)->value = this->parameters.at(i)->value;
+        Token* temp = new Token;
+        temp->raw_value = "=";
+        for(size_t i = 0; i < function->parameters.size(); i++){
+            infixParser->tokens.clear();
+            infixParser->tokens.push_back(function->parameters.at(i));
+            infixParser->tokens.push_back(temp);
+            infixParser->tokens.push_back(parameters.at(i));
+            AST_Node* a = infixParser->read_one_line(0, infixParser->tokens.size() -1, nullptr);
+            Data b = infixParser->evaluate(a);
         }
         function->calculate(infixParser);
-        for(size_t i = 0; i < function->parameters.size(); i++){
-            function->parameters.at(i)->value = storeVals[i];
-        }
+        delete temp;
+
     } else {
-        // cout << "correct case" << endl;
         infixParser->tokens = this->parameters;
         // cout << this->parameters.size() << endl;
         vector <Token*> temp;
@@ -349,14 +355,10 @@ void FunctionCall::calculate(InfixParser* infixParser){
         token->raw_value = "=";
         temp.push_back(token);
 
-        for (size_t i = 2; i < this->parameters.size(); i++){
+        for (size_t i = 0; i < this->parameters.size(); i++){
             temp.push_back(this->parameters.at(i));
         }
 
-        // for (size_t i = 0; i < temp.size(); i++){
-        //     cout << temp.at(i)->raw_value << endl;
-        // }
-        
         infixParser->tokens = temp;
         AST_Node* a = infixParser->read_one_line(0, temp.size() -1, nullptr);
         Data b = infixParser->evaluate(a);
