@@ -54,6 +54,7 @@ FunctionCall* Scrypter::buildFunction(){
     index += 2;
     while(tokens.at(index)->raw_value != ")"){
     if (tokens.at(index)->raw_value != ","){
+        // cout << tokens.at(index)->raw_value << endl;
         functionCall->parameters.push_back(tokens.at(index));
     }
     index++;
@@ -236,6 +237,7 @@ Statement* Scrypter::buildAST(){
 
 void Scrypter::calculate(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
+        // ASTHeads.at(i)->print(infixparser);
         if (!ASTHeads.at(i)->is_fuction_def){
             ASTHeads.at(i)->calculate(infixparser);
         }

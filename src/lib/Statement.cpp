@@ -358,14 +358,9 @@ void FunctionCall::calculate(InfixParser* infixParser){
         for (size_t i = 0; i < this->parameters.size(); i++){
             temp.push_back(this->parameters.at(i));
         }
-
         infixParser->tokens = temp;
         AST_Node* a = infixParser->read_one_line(0, temp.size() -1, nullptr);
         Data b = infixParser->evaluate(a);
-
-        double tempVal = function->parameters.at(0)->value;
-        function->parameters.at(0)->value = b.double_val;
         function->calculate(infixParser);
-        function->parameters.at(0)->value = tempVal;
     }
 }
