@@ -271,7 +271,7 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
         } 
         else if (tokens.at(i)->raw_value == "(" && is_function){
             if(tokens.at(i + 1)->raw_value == ","){
-                error_index = i;
+                error_index = i + 1;
                 return true;
             }
             ++count;

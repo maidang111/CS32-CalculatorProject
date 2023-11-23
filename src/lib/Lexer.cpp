@@ -341,11 +341,13 @@ void Lexer::create_endtokens(){
                     if (variable) {
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         error = true;
+                        exit(1);
                     }
                     raw_value += whole_input.at(i).at(j);
                     if(count(raw_value.begin(), raw_value.end(), '.') > 1){ // multiple decimals
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         error = true;
+                        exit(1);
                     } else if((j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1)))){
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
                         exit(1);
@@ -378,6 +380,7 @@ void Lexer::create_endtokens(){
                 error = true;
                 this->error = true;
                 prev_error = true;
+                exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
