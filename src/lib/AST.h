@@ -21,6 +21,7 @@ class Token{
     double value;
     bool bool_val;
     bool is_operator;
+    bool is_function;
     Token* left;
     Token* right;
     static bool error_;
@@ -171,6 +172,9 @@ class Comparison: public Token {
         data_type = BOOL;
     }
 };
+
+
+
 // class LeftP: public Token{
 
 //     void get_value();

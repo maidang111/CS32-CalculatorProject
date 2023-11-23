@@ -13,7 +13,7 @@ int main(){
     }
     // lexer.print_endtokens();
     Scrypter scrypt(lexer.multi_end_tokens);
-
+    scrypt.check_return();
     scrypt.buildASTs();
     scrypt.calculate();
     // // lexer.delete_endtokens();

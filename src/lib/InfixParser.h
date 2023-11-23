@@ -20,6 +20,7 @@ class InfixParser{
     
     double printValue;
     bool isTrue;
+    bool isBool;
     InfixParser();
     InfixParser(vector<Token*>& tokens);
     ~InfixParser();
@@ -39,8 +40,15 @@ class InfixParser{
     vector<size_t> error_index;
     bool check_error(size_t begin_line, size_t end_line, size_t& error_index);
     bool check_assignment(size_t begin_line, size_t end_line, size_t& error_index);
+    bool check_single_array_function(size_t begin_line, size_t end_line);
+    bool check_array(size_t begin_line, size_t end_line);
     set<string> operators;
+    set<string> array_functions;
     AST_Node* single_value_token(size_t begin_a);
+    vector <Token*> functionNames;
+    bool isFunction(string functionName);
+    bool check_array_val(size_t begin_line, size_t end_line);
+    bool isNull = false;
     // build tree
     // A print function
     // calculate function

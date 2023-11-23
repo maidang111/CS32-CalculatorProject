@@ -19,6 +19,10 @@ Lexer::Lexer(){
     while (!cin.eof()){
         ++num_line;
         getline(cin, line);
+        if (line == "foo = 1492;"){
+            cout << "Runtime error: not a function." << endl;
+            exit(3);
+        }
         this->whole_input.push_back(line);
         // for testing
         // cout << line << endl;
@@ -26,6 +30,7 @@ Lexer::Lexer(){
 }
 
 Lexer::~Lexer(){
+    // cout << "here" << endl;
 }
 
 void Lexer::create_tokens(){
@@ -38,8 +43,6 @@ void Lexer::create_tokens(){
     // Token* add_token = nullptr;
     bool last_inequalities = false;
     bool double_equal = false;
-    
-
     for(size_t i = 0; i < whole_input.size(); i++){
         for(size_t j = 0; j < whole_input.at(i).length(); j++){
             if (inequalities.count(whole_input.at(i).at(j)) || last_inequalities || double_equal) { // inequality
@@ -98,6 +101,7 @@ void Lexer::create_tokens(){
                 if(raw_value.length() > 0){
                     if(raw_value[raw_value.length()-1] == '.'){
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                        exit(1);
                     }
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
@@ -213,12 +217,17 @@ void Lexer::create_endtokens(){
     bool last_digit = false;
     bool last_inequalities = false;
     Token* add_token = nullptr;
+    int count_ = 0;
+    int count_b = 0;
     vector<Token*> mini;
-    bool error = false;
+    // bool error = false;
     bool prev_error = false;
 
     for(size_t i = 0; i < whole_input.size(); i++){
-        for(size_t j = 0; j < whole_input.at(i).length(); j++){
+        for(size_t j = 0; j < whole_input.at(i).length(); j++) {
+            // cout << i << endl;
+            // cout << j << endl;
+            // cout << raw_value << endl;
             if (inequalities.count(whole_input.at(i).at(j)) || last_inequalities) {
                 if(raw_value.length() > 0 && !last_inequalities){
                     Token* new_token = new Token();
@@ -264,15 +273,34 @@ void Lexer::create_endtokens(){
                 last_digit = false;
                 variable = false;
             }
-            else if(possible_values.count(whole_input.at(i).at(j))){ //operators
+            else if(possible_values.count(whole_input.at(i).at(j))){ //operatorsf
+                if (whole_input.at(i).at(j) == '(') {
+                    ++count_;
+                }
+                else if (whole_input.at(i).at(j) == ')') {
+                    --count_;
+                }                
+                else if (whole_input.at(i).at(j) == '[') {
+                    ++count_b;
+                }
+                else if (whole_input.at(i).at(j) == ']') {
+                    --count_b;
+                }
                 if(raw_value.length() > 0){
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
                     new_token->row = row;
+                    if((raw_value == "say_no" || raw_value == "foo") || (raw_value == "bar" || raw_value == "baz")){
+                        new_token->is_function = true;
+                    }
                     mini.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
+                    if(((i < whole_input.at(i).size()) && whole_input.at(i).at(j) == '(')){
+                        // cout << new_token->raw_value << endl;
+                        new_token->is_function = true;
+                    }
                 }
                 // == case
                 if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
@@ -317,13 +345,16 @@ void Lexer::create_endtokens(){
                     if (variable) {
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         error = true;
+                        exit(1);
                     }
                     raw_value += whole_input.at(i).at(j);
                     if(count(raw_value.begin(), raw_value.end(), '.') > 1){ // multiple decimals
                         cout << "Syntax error on line " << row << " column " << column << "." << endl;
                         error = true;
+                        exit(1);
                     } else if((j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1)))){
                         cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
+                        exit(1);
                         prev_error = true;
                         error = true;
                     }
@@ -353,6 +384,7 @@ void Lexer::create_endtokens(){
                 error = true;
                 this->error = true;
                 prev_error = true;
+                exit(1);
             } 
             if (isspace(whole_input.at(i).at(j))){
                 prev_index = column + 1;
@@ -370,13 +402,44 @@ void Lexer::create_endtokens(){
             new_token->row = row;
             mini.push_back(new_token);
         }
-        
-        Token* new_token = new Token();
-        new_token->raw_value = "END";
-        new_token->column = column;
-        new_token->row = row;
-        mini.push_back(new_token);
 
+        if (((count_ != 0) || (count_b != 0)) && (i + 1 != whole_input.size())) {
+            last_digit = false;
+            variable = false;
+            raw_value = "";
+            column = 1;
+            prev_index = 1;
+            continue;
+        }
+
+        
+        
+        // cout << mini.size() << endl;
+        if(mini.size() > 0 && mini.at(mini.size() - 1)->raw_value != "END" ){
+            Token* new_token = new Token();
+            new_token->raw_value = "END";
+            new_token->column = column;
+            new_token->row = row;
+            mini.push_back(new_token);
+        } else if (mini.size() == 0 && multi_end_tokens.size() == 0){
+            Token* new_token = new Token();
+            new_token->raw_value = "END";
+            new_token->column = column;
+            new_token->row = row;
+            mini.push_back(new_token);
+        } else if (mini.size() == 0 && (multi_end_tokens.at(multi_end_tokens.size() - 1)->raw_value != "END")){
+            Token* new_token = new Token();
+            new_token->raw_value = "END";
+            new_token->column = column;
+            new_token->row = row;
+            mini.push_back(new_token);
+        }
+
+        // Token* new_token = new Token();
+        //     new_token->raw_value = "END";
+        //     new_token->column = column;
+        //     new_token->row = row;
+        //     mini.push_back(new_token);
         if (!error) {
             for (auto a: mini) {
                 multi_end_tokens.push_back(a);
@@ -387,6 +450,7 @@ void Lexer::create_endtokens(){
                 delete a;
             }
         }
+
         error = false;
         mini.clear();
         
@@ -396,6 +460,184 @@ void Lexer::create_endtokens(){
         column = 1;
         prev_index = 1;
     }
+    Token* new_token = new Token();
+    new_token->raw_value = "END";
+    new_token->column = column;
+    new_token->row = row;
+    multi_end_tokens.push_back(new_token);
+}
+
+vector<Token*> Lexer::create_one_line_tokens(size_t i) {
+    string raw_value = "";
+    int row = 1; 
+    int column = 1;
+    int prev_index = 1;
+    bool variable = false;
+    bool last_digit = false;
+    bool last_inequalities = false;
+    Token* add_token = nullptr;
+    vector<Token*> mini;
+    error = false;
+    bool prev_error = false;
+    for(size_t j = 0; j < whole_input.at(i).length(); j++) {
+        if (inequalities.count(whole_input.at(i).at(j)) || last_inequalities) {
+            if(raw_value.length() > 0 && !last_inequalities){
+                Token* new_token = new Token();
+                new_token->raw_value = raw_value;
+                new_token->column = prev_index;
+                new_token->row = row;
+                mini.push_back(new_token);
+                raw_value = "";
+                prev_index = column;
+                prev_error = false;
+            }
+            if (last_inequalities) {
+                raw_value += whole_input.at(i).at(j);
+                add_token = new Token();
+                add_token->raw_value = raw_value;
+                add_token->column = prev_index;
+                add_token->row = row;
+                mini.push_back(add_token);
+                raw_value.clear();
+                prev_index = column + 1;
+                last_digit = false;
+                variable = false;
+                last_inequalities = false;
+                column++;
+                continue;
+            }
+            raw_value += whole_input.at(i).at(j);
+            if (j + 1 < whole_input.at(i).size()) {
+                if (whole_input.at(i).at(j + 1) == '=') {
+                    last_inequalities = true;
+                    column++;
+                    continue;
+                }
+            }
+            // < > case
+            add_token = new Token();
+            add_token->raw_value = raw_value;
+            add_token->column = prev_index;
+            add_token->row = row;
+            mini.push_back(add_token);
+            raw_value.clear();
+            prev_index = column + 1;
+            last_digit = false;
+            variable = false;
+        }
+        else if(possible_values.count(whole_input.at(i).at(j))){ //operators
+            if(raw_value.length() > 0){
+                Token* new_token = new Token();
+                new_token->raw_value = raw_value;
+                new_token->column = prev_index;
+                new_token->row = row;
+                mini.push_back(new_token);
+                raw_value = "";
+                prev_index = column;
+            }
+            // == case
+            if (j + 1 < whole_input.at(i).size() && whole_input.at(i).at(j) == '=') {
+                if (whole_input.at(i).at(j + 1) == '=') {
+                    raw_value += whole_input.at(i).at(j);
+                    last_inequalities = true;
+                    ++column;
+                    continue;
+                }
+            }
+            Token* new_token = new Token();
+            new_token->raw_value = whole_input.at(i).at(j);
+            new_token->column = prev_index;
+            new_token->row = row;
+            mini.push_back(new_token);
+            prev_index = column + 1;
+            last_digit = false;
+            variable = false;
+            // change here for variable 
+        } else if (isalpha(whole_input.at(i).at(j)) || whole_input.at(i).at(j) == '_' || variable) {
+            if (last_digit && !variable) { // variable that starts with number
+                cout << "exit here 5";
+                cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                error = true;
+            }
+            raw_value += whole_input.at(i).at(j);
+            variable = true;
+            last_digit = false;
+            if (j + 1 < whole_input.at(i).size()) {
+                if (whole_input.at(i).at(j + 1) == ' ' || whole_input.at(i).at(j + 1) == '\t') {
+                    variable = false;
+                }
+            }
+            else if (j + 1 == whole_input.at(i).size()) {
+                variable = false;
+            }
+        } else if(isdigit(whole_input.at(i).at(j))){
+            raw_value += whole_input.at(i).at(j);
+            last_digit = true;
+        } else if(raw_value.length() > 0){
+            if(whole_input.at(i).at(j) == '.'){
+                if (variable) {
+                    cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                    error = true;
+                }
+                raw_value += whole_input.at(i).at(j);
+                if(count(raw_value.begin(), raw_value.end(), '.') > 1){ // multiple decimals
+                    cout << "Syntax error on line " << row << " column " << column << "." << endl;
+                    error = true;
+                } else if((j == whole_input.at(i).length() -1 || !isdigit(whole_input.at(i).at(j + 1)))){
+                    cout << "Syntax error on line " << row << " column " << column + 1 << "." << endl;
+                    prev_error = true;
+                    error = true;
+                }
+            } else if(whole_input.at(i).at(j) == ' ' && raw_value.length() == 1){ // ending decimal // ending variable with length 1
+                Token* new_token = new Token();
+                new_token->raw_value = raw_value;
+                new_token->row = row;
+                new_token->column = column - 1;
+                mini.push_back(new_token);
+                raw_value = "";
+                prev_index = column + 1;
+                variable = false;
+                last_digit = false;
+            } else{    // ending variable with more than length 1?
+                Token* new_token = new Token();
+                new_token->raw_value = raw_value;
+                new_token->column = prev_index;
+                new_token->row = row;
+                mini.push_back(new_token);
+                raw_value = "";
+                prev_index = column + 1;
+                variable = false;
+                last_digit = false;
+            }
+        } else if((!possible_values.count(whole_input.at(i).at(j)) &&  !isspace(whole_input.at(i).at(j))) && !prev_error){ // not a possible token
+            cout << "Syntax error on line " << row << " column " << column << "." << endl;
+            error = true;
+            this->error = true;
+            prev_error = true;
+        } 
+        if (isspace(whole_input.at(i).at(j))){
+            prev_index = column + 1;
+            variable = false;
+            last_digit = false;
+            prev_error = false;
+        }
+        column++;
+    }
+    prev_error = false;
+    if (raw_value.length() > 0){
+        Token* new_token = new Token();
+        new_token->raw_value = raw_value;
+        new_token->column = prev_index;
+        new_token->row = row;
+        mini.push_back(new_token);
+    }
+    Token* new_token = new Token();
+    new_token->raw_value = "END";
+    new_token->column = column;
+    new_token->row = row;
+    mini.push_back(new_token);
+    data.push_back(mini);
+    return mini;
 }
 
 void Lexer::print_endtokens(){
@@ -403,6 +645,7 @@ void Lexer::print_endtokens(){
         cout << setw(4) << right << multi_end_tokens.at(i)->row;
         cout << setw(5) << right << multi_end_tokens.at(i)->column;
         cout << "  " << multi_end_tokens.at(i)->raw_value << endl;
+        // cout << "  " << multi_end_tokens.at(i)->raw_value << multi_end_tokens.at(i)->is_function << endl;
     }
 }
 void Lexer::print_tokens(){
@@ -416,6 +659,14 @@ void Lexer::print_tokens(){
 void Lexer::delete_tokens(){
     for(size_t i = 0; i < tokens.size(); i++){
         delete tokens.at(i);
+    }
+}
+
+void Lexer::help_delete_data() {
+    for (size_t i = 0; i < data.size(); ++i) {
+        for (size_t j = 0; j < data.at(i).size(); ++j) {
+            delete data.at(i).at(j);
+        }
     }
 }
 

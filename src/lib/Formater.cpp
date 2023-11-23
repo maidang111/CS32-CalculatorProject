@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -6,11 +5,17 @@
 using namespace std;
 
 Formater::Formater(vector<Token*> tokens){
+    InfixParser* infixparser = new InfixParser();
+    this->infixparser = infixparser;
+    this->tokens = tokens;
+    this->index = 0;
+
     this->tokens = tokens;
     this->index = 0;
 }
 
 Formater::~Formater(){
+    delete infixparser;
 }
 
 void Formater::deleteStatements(){
@@ -19,12 +24,13 @@ void Formater::deleteStatements(){
         }
     delete_tokens();
 }
+
 void Formater::buildASTs(){
     while(index != tokens.size()){
+        level = 0;
         if(tokens.at(index)->raw_value == "END"){
             index++;
         } else {
-            level = 0;
             Statement* root = buildAST();
             if (root != nullptr){
                 ASTHeads.push_back(root);
@@ -36,7 +42,69 @@ void Formater::buildASTs(){
 }
 
 Statement* Formater::buildAST(){
-    if(tokens.at(index)->raw_value == "while"){
+    if(tokens.at(index)->raw_value == "def"){
+        index++;
+
+    Function* function = new Function();
+    function->level = level;
+    function->functionName = tokens.at(index)->raw_value;
+    infixparser->functionNames.push_back(tokens.at(index));
+    level++;
+    //get function parameters
+    index += 2;
+
+    // cout << tokens.at(index)->raw_value << endl << endl;
+
+    while(tokens.at(index)->raw_value != ")"){
+        function->condition.push_back(tokens.at(index));
+        index++;
+    }
+    while(tokens.at(index)->raw_value != "{"){
+        index++;
+    }
+    index++;
+
+    // cout << tokens.at(index)->raw_value << endl;
+    while(tokens.at(index)->raw_value != "return" && tokens.at(index)->raw_value != "}"){
+            if(tokens.at(index)->raw_value != "END"){
+                size_t tempLevel = level;
+                function->body.push_back(buildAST());
+                level = tempLevel;
+            } else {
+                index++;
+            }
+    }
+    // if(tokens.at(index)->raw_value == "}"){
+    //     index += 2;
+    // }
+
+    // cout << function->functionName << endl;
+    //Creating return statement
+    if(tokens.at(index)->raw_value == "return"){
+        while (tokens.at(index)->raw_value != ";"){
+            function->returnStatement.push_back(tokens.at(index));
+            index++;
+        }
+        Token* endToken = new Token;
+        endToken->raw_value = "END";
+        function->returnStatement.push_back(endToken);
+        tokens.push_back(endToken);
+        index++;
+    }
+
+    while(tokens.at(index)->raw_value != "}"){
+            if(tokens.at(index)->raw_value != "END"){
+                size_t tempLevel = level;
+                function->body.push_back(buildAST());
+                level = tempLevel;
+            } else {
+                index++;
+            }
+        }
+        index++;
+
+    return function;
+    } else if(tokens.at(index)->raw_value == "while"){
         index++;
         While* whileBlock = new While();
         whileBlock->level = level;
@@ -107,6 +175,9 @@ Statement* Formater::buildAST(){
             return elseBlock;
         }
         index++;
+        if(tokens.at(index)->raw_value == "}"){
+            return elseBlock;
+        }
         while(tokens.at(index)->raw_value != "}"){
             if(tokens.at(index)->raw_value != "END"){
                 size_t tempLevel = level;
@@ -135,7 +206,10 @@ Statement* Formater::buildAST(){
         Expression* expressionBlock = new Expression();
         expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){
-            expressionBlock->body.push_back(tokens.at(index));
+            if(tokens.at(index)->raw_value != ";"){
+                // cout<< tokens.at(index) << tokens.at(index)->raw_value << endl;
+                expressionBlock->body.push_back(tokens.at(index));
+            }
             index++;
         }
         expressionBlock->body.push_back(tokens.at(index));
@@ -146,7 +220,7 @@ Statement* Formater::buildAST(){
 
 void Formater::printFormated(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
-        ASTHeads.at(i)->print();
+        ASTHeads.at(i)->print(infixparser);
     }
 }
 void Formater::deleteFunc(){
@@ -170,7 +244,11 @@ void Formater::delete_help(Statement* node) {
 }
 
 void Formater::delete_tokens(){
+    // cout << tokens.size() << endl;
     for(size_t i = 0; i < tokens.size(); i++){
+        // cout << tokens.at(i)->raw_value << endl;
         delete tokens.at(i);
+        // cout << "deleted" << endl;
+
     }   
 }

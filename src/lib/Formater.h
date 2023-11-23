@@ -2,13 +2,14 @@
 #include <vector>
 #include "AST.h"
 #include "Statement.h"
+
 using namespace std;
 
 class Formater{
     public:
     Formater(vector <Token*>);
+    InfixParser* infixparser;
     ~Formater();
-    
     vector <Token*> tokens;
     vector <Statement*> ASTHeads;
     size_t index;
@@ -22,4 +23,6 @@ class Formater{
     void printFormated();
     private:
     Statement* buildAST();
+    // FunctionCall* buildFunction();
+
 };

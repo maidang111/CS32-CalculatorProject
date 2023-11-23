@@ -12,6 +12,7 @@ Token::Token(){
     this->left = nullptr;
     this->right = nullptr;
     this->error_ = false;
+    this->is_function = false;
 };
 
 bool Token::error_ = false;
