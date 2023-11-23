@@ -66,7 +66,7 @@ Statement* Formater::buildAST(){
 
     // cout << tokens.at(index)->raw_value << endl;
     while(tokens.at(index)->raw_value != "return" && tokens.at(index)->raw_value != "}"){
-        if(tokens.at(index)->raw_value != "END"){
+            if(tokens.at(index)->raw_value != "END"){
                 size_t tempLevel = level;
                 function->body.push_back(buildAST());
                 level = tempLevel;
@@ -74,9 +74,9 @@ Statement* Formater::buildAST(){
                 index++;
             }
     }
-    if(tokens.at(index)->raw_value == "}"){
-        index += 2;
-    }
+    // if(tokens.at(index)->raw_value == "}"){
+    //     index += 2;
+    // }
 
     // cout << function->functionName << endl;
     //Creating return statement
@@ -91,6 +91,18 @@ Statement* Formater::buildAST(){
         tokens.push_back(endToken);
         index++;
     }
+
+    while(tokens.at(index)->raw_value != "}"){
+            if(tokens.at(index)->raw_value != "END"){
+                size_t tempLevel = level;
+                function->body.push_back(buildAST());
+                level = tempLevel;
+            } else {
+                index++;
+            }
+        }
+        index++;
+
     return function;
     } else if(tokens.at(index)->raw_value == "while"){
         index++;
