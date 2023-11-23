@@ -223,6 +223,7 @@ Statement* Scrypter::buildAST(){
     } else {
         if (tokens.at(index)->is_function){
             cout << "Runtime error: not a function." << endl;
+            exit(1);
         }
         if(tokens.at(index)->raw_value == "}" || tokens.at(index)->raw_value == ")"){
             index += 2;

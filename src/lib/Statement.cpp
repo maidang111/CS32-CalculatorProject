@@ -371,7 +371,7 @@ void FunctionCall::calculate(InfixParser* infixParser){
         delete temp;
     } else if (function->parameters.size() == 3 && parameters.size() == 2){
         cout << "Runtime error: incorrect argument count." << endl;
-        exit(1);
+        exit(3);
     }
     else {
         infixParser->tokens = this->parameters;
