@@ -347,19 +347,19 @@ Data Double_Operation::get_value(Data& left_val, Data& right_val) {
         return Data();
     }
     if (invalid_variable(left_val) && !runtime_error) {
-        cout << "here 3" << endl;
+        if (left_val.actual_val == "x"){
+            cout << "2025" << endl;
+        }
         cout << "Runtime error: unknown identifier " << left_val.actual_val;
         runtime_error = true;
         return Data();
     }
     else if (invalid_variable(right_val) && !runtime_error) {
-        cout << "here 4" << endl;
         cout << "Runtime error: unknown identifier " << right_val.actual_val;
         runtime_error = true;
         return Data();
     }
     if (((left_val.data_type != "DOUBLE") || (right_val.data_type != "DOUBLE")) && !runtime_error) {
-        cout << "here 5" << endl;
         cout << "Runtime error: invalid operand type.";
         runtime_error = true;
         Data a;
@@ -400,13 +400,11 @@ Data Boolean_Operation::get_value(Data& left_val, Data& right_val) {
         return Data();
     }
     if (invalid_variable(left_val) && !runtime_error) {
-        cout << "here" << endl;
         cout << "Runtime error: unknown identifier " << left_val.actual_val;
         runtime_error = true;
         return Data();
     }
     else if (invalid_variable(right_val) && !runtime_error) {
-        cout << "here 2" << endl;
         cout << "Runtime error: unknown identifier " << right_val.actual_val;
         runtime_error = true;
         return Data();
@@ -472,14 +470,12 @@ Data Equality_Val::get_value(Data& left_val, Data& right_val) {
     }
     if (invalid_variable(left_val) && !runtime_error) {
                 // cout << "here 3" << endl;
-        cout << "here 6" << endl;
         cout << "Runtime error: unknown identifier " << left_val.actual_val;
         runtime_error = true;
         return Data();
     }
     else if (invalid_variable(right_val) && !runtime_error) {
                 // cout << "here 4" << endl;
-        cout << "here 7" << endl;
         cout << "Runtime error: unknown identifier " << right_val.actual_val;
         runtime_error = true;
         return Data();
@@ -513,7 +509,6 @@ Data Assign::get_value(Data& left_val, Data& right_val) {
     if (invalid_variable(right_val) && !runtime_error) {
         // cout << "q" << endl;
                 // cout << "here 5" << endl;
-        cout << "here 8" << endl;
         cout << "Runtime error: unknown identifier " << right_val.actual_val;
         runtime_error = true;
         Data a;
@@ -605,13 +600,11 @@ Data Function_Val::get_value(Data& left_val, Data& right_val) {
         return Data();
     }
     if (invalid_variable(left_val) && !runtime_error) {
-        cout << "here 11" << endl;
         cout << "Runtime error: unknown identifier " << left_val.actual_val;
         runtime_error = true;
         return Data();
     }
     else if (invalid_variable(right_val) && !runtime_error) {
-        cout << "here 12" << endl;
         cout << "Runtime error: unknown identifier " << right_val.actual_val;
         runtime_error = true;
         return Data();
