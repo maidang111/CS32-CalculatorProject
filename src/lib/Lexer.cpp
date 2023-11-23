@@ -221,6 +221,7 @@ void Lexer::create_endtokens(){
         for(size_t j = 0; j < whole_input.at(i).length(); j++) {
             // cout << i << endl;
             // cout << j << endl;
+            // cout << raw_value << endl;
             if (inequalities.count(whole_input.at(i).at(j)) || last_inequalities) {
                 if(raw_value.length() > 0 && !last_inequalities){
                     Token* new_token = new Token();
@@ -272,12 +273,15 @@ void Lexer::create_endtokens(){
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
                     new_token->row = row;
+                    if(raw_value == "say_no"){
+                        new_token->is_function = true;
+                    }
                     mini.push_back(new_token);
                     raw_value = "";
                     prev_index = column;
-                    if((i < whole_input.at(i).size()) && whole_input.at(i).at(j) == '('){
+                    if(((i < whole_input.at(i).size()) && whole_input.at(i).at(j) == '(')){
+                        // cout << new_token->raw_value << endl;
                         new_token->is_function = true;
-
                     }
                 }
                 // == case

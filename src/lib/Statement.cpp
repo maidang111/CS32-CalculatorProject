@@ -230,9 +230,7 @@ void Expression::calculate(InfixParser* infixParser){
     // cout << infixParser->tokens.size();
     infixParser->tokens = body;
     size_t i = 0;
-    // for (size_t i = 0 ; i < body.size(); i++ ){
-    //     cout << body.at(i)->raw_value << body.at(i)->value << endl;
-    // }
+
     if (infixParser->check_error(0, body.size() -2, i)){
         cout << "Unexpected token at line 1 column " << body.at(i)->column << ": " << body.at(i)->raw_value << endl;
         exit(2);
