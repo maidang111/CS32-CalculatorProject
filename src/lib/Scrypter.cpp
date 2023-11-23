@@ -38,6 +38,7 @@ bool Scrypter::check_return() {
         }
         else if (tokens.at(i)->raw_value == "return") {
             if (!is_fct) {
+                cout << "[42]" << endl;
                 cout << "Runtime error: unexpected return." << endl;
                 exit(3);
                 return false;
