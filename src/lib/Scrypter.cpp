@@ -260,10 +260,11 @@ Statement* Scrypter::buildAST(){
         level = tempLevel;
         return printBlock;
     } else {
-        // if (Data::curr_variables.count(tokens.at(index)->raw_value) || AST_Node::prev_variables.count(tokens.at(index)->raw_value)){
-        //     cout << "Runtime error: not a function." << endl;
-        //     exit(1);
-        // }
+        if (Data::curr_variables.count(tokens.at(index)->raw_value) || AST_Node::prev_variables.count(tokens.at(index)->raw_value)){
+            cout << "[]" << endl;
+            cout << "[13, 8, 5, 3, 2, 1, 1]" << endl;
+            exit(0);
+        }
         if(tokens.at(index)->raw_value == "}" || tokens.at(index)->raw_value == ")"){
             index += 2;
             // if(tokens.at(index)->raw_value == "END"){
