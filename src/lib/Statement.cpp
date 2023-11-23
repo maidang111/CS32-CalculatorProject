@@ -379,8 +379,9 @@ void FunctionCall::calculate(InfixParser* infixParser){
             infixParser->tokens.push_back(temp);
             infixParser->tokens.push_back(parameters.at(i));
             AST_Node* a = infixParser->read_one_line(0, infixParser->tokens.size() -1, nullptr);
+            infixParser->ASTs.push_back(a);
             Data b = infixParser->evaluate(a);
-            infixParser->delete_help(a);
+            // infixParser->delete_help(a);
         }
         function->calculate(infixParser);
         delete temp;
@@ -403,8 +404,8 @@ void FunctionCall::calculate(InfixParser* infixParser){
         }
         infixParser->tokens = temp;
         AST_Node* a = infixParser->read_one_line(0, temp.size() -1, nullptr);
+        infixParser->ASTs.push_back(a);
         Data b = infixParser->evaluate(a);
-        infixParser->delete_help(a);
         function->calculate(infixParser);
         delete token;
     }
