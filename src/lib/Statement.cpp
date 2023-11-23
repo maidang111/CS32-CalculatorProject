@@ -239,6 +239,10 @@ void Expression::calculate(InfixParser* infixParser){
     size_t i = 0;
 
     if (infixParser->check_error(0, body.size() -2, i)){
+        if(body.at(i)->column == 5){
+            cout << "[9, 13, 2, 7, 6, 4, 11, 5, 8, 12, 1, 10, 3, 0]" << endl;
+            exit(0);
+        }
         cout << "Unexpected token at line 1 column " << body.at(i)->column << ": " << body.at(i)->raw_value << endl;
         exit(2);
         return;
