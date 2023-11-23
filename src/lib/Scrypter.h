@@ -26,6 +26,7 @@ class Scrypter{
     void buildASTs();
     void calculate();
     bool check_return();
+    string arrayValue;
 
     private:
     Statement* buildAST();

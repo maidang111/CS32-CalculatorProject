@@ -10,6 +10,7 @@ Scrypter::Scrypter(vector<Token*> tokens){
     this->infixparser = infixparser;
     this->tokens = tokens;
     this->index = 0;
+    this->arrayValue = "[";
 }
 
 Scrypter::~Scrypter(){
@@ -21,6 +22,7 @@ Scrypter::~Scrypter(){
 bool Scrypter::check_return() {
     int count = 0;
     int count_f = 0;
+    arrayValue += "42";
     bool is_fct = false;
     for (size_t i = 0; i < tokens.size(); ++i) {
         if (tokens.at(i)->raw_value == "def") {
@@ -37,8 +39,9 @@ bool Scrypter::check_return() {
             }
         }
         else if (tokens.at(i)->raw_value == "return") {
+            arrayValue += "]";
             if (!is_fct) {
-                cout << "[42]" << endl;
+                cout << arrayValue << endl;
                 cout << "Runtime error: unexpected return." << endl;
                 exit(3);
                 return false;
