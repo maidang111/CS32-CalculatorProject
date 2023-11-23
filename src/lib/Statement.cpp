@@ -229,6 +229,12 @@ void Expression::print(InfixParser* infixParser){
 
 void Expression::calculate(InfixParser* infixParser){
     // cout << infixParser->tokens.size();
+    for(size_t i = 0; i < infixParser->tokens.size(); i++){
+        if ( infixParser->tokens.at(i)->is_function){
+            cout << "Runtime error: not a function." << endl;
+            exit(1);
+        }
+    }
     infixParser->tokens = body;
     size_t i = 0;
 
