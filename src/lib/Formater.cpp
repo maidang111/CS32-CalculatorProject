@@ -186,6 +186,11 @@ Statement* Formater::buildAST(){
         Print* printBlock = new Print();
         printBlock->level = level;
         size_t tempLevel = level;
+        if(tokens.at(index)->is_function){
+            printBlock->body.push_back(buildFunction());
+        } else {
+            printBlock->body.push_back(buildAST());
+        }
         level = 0;
         printBlock->body.push_back(buildAST());
         level = tempLevel;
