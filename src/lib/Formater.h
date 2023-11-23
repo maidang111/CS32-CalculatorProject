@@ -23,6 +23,6 @@ class Formater{
     void printFormated();
     private:
     Statement* buildAST();
-    FunctionCall* buildFunction();
+    // FunctionCall* buildFunction();
 
 };
