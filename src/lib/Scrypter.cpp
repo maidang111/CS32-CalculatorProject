@@ -31,6 +31,7 @@ void Scrypter::buildASTs(){
             index++;
         } else {
             if(tokens.at(index)->is_function){
+                cout << tokens.at(index)->raw_value << endl;
                 level = 0;
                 FunctionCall* root = buildFunction();
                 if (root != nullptr){
