@@ -8,6 +8,7 @@ using namespace std;
 
 class Statement{
     public:
+    bool is_fuction_def;
     Statement();
     size_t level;
     vector <Token*> condition;
@@ -78,11 +79,26 @@ class Function: public Statement{
     public:
     size_t level;
     vector <Token*> condition;
+    vector <Token*> parameters;
     vector <Statement*> body;
     vector <Token*> returnStatement;
     string functionName;
     void print(InfixParser* infixParser);
     void deleteStatement();
-    // void calculate(InfixParser* infixParser);
+    void calculate(InfixParser* infixParser);
+    // vector <Token*> getValue();
+};
+
+class FunctionCall: public Statement{
+    public:
+    size_t level;
+    vector <Token*> condition;
+    vector <Token*> parameters;
+    vector <Statement*> body;
+    vector <Token*> returnStatement;
+    string functionName;
+    Function* function;
+    // void deleteStatement();
+    void calculate(InfixParser* infixParser);
     // vector <Token*> getValue();
 };

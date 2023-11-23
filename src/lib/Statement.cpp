@@ -185,7 +185,15 @@ void Print::deleteStatement(){
 void Print::calculate(InfixParser* infixParser){
     if(body.size() > 0){
         body.at(0)->calculate(infixParser);
-        cout << infixParser->printValue << endl;
+        if (infixParser->isBool){
+            if(infixParser->printValue == 0.0){
+                cout << "false";
+            } else {
+                cout << "true";
+            }
+        } else {
+            cout << infixParser->printValue << endl;
+        }
     }
 }
 
@@ -223,7 +231,7 @@ void Expression::calculate(InfixParser* infixParser){
     infixParser->tokens = body;
     size_t i = 0;
     // for (size_t i = 0 ; i < body.size(); i++ ){
-    //     cout << body.at(i)->raw_value << endl;
+    //     cout << body.at(i)->raw_value << body.at(i)->value << endl;
     // }
     if (infixParser->check_error(0, body.size() -2, i)){
         cout << "Unexpected token at line 1 column " << body.at(i)->column << ": " << body.at(i)->raw_value << endl;
@@ -234,7 +242,11 @@ void Expression::calculate(InfixParser* infixParser){
     Data b = infixParser->evaluate(a);
     infixParser->update_variables();
     if (b.data_type == "DOUBLE") {
+        infixParser->isBool = false;
         infixParser->printValue = b.double_val;
+    } else if (b.data_type == "BOOL") {
+        infixParser->isBool = true;
+        infixParser->printValue = b.bool_val;
     }
     infixParser->delete_help(a);
 }
@@ -300,8 +312,58 @@ void Function::print(InfixParser* infixParser){
 }
 
 void Function::deleteStatement(){
+    // cout << body.size() << endl;
     for(size_t i = 0; i < body.size(); i++){
         body.at(i)->deleteStatement();
     }
     delete this;
+}
+
+void Function::calculate(InfixParser* infixParser){
+    for(size_t i = 0; i < body.size(); i++){
+        // cout << "passes here" << endl;
+        body.at(i)->calculate(infixParser);
+    }
+    return;
+}
+
+void FunctionCall::calculate(InfixParser* infixParser){
+    if (function->parameters.size() == this->parameters.size()){
+        double storeVals[function->parameters.size()];
+            for(size_t i = 0; i < function->parameters.size(); i++){
+            storeVals[i] = function->parameters.at(i)->value;
+            function->parameters.at(i)->value = this->parameters.at(i)->value;
+        }
+        function->calculate(infixParser);
+        for(size_t i = 0; i < function->parameters.size(); i++){
+            function->parameters.at(i)->value = storeVals[i];
+        }
+    } else {
+        // cout << "correct case" << endl;
+        infixParser->tokens = this->parameters;
+        // cout << this->parameters.size() << endl;
+        vector <Token*> temp;
+        temp.push_back(function->parameters.at(0));
+        
+        Token* token = new Token; 
+        token->raw_value = "=";
+        temp.push_back(token);
+
+        for (size_t i = 2; i < this->parameters.size(); i++){
+            temp.push_back(this->parameters.at(i));
+        }
+
+        for (size_t i = 0; i < temp.size(); i++){
+            cout << temp.at(i)->raw_value << endl;
+        }
+        
+        infixParser->tokens = temp;
+        AST_Node* a = infixParser->read_one_line(0, temp.size() -1, nullptr);
+        Data b = infixParser->evaluate(a);
+
+        double tempVal = function->parameters.at(0)->value;
+        function->parameters.at(0)->value = b.double_val;
+        function->calculate(infixParser);
+        function->parameters.at(0)->value = tempVal;
+    }
 }

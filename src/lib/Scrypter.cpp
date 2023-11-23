@@ -30,19 +30,99 @@ void Scrypter::buildASTs(){
         if(tokens.at(index)->raw_value == "END"){
             index++;
         } else {
-            level = 0;
-            Statement* root = buildAST();
-            if (root != nullptr){
-                ASTHeads.push_back(root);
+            if(tokens.at(index)->is_function){
+                level = 0;
+                FunctionCall* root = buildFunction();
+                if (root != nullptr){
+                    ASTHeads.push_back(root);
+                }
+            } else {
+                level = 0;
+                Statement* root = buildAST();
+                if (root != nullptr){
+                    ASTHeads.push_back(root);
+                }
             }
         }
     }
 }
 
+FunctionCall* Scrypter::buildFunction(){
+    FunctionCall* functionCall = new FunctionCall();
+    functionCall->is_fuction_def = false;
+    functionCall->functionName = tokens.at(index)->raw_value;
+    while(tokens.at(index)->raw_value != ")"){
+    if (tokens.at(index)->raw_value != ","){
+        functionCall->parameters.push_back(tokens.at(index));
+    }
+    index++;
+    }
+    for(size_t i = 0; i < ASTFunctions.size(); i++){
+        if (ASTFunctions.at(i)->functionName == functionCall->functionName){
+            functionCall->function = ASTFunctions.at(i);
+        }
+    }
+    return functionCall;
+}
+
 Statement* Scrypter::buildAST(){
-    if(tokens.at(index)->raw_value == "while"){
+    if(tokens.at(index)->raw_value == "def"){
+        index++;
+
+    Function* function = new Function();
+    function->is_fuction_def = true;
+    function->level = level;
+    function->functionName = tokens.at(index)->raw_value;
+    infixparser->functionNames.push_back(tokens.at(index));
+    ASTFunctions.push_back(function);
+    level++;
+    //get function parameters
+    index += 2;
+
+    // cout << tokens.at(index)->raw_value << endl << endl;
+
+    while(tokens.at(index)->raw_value != ")"){
+        // cout << tokens.at(index)->raw_value << endl;
+        function->parameters.push_back(tokens.at(index));
+        index++;
+    }
+    while(tokens.at(index)->raw_value != "{"){
+        index++;
+    }
+    index++;
+    // cout << tokens.at(index)->raw_value << endl;
+    while(tokens.at(index)->raw_value != "return" && tokens.at(index)->raw_value != "}"){
+        if(tokens.at(index)->raw_value != "END"){
+                    // cout << tokens.at(index)->raw_value << endl;
+                size_t tempLevel = level;
+                function->body.push_back(buildAST());
+                level = tempLevel;
+            } else {
+                index++;
+            }
+    }
+    if(tokens.at(index)->raw_value == "}"){
+        index += 2;
+    }
+
+    // cout << function->functionName << endl;
+    //Creating return statement
+    if(tokens.at(index)->raw_value == "return"){
+        while (tokens.at(index)->raw_value != ";"){
+            function->returnStatement.push_back(tokens.at(index));
+            index++;
+        }
+        Token* endToken = new Token;
+        endToken->raw_value = "END";
+        function->returnStatement.push_back(endToken);
+        tokens.push_back(endToken);
+        index++;
+    }
+    return function;
+    } else if(tokens.at(index)->raw_value == "while"){
         index++;
         While* whileBlock = new While();
+        whileBlock->is_fuction_def = false;
         whileBlock->level = level;
         level++;
         while(tokens.at(index)->raw_value != "{"){
@@ -67,6 +147,7 @@ Statement* Scrypter::buildAST(){
     } else if (tokens.at(index)->raw_value == "if"){
         index++;
         If* ifBlock = new If();
+        ifBlock->is_fuction_def = false;
         ifBlock->level = level;
         level++;
         while(tokens.at(index)->raw_value != "{"){
@@ -90,6 +171,7 @@ Statement* Scrypter::buildAST(){
     } else if (tokens.at(index)->raw_value == "else"){
         index++;
         Else* elseBlock = new Else();
+        elseBlock->is_fuction_def = false;
         elseBlock->level = level;
         level++;
         if (tokens.at(index)->raw_value == "if"){
@@ -122,6 +204,7 @@ Statement* Scrypter::buildAST(){
     } else if (tokens.at(index)->raw_value == "print"){
         index++;
         Print* printBlock = new Print();
+        printBlock->is_fuction_def = false;
         printBlock->level = level;
         size_t tempLevel = level;
         level = 0;
@@ -129,12 +212,13 @@ Statement* Scrypter::buildAST(){
         level = tempLevel;
         return printBlock;
     } else {
-        if(tokens.at(index)->raw_value == "}"){
+        if(tokens.at(index)->raw_value == "}" || tokens.at(index)->raw_value == ")"){
             index += 2;
             // if(tokens.at(index)->raw_value == "END"){
             return nullptr;
         }
         Expression* expressionBlock = new Expression();
+        expressionBlock->is_fuction_def = false;
         expressionBlock->level = level;
         while (tokens.at(index)->raw_value != "END"){
             if (tokens.at(index)->raw_value != ";"){
@@ -150,7 +234,9 @@ Statement* Scrypter::buildAST(){
 
 void Scrypter::calculate(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
-        ASTHeads.at(i)->calculate(infixparser);
+        if (!ASTHeads.at(i)->is_fuction_def){
+            ASTHeads.at(i)->calculate(infixparser);
+        }
     }
 }
 void Scrypter::deleteFunc(){

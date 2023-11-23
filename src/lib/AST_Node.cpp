@@ -333,11 +333,12 @@ Function_Val::Function_Val(vector<Token*> in_data) {
         val.actual_val += in_data.at(i)->raw_value;
         if (in_data.at(i)->raw_value == ","){
             val.actual_val += " ";
+        } else {
+            data_vec.push_back(in_data.at(i));
         }
     }
     // cout << "after creating function" << endl;   
     val.data_type = "EMPTY" ;
-    data_vec = in_data;
 }
 
 Data Double_Operation::get_value(Data& left_val, Data& right_val) {

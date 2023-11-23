@@ -556,7 +556,7 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
         }
     }
 
-    if (array_functions.count(tokens.at(begin_line)->raw_value)) {
+    if (isalpha(tokens.at(begin_line)->raw_value.at(0))) {// length push or pop
             bool m = check_single_array_function(begin_line + 1, end_line);
             if (m) {
                 Array_Fct* add_array_fct = new Array_Fct(tokens.at(begin_line));
@@ -942,12 +942,10 @@ AST_Node* InfixParser::read_one_line(size_t begin_line, size_t end_line, AST_Nod
 }
 
 void InfixParser::delete_help(AST_Node* in_node) {
-    // cout << "called" << endl;
+    // cout << in_node->val.actual_val << endl;
     if (!in_node) {
         return;
     }
-    // cout << in_node->val.actual_val << endl;
-
     // cout << "delete left" << endl;
     // cout << in_node->val.actual_val << endl;
     // cout << in_node->val.actual_val << endl;

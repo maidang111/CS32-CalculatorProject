@@ -12,7 +12,10 @@ class Scrypter{
     ~Scrypter();
     InfixParser* infixparser;
     vector <Token*> tokens;
+    
     vector <Statement*> ASTHeads;
+    vector <Function*> ASTFunctions;
+
     size_t index;
     int level;
     void delete_tokens();
@@ -24,4 +27,6 @@ class Scrypter{
     void calculate();
     private:
     Statement* buildAST();
+    FunctionCall* buildFunction();
+    
 };
