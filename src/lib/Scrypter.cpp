@@ -221,7 +221,7 @@ Statement* Scrypter::buildAST(){
         level = tempLevel;
         return printBlock;
     } else {
-        if (tokens.at(index)->is_function){
+        if (Data::curr_variables.count(tokens.at(index)->raw_value) || AST_Node::prev_variables.count(tokens.at(index)->raw_value)){
             cout << "Runtime error: not a function." << endl;
             exit(1);
         }
