@@ -27,20 +27,52 @@ void Formater::deleteStatements(){
 }
 
 void Formater::buildASTs(){
-    while(index != tokens.size()){
-        level = 0;
+     while(index != tokens.size()){
         if(tokens.at(index)->raw_value == "END"){
             index++;
         } else {
-            Statement* root = buildAST();
-            if (root != nullptr){
-                ASTHeads.push_back(root);
+            if(tokens.at(index)->is_function){
+                level = 0;
+                if (tokens.at(index)->raw_value == "foo"){
+                }
+                FunctionCall* root = buildFunction();
+                if (root != nullptr){
+                    ASTHeads.push_back(root);
+                }
+            } else {
+                if (tokens.at(index)->raw_value == "foo"){
+                }
+                level = 0;
+                Statement* root = buildAST();
+                if (root != nullptr){
+                    ASTHeads.push_back(root);
+                }
             }
-            // root->print()
-            // ASTHeads.at(0)->print();
         }
     }
 }
+
+FunctionCall* Formater::buildFunction(){
+    FunctionCall* functionCall = new FunctionCall();
+    // functionCall->is_fuction_def = false;
+    functionCall->functionName = tokens.at(index)->raw_value;
+    // cout << tokens.at(index)->raw_value << endl;
+    index += 2;
+    while(tokens.at(index)->raw_value != ")"){
+    if (tokens.at(index)->raw_value != ","){
+        // cout << tokens.at(index)->raw_value << endl;
+        functionCall->parameters.push_back(tokens.at(index));
+    }
+    index++;
+    }
+    // for(size_t i = 0; i < ASTFunctions.size(); i++){
+    //     if (ASTFunctions.at(i)->functionName == functionCall->functionName){
+    //         functionCall->function = ASTFunctions.at(i);
+    //     }
+    // }
+    return functionCall;
+}
+
 
 Statement* Formater::buildAST(){
     if(tokens.at(index)->raw_value == "def"){
