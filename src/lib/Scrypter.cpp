@@ -26,19 +26,13 @@ void Scrypter::deleteStatements(){
 }
 
 void Scrypter::buildASTs(){
-    size_t count = 0;
     while(index != tokens.size()){
-        if(count == 2){
-            cout << "Runtime error: not a function." << endl;
-            exit(1);
-        }
         if(tokens.at(index)->raw_value == "END"){
             index++;
         } else {
             if(tokens.at(index)->is_function){
                 level = 0;
                 if (tokens.at(index)->raw_value == "foo"){
-                    count++;
                 }
                 FunctionCall* root = buildFunction();
                 if (root != nullptr){
@@ -46,7 +40,6 @@ void Scrypter::buildASTs(){
                 }
             } else {
                 if (tokens.at(index)->raw_value == "foo"){
-                    count++;
                 }
                 level = 0;
                 Statement* root = buildAST();

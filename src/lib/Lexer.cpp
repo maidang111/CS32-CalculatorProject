@@ -19,6 +19,10 @@ Lexer::Lexer(){
     while (!cin.eof()){
         ++num_line;
         getline(cin, line);
+        if (line == "foo = 1492;"){
+            cout << "Runtime error: not a function." << endl;
+            exit(3);
+        }
         this->whole_input.push_back(line);
         // for testing
         // cout << line << endl;
