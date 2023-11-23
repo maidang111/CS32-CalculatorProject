@@ -185,14 +185,14 @@ void Print::deleteStatement(){
 void Print::calculate(InfixParser* infixParser){
     if(body.size() > 0){
         body.at(0)->calculate(infixParser);
-         if (infixParser->isNull){
-            cout << "null" << endl;
-        } else if (infixParser->isBool){
+        if (infixParser->isBool){
             if(infixParser->printValue == 0.0){
                 cout << "false" << endl;
             } else {
                 cout << "true" << endl;
             }
+        } else if (infixParser->isNull){
+            cout << "null" << endl;
         } else {
             cout << infixParser->printValue << endl;
         }
@@ -326,7 +326,6 @@ void Function::calculate(InfixParser* infixParser){
     //     // cout << "here" << endl;
     //     cout << returnStatement.at(i)->raw_value << endl;
     // }
-    // cout << returnStatement.size() << endl;
     if (returnStatement.size() > 1){
         if(returnStatement.size() == 2){
             infixParser->isNull = true;
