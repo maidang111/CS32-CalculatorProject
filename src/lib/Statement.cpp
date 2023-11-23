@@ -362,5 +362,6 @@ void FunctionCall::calculate(InfixParser* infixParser){
         Data b = infixParser->evaluate(a);
         infixParser->delete_help(a);
         function->calculate(infixParser);
+        delete token;
     }
 }
