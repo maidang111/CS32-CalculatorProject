@@ -50,7 +50,6 @@ Statement* Formater::buildAST(){
     function->functionName = tokens.at(index)->raw_value;
     infixparser->functionNames.push_back(tokens.at(index));
     level++;
-
     //get function parameters
     index += 2;
 
@@ -68,7 +67,6 @@ Statement* Formater::buildAST(){
     // cout << tokens.at(index)->raw_value << endl;
     while(tokens.at(index)->raw_value != "return" && tokens.at(index)->raw_value != "}"){
         if(tokens.at(index)->raw_value != "END"){
-                    // cout << tokens.at(index)->raw_value << endl;
                 size_t tempLevel = level;
                 function->body.push_back(buildAST());
                 level = tempLevel;
@@ -76,7 +74,6 @@ Statement* Formater::buildAST(){
                 index++;
             }
     }
-
     if(tokens.at(index)->raw_value == "}"){
         index += 2;
     }

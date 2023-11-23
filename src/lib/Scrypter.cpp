@@ -16,6 +16,37 @@ Scrypter::~Scrypter(){
     delete infixparser;
 }
 
+
+
+bool Scrypter::check_return() {
+    int count = 0;
+    int count_f = 0;
+    bool is_fct = false;
+    for (size_t i = 0; i < tokens.size(); ++i) {
+        if (tokens.at(i)->raw_value == "def") {
+            is_fct = true;
+            count_f = count;
+        }
+        else if (tokens.at(i)->raw_value == "{") {
+            ++count;
+        }
+        else if (tokens.at(i)->raw_value == "}") {
+            --count;
+            if (count_f == count) {
+                is_fct = false;
+            }
+        }
+        else if (tokens.at(i)->raw_value == "return") {
+            if (!is_fct) {
+                cout << "Runtime error: unexpected return." << endl;
+                exit(3);
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void Scrypter::deleteStatements(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
             // cout << i;
