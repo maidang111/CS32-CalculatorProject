@@ -49,7 +49,7 @@ void Scrypter::buildASTs(){
 
 FunctionCall* Scrypter::buildFunction(){
     FunctionCall* functionCall = new FunctionCall();
-    functionCall->is_fuction_def = false;
+    // functionCall->is_fuction_def = false;
     functionCall->functionName = tokens.at(index)->raw_value;
     // cout << tokens.at(index)->raw_value << endl;
     index += 2;
@@ -81,7 +81,9 @@ Statement* Scrypter::buildAST(){
     //get function parameters
     index += 2;
     // cout << tokens.at(index)->raw_value << endl << endl;
-
+    while(tokens.at(index)->raw_value == "END"){
+        index++;
+    }
     while(tokens.at(index)->raw_value != ")"){
         // cout << tokens.at(index)->raw_value << endl;
         if (tokens.at(index)->raw_value != ","){
@@ -211,7 +213,11 @@ Statement* Scrypter::buildAST(){
         printBlock->level = level;
         size_t tempLevel = level;
         level = 0;
-        printBlock->body.push_back(buildAST());
+        if(tokens.at(index)->is_function){
+            printBlock->body.push_back(buildFunction());
+        } else {
+            printBlock->body.push_back(buildAST());
+        }
         level = tempLevel;
         return printBlock;
     } else {
@@ -237,7 +243,6 @@ Statement* Scrypter::buildAST(){
 
 void Scrypter::calculate(){
     for(size_t i = 0; i < ASTHeads.size(); i++){
-        // ASTHeads.at(i)->print(infixparser);
         if (!ASTHeads.at(i)->is_fuction_def){
             ASTHeads.at(i)->calculate(infixparser);
         }

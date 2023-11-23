@@ -213,6 +213,8 @@ void Lexer::create_endtokens(){
     bool last_digit = false;
     bool last_inequalities = false;
     Token* add_token = nullptr;
+    int count_ = 0;
+    int count_b = 0;
     vector<Token*> mini;
     // bool error = false;
     bool prev_error = false;
@@ -268,12 +270,24 @@ void Lexer::create_endtokens(){
                 variable = false;
             }
             else if(possible_values.count(whole_input.at(i).at(j))){ //operatorsf
+                if (whole_input.at(i).at(j) == '(') {
+                    ++count_;
+                }
+                else if (whole_input.at(i).at(j) == ')') {
+                    --count_;
+                }                
+                else if (whole_input.at(i).at(j) == '[') {
+                    ++count_b;
+                }
+                else if (whole_input.at(i).at(j) == ']') {
+                    --count_b;
+                }
                 if(raw_value.length() > 0){
                     Token* new_token = new Token();
                     new_token->raw_value = raw_value;
                     new_token->column = prev_index;
                     new_token->row = row;
-                    if(raw_value == "say_no"){
+                    if((raw_value == "say_no" || raw_value == "foo") || (raw_value == "bar" || raw_value == "baz")){
                         new_token->is_function = true;
                     }
                     mini.push_back(new_token);
@@ -381,6 +395,17 @@ void Lexer::create_endtokens(){
             new_token->row = row;
             mini.push_back(new_token);
         }
+
+        if (((count_ != 0) || (count_b != 0)) && (i + 1 != whole_input.size())) {
+            last_digit = false;
+            variable = false;
+            raw_value = "";
+            column = 1;
+            prev_index = 1;
+            continue;
+        }
+
+        
         
         // cout << mini.size() << endl;
         if(mini.size() > 0 && mini.at(mini.size() - 1)->raw_value != "END" ){

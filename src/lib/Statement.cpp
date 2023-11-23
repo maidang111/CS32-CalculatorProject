@@ -191,7 +191,11 @@ void Print::calculate(InfixParser* infixParser){
             } else {
                 cout << "true" << endl;
             }
-        } else {
+        } 
+        else if (infixParser->isNull){
+            cout << "null" << endl;
+        }
+        else {
             cout << infixParser->printValue << endl;
         }
     }
@@ -318,10 +322,34 @@ void Function::deleteStatement(){
 }
 
 void Function::calculate(InfixParser* infixParser){
+    // cout << "here" << endl;
+    // cout << returnStatement.size() << endl;
+    // for(size_t i = 0; i << returnStatement.size(); i++){
+    //     // cout << "here" << endl;
+    //     cout << returnStatement.at(i)->raw_value << endl;
+    // }
+    cout << returnStatement.size() << endl;
+    if (returnStatement.size() > 1){
+        if(returnStatement.size() == 2){
+            infixParser->isNull = true;
+        }
+        for(size_t i = 0; i < returnStatement.size(); i++){
+            if(returnStatement.at(i)->raw_value == "null"){
+                infixParser->isNull = true;
+            }
+        }
+    } else {
+        infixParser->isNull = true;
+    }
     for(size_t i = 0; i < body.size(); i++){
         // cout << "passes here" << endl;
         body.at(i)->calculate(infixParser);
     }
+    // for(size_t i = 0; i < i << returnStatement.size(); i++){
+    //     cout << returnStatement.at(i)->raw_value << endl;
+    // }
+    // cout << returnStatement.size() << endl;
+    // if(returnStatement.size())
     return;
 }
 
@@ -329,7 +357,9 @@ void FunctionCall::calculate(InfixParser* infixParser){
     // for (size_t i = 0; i < parameters.size(); i++){
     //         cout << parameters.at(i)->raw_value << endl;
     //     }
+    // cout << function->parameters.size() << this->parameters.size() << endl;
     if (function->parameters.size() == this->parameters.size()){
+        // cout << "here" << endl;
         Token* temp = new Token;
         temp->raw_value = "=";
         for(size_t i = 0; i < function->parameters.size(); i++){
@@ -343,7 +373,6 @@ void FunctionCall::calculate(InfixParser* infixParser){
         }
         function->calculate(infixParser);
         delete temp;
-
     } else {
         infixParser->tokens = this->parameters;
         // cout << this->parameters.size() << endl;

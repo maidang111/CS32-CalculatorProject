@@ -312,7 +312,7 @@ bool InfixParser::check_error(size_t begin_line, size_t end_line, size_t& error_
             if ((fct_p + 1 == count) && is_fct) {
                 is_fct = false;
             }
-            else if (operator_last || last_left || last_left_b) {
+            else if (operator_last || last_left_b) {
                 error_index = i;
                 // cout << "here exit" << endl;
                 return true;

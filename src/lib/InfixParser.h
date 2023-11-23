@@ -48,6 +48,7 @@ class InfixParser{
     vector <Token*> functionNames;
     bool isFunction(string functionName);
     bool check_array_val(size_t begin_line, size_t end_line);
+    bool isNull;
     // build tree
     // A print function
     // calculate function
