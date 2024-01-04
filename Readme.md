@@ -1,4 +1,3 @@
-# Scrypt Project CS32
 ## Purpose:
 The purpose of this project is to build a user-friendly high-level programming language using c++. We included the basic features of computer science language. It supports various data types including numbers, null, boolean values, and arrays. These data could be stored in the form of variables. Its basic functionality involve arithmetic operations, variables, boolean operations, if/else statements, while loop, array built-in functions, user defined functions, and built-in print functions.
 
